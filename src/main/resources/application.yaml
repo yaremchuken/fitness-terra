@@ -1,0 +1,9 @@
+cloud:
+  aws:
+    bucket: fitness-terra
+    region:
+      static: us-east-2
+      auto: false
+    credentials:
+      access-key:
+      secret-key:
