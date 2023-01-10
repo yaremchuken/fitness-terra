@@ -48,7 +48,7 @@ class AuthApi(
                 refreshToken.token,
                 refreshToken.issuedAt)
 
-        val role = roleService.create(user, RoleType.GAMER)
+        val role = roleService.create(user, RoleType.USER)
 
         val accessToken: String = jwtTokenProvider.createAccessToken(credentials.username, mutableListOf(role))
 

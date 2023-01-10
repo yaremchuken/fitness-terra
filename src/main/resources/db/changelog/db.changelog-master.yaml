@@ -5,3 +5,9 @@ databaseChangeLog:
   - include:
       file: role.yaml
       relativeToChangelogFile: true
+  - include:
+      file: exercise.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: workout.yaml
+      relativeToChangelogFile: true

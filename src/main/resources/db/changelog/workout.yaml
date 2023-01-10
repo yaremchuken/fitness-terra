@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: workout_0
+      author: admin
+      changes:
+        - createTable:
+            tableName: workout
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: workout_pkey
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: user_workout_fk
+                    referencedColumnNames: id
+                    referencedTableName: user
+              - column:
+                  name: breaks
+                  type: integer[]
+        - createTable:
+            tableName: workout_exercises
+            columns:
+              - column:
+                  name: workout_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: workout_exercise_fk
+                    referencedColumnNames: id
+                    referencedTableName: workout
+              - column:
+                  name: exercise_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: exercise_workout_fk
+                    referencedColumnNames: id
+                    referencedTableName: exercise

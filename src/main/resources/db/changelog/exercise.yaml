@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - changeSet:
+      id: exercise_0
+      author: admin
+      changes:
+        - createTable:
+            tableName: exercise
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: exercise_pkey
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: user_exercise_fk
+                    referencedColumnNames: id
+                    referencedTableName: user
+              - column:
+                  name: title
+                  type: character varying(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: character varying(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: muscle_groups
+                  type: integer[]
+              - column:
+                  name: repeats
+                  type: integer
+                  defaultValue: "0"
+              - column:
+                  name: duration
+                  type: integer
+                  defaultValue: "0"
+              - column:
+                  name: calories
+                  type: integer
+                  defaultValue: "0"
+              - column:
+                  name: equipments
+                  type: integer[]
+              - column:
+                  name: weights
+                  type: integer[]

@@ -30,7 +30,7 @@ class UserRoleId (
 ) : Serializable
 
 enum class RoleType(private val role: String) : GrantedAuthority {
-    GAMER("GAMER"),
+    USER("USER"),
     ADMIN("ADMIN");
 
     override fun getAuthority() = role

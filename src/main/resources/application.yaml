@@ -12,6 +12,8 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         default_schema: public
         globally_quoted_identifiers: true
+#    hibernate:
+#      ddl-auto: create
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
