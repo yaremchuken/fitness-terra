@@ -1,0 +1,19 @@
+@import './vendor/fonts/fonts.scss';
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  line-height: 1;
+  letter-spacing: 1px;
+  font-weight: normal;
+
+  background-color: darkslategray;
+
+  cursor: default;
+}

@@ -1,3 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fitness_terra
+    username: fitness_terra
+    password: fitness_terra
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
+        globally_quoted_identifiers: true
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
 cloud:
   aws:
     bucket: fitness-terra
@@ -7,3 +24,6 @@ cloud:
     credentials:
       access-key:
       secret-key:
+
+jwt:
+  secret-key:

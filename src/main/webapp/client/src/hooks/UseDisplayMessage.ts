@@ -1,0 +1,35 @@
+import { v4 } from 'uuid'
+import { useCallback } from 'react'
+import { useStore } from 'react-redux'
+import { PayloadedAction } from '../actions/Action'
+import { ActionType } from '../actions/ActionType'
+
+export const useDisplayMessage = () => {
+  const store = useStore()
+  return useCallback(
+    (message: string) => {
+      if (message) {
+        store.dispatch<PayloadedAction>({
+          type: ActionType.SHOW_MESSAGE_POPUP,
+          payload: { id: v4(), firedAt: new Date().getTime(), message: message },
+        })
+      }
+    },
+    [store]
+  )
+}
+
+export const useDismissMessage = () => {
+  const store = useStore()
+  return useCallback(
+    (id: string) => {
+      if (id) {
+        store.dispatch<PayloadedAction>({
+          type: ActionType.DISMISS_MESSAGE_POPUP,
+          payload: id,
+        })
+      }
+    },
+    [store]
+  )
+}

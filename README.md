@@ -1,4 +1,4 @@
-# Getting Started
+# How to Run
 
 ### <span style="color:yellow">Initialize Database</span>
 #### Connect to Postgres
@@ -34,7 +34,7 @@ CREATE DATABASE fitness_terra
 You will need <a href="http://aws.amazon.com" target="_blank">Amazon AWS</a> account
 and S3 bucket (you can use <a href="https://s3.console.aws.amazon.com/s3/buckets" target="_blank">S3 Management console</a>).
 Don`t forget to create IAM User with S3 permissions in *Security Credentials* of your account.<br>
-Fill application.yaml with Amazon AWS credentials:
+Fill <b>application.yaml</b> with Amazon AWS properties:
 ``` yaml
 cloud:
   aws:
@@ -42,7 +42,27 @@ cloud:
     region:
       static: eu-north-1
       auto: false
+```
+also you need add credentials for Amazon AWS in <b>application.yaml</b>
+``` yaml
+cloud:
+  aws:
     credentials:
       access-key: XXX
       secret-key: XXXX
 ```
+or VM properties
+```
+-Dcloud.aws.credentials.access-key=XXX
+-Dcloud.aws.credentials.secret-key=XXXX
+```
+
+### <span style="color:yellow">JWT</span>
+Secret key word must be minimum <b>256</b> bits long<br>
+add property to <b>application.yaml</b>
+```yaml
+jwt:
+  secret-key: XXX
+```
+or VM properties
+```-Djwt.secret-key=XXX```

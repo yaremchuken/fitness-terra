@@ -19,9 +19,9 @@ import java.util.UUID
 
 @Component
 class JwtTokenProvider(
-    @Value("\${jwt.secret.key}") private val secretKey: String,
-    @Value("\${jwt.token.lifetime.ms:3600000}") private val tokenLifetimeMs: Long,
-    @Value("\${jwt.refresh.token.lifetime.ms:86400000000}") private val refreshLifetimeMs: Long,
+    @Value("\${jwt.secret-key}") private val secretKey: String,
+    @Value("\${jwt.token.lifetime_ms:3600000}") private val tokenLifetimeMs: Long,
+    @Value("\${jwt.token.refresh_lifetime_ms:86400000000}") private val refreshLifetimeMs: Long,
     private val userDetailsService: UserDetailsService,
     private val clock: Clock
 ) : Serializable {
