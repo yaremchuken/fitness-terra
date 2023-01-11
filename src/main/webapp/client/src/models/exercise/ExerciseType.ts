@@ -1,0 +1,12 @@
+export enum ExerciseType {
+  WARMUP,
+  CARDIO,
+  STRENGTH,
+  FLEXIBILITY,
+  BALANCE,
+  COORDINATION,
+  CYCLING,
+  WALKING,
+  RUNNING,
+  MARTIAL,
+}

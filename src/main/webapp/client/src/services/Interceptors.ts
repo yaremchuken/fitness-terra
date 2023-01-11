@@ -2,7 +2,7 @@ import { AxiosHeaders } from 'axios'
 import { Store } from 'redux'
 import api from './Api'
 
-const storageName = 'goblinterra'
+const storageName = 'fitnessterra'
 
 type StoredUserData = {
   uid: number
@@ -24,6 +24,8 @@ const interceptors = (store: Store) => {
   api.interceptors.request.use(
     (config) => {
       const data = getStoredData()
+      console.log(config.url, data)
+
       if (!config.url?.startsWith('auth') && data && data.accessToken) {
         config.headers = (config.headers ?? {}) as AxiosHeaders
         config.headers.set('Authorization', `Bearer ${data.accessToken}`)

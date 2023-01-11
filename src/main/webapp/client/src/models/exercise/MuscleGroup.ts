@@ -1,0 +1,13 @@
+export enum MuscleGroup {
+  NECK,
+  SHOULDERS,
+  CHEST,
+  BICEPS,
+  TRICEPS,
+  FOREARMS,
+  ABS,
+  GLUTES,
+  HAMSTRINGS,
+  THIGHS,
+  CALVES,
+}

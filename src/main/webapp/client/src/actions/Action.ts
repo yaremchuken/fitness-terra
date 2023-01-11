@@ -1,6 +1,7 @@
 import { Action } from 'redux'
 import { ActionType } from './ActionType'
 import { Message } from '../components/message-popup/MessagePopup'
+
 export interface PayloadedAction extends Action<ActionType> {
   payload?: any
 }
