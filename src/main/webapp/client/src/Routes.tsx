@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import CollectionPage from './pages/collection-page/CollectionPage'
 import WelcomePage from './pages/welcome-page/WelcomePage'
 
-export const useRoutes = (isAuthenticated: boolean) => {
+export const getRoutes = (isAuthenticated: boolean) => {
   if (!isAuthenticated) {
     return (
       <Routes>

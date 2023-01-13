@@ -10,18 +10,18 @@ type StoredUserData = {
   refreshToken: string
 }
 
-const useAuth = () => {
+const useAuth = (store: Store) => {
   const [uid, setUid] = useState<number | undefined>()
   const [accessToken, setAccessToken] = useState<string | undefined>()
   const [refreshToken, setRefreshToken] = useState<string | undefined>()
 
-  const getStoredData = (): StoredUserData => {
-    return JSON.parse(localStorage.getItem(storageName) as string)
-  }
-
   const prepareStore = (uid: number): StoredUserData => {
     localStorage.setItem(storageName, JSON.stringify({ uid }))
     return { uid, accessToken: '', refreshToken: '' }
+  }
+
+  const getStoredData = (): StoredUserData => {
+    return JSON.parse(localStorage.getItem(storageName) as string)
   }
 
   const storeTokens = useCallback((uid: number, accessToken?: string, refreshToken?: string) => {
@@ -58,16 +58,13 @@ const useAuth = () => {
     [storeTokens]
   )
 
-  const logout = useCallback((store?: Store) => {
+  const logout = useCallback(() => {
     setUid(undefined)
     setAccessToken(undefined)
     setRefreshToken(undefined)
 
     localStorage.removeItem(storageName)
-
-    if (store) {
-      store.dispatch(clearStores())
-    }
+    store.dispatch(clearStores())
   }, [])
 
   useEffect(() => {

@@ -1,16 +1,13 @@
 import { combineReducers } from 'redux'
-import reducer, { State as ReducerState } from './Reducer'
-import auth, { State as AuthState } from './AuthReducer'
 import exercise, { State as ExerciseReducerState } from './ExerciseReducer'
+import reducer, { State as ReducerState } from './Reducer'
 
 export const rootReducer = combineReducers({
   reducer,
-  auth,
   exercise,
 })
 
 export type StoreState = {
-  auth: AuthState
   reducer: ReducerState
   exercise: ExerciseReducerState
 }

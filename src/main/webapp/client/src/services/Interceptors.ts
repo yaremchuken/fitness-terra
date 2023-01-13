@@ -1,32 +1,18 @@
 import { AxiosHeaders } from 'axios'
-import { Store } from 'redux'
-import { clearStores } from '../actions/Action'
 import api from './Api'
 
-const storageName = 'fitnessterra'
-
-type StoredUserData = {
-  uid: number
-  accessToken: string
-  refreshToken: string
-}
-
-const getStoredData = (): StoredUserData => {
-  return JSON.parse(localStorage.getItem(storageName) as string)
-}
-
-const persistData = (data: StoredUserData) => {
-  localStorage.setItem(storageName, JSON.stringify(data))
-}
-
-const interceptors = (store: Store) => {
+const interceptors = (
+  login: (uid: number, accessToken: string, refreshToken?: string) => void,
+  logout: () => void,
+  uid?: number,
+  accessToken?: String,
+  refreshToken?: String
+) => {
   api.interceptors.request.use(
     (config) => {
-      const data = getStoredData()
-
-      if (!config.url?.startsWith('auth') && data && data.accessToken) {
+      if (!config.url?.startsWith('auth') && accessToken) {
         config.headers = (config.headers ?? {}) as AxiosHeaders
-        config.headers.set('Authorization', `Bearer ${data.accessToken}`)
+        config.headers.set('Authorization', `Bearer ${accessToken}`)
       }
       return config
     },
@@ -40,22 +26,13 @@ const interceptors = (store: Store) => {
 
       if (error.response && error.response.status === 401) {
         if (error.response.data === 'User does not exists') {
-          localStorage.removeItem(storageName)
-
-          if (store) {
-            store.dispatch(clearStores())
-          }
+          logout()
         } else if (error.response.data.startsWith('JWT expired') && !original._retry) {
           original._retry = true
 
-          const data = getStoredData()
+          const rs = await api.post('auth/renew-token', { uid, refreshToken })
 
-          const rs = await api.post('auth/renew-token', {
-            uid: data.uid,
-            refreshToken: data.refreshToken,
-          })
-
-          persistData({ ...rs.data })
+          login(rs.data.uid, rs.data.accessToken, rs.data.refreshToken)
 
           return api(original)
         }
