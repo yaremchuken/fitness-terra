@@ -23,7 +23,7 @@ export const exercisesLoaded = (exercises: Exercise[]) => {
 export const exerciseCreated = (exercise: Exercise) => {
   return {
     type: ExerciseActionType.EXERCISE_CREATED,
-    paylod: exercise,
+    payload: exercise,
   }
 }
 

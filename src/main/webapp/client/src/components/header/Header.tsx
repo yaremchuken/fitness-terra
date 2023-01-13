@@ -14,20 +14,37 @@ const Header = ({ isAuthenticated, logout }: HeaderProps) => {
   const store = useStore()
   const navigate = useNavigate()
 
+  const goHome = () => {
+    navigate('/')
+  }
+
+  const gotoCollection = () => {
+    navigate('/collection')
+  }
+
   const onLogout = () => {
-    displayMessage(`До скорой встречи!`)
+    displayMessage(`See you later!`)
     logout(store)
     navigate('/')
   }
 
   return (
     <header className={styles.header}>
-      <div className={styles.title}>Fitness Terra</div>
-      {isAuthenticated && (
-        <button className={`${styles.btn} ${styles.btnLogout}`} onClick={onLogout}>
-          logout
-        </button>
-      )}
+      <div className={styles.container}>
+        <div className={styles.title} onClick={goHome}>
+          Fitness Terra
+        </div>
+        {isAuthenticated && (
+          <nav className={styles.navbar}>
+            <button className={`${styles.btn} ${styles.btnLogout}`} onClick={gotoCollection}>
+              collection
+            </button>
+            <button className={`${styles.btn} ${styles.btnLogout}`} onClick={onLogout}>
+              logout
+            </button>
+          </nav>
+        )}
+      </div>
     </header>
   )
 }

@@ -35,21 +35,30 @@ databaseChangeLog:
               - column:
                   name: muscle_groups
                   type: integer[]
+                  constraints:
+                    nullable: false
               - column:
                   name: repeats
                   type: integer
-                  defaultValue: "0"
+                  constraints:
+                    nullable: false
               - column:
                   name: duration
                   type: integer
-                  defaultValue: "0"
+                  constraints:
+                    nullable: false
               - column:
                   name: calories
                   type: integer
-                  defaultValue: "0"
+                  constraints:
+                    nullable: false
               - column:
                   name: equipments
                   type: integer[]
+                  constraints:
+                    nullable: false
               - column:
                   name: weights
                   type: integer[]
+                  constraints:
+                    nullable: false

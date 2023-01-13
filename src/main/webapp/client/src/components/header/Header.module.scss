@@ -1,53 +1,45 @@
 @import '../../utils/css/index.scss';
 
-@keyframes spend {
-  100% {
-    transform: translateY(15px);
-  }
-}
-
-@keyframes receive {
-  100% {
-    transform: translateY(0);
-  }
-}
-
 .header {
-  position: relative;
-  font-size: 18px;
-  height: $header_height;
-  background-color: #777;
-  border-bottom: 1px solid #f4f2f2;
+  font-size: 24px;
+
+  background-color: lavender;
+
   box-sizing: border-box;
   z-index: 100;
+}
 
+.container {
+  max-width: $screen-width;
+  margin: auto;
   display: flex;
 }
 
 .title {
+  padding: 15px;
   align-self: center;
-  color: lavender;
-  margin-left: 10px;
+  // color: lavender;
+  margin-left: 20px;
   margin-right: auto;
 }
 
+.navbar {
+  display: flex;
+}
+
 .btn {
-  padding: 0 5px;
+  margin: 0 25px;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 16px;
   display: flex;
   justify-content: center;
   cursor: pointer;
-  color: white;
   border: none;
   outline: none;
+  background-color: transparent;
   align-items: center;
 
   &:hover {
-    background-color: chocolate;
-  }
-
-  &Logout {
-    background-color: brown;
+    color: chocolate;
   }
 }

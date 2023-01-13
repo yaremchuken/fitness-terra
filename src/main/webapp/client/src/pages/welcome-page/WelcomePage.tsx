@@ -9,7 +9,7 @@ const WelcomePage = (props: WelcomePageProps) => {
   const auth = useContext(AuthContext)
 
   const vh = window.innerHeight * 0.01
-  document.documentElement.style.setProperty('--vh-welcome', `${vh}px`)
+  document.documentElement.style.setProperty('--vh-unit', `${vh}px`)
 
   return (
     <div className={styles.welcome}>

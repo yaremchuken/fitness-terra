@@ -14,6 +14,7 @@ class ExerciseService(private val exerciseRepository: ExerciseRepository) {
 
     fun toDto(entity: Exercise) =
         ExerciseDto(
+            entity.id,
             entity.title,
             entity.type,
             entity.muscleGroups,

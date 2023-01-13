@@ -3,12 +3,13 @@ import { ExerciseType } from './ExerciseType'
 import { MuscleGroup } from './MuscleGroup'
 
 type Exercise = {
+  id?: number
   title: string
   type: ExerciseType
   muscleGroups: MuscleGroup[]
-  repeats?: number
-  duration?: number
-  calories?: number
+  repeats: number
+  duration: number
+  calories: number
   equipments: EquipmentType[]
   weights: number[]
 }

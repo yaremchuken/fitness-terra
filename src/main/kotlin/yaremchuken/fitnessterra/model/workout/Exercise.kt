@@ -34,17 +34,17 @@ class Exercise(
     /**
      * Amount of repetitions.
      */
-    val repeats: Int?,
+    val repeats: Int,
 
     /**
      * Duration of exercise in seconds.
      */
-    val duration: Int?,
+    val duration: Int,
 
     /**
      * Amount of calories loss while exercising.
      */
-    val calories: Int?,
+    val calories: Int,
 
     /**
      * Type of equipment using in exercise.

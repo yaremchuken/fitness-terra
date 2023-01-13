@@ -2,7 +2,6 @@
 
 .messagePopup {
   border: solid 1px black;
-  border-radius: 5px;
   background-color: rgba($color: teal, $alpha: 0.6);
   display: flex;
   cursor: default;
@@ -19,6 +18,9 @@
     font-size: 16px;
     color: whitesmoke;
     margin: 6px;
-    @include strokeText;
   }
+}
+
+.errorTone {
+  background-color: red;
 }

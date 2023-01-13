@@ -11,13 +11,9 @@ import interceptors from './services/Interceptors'
 import store from './Store'
 
 const App = () => {
-  const { uid, accessToken, refreshToken, storeTokens, login, logout, ready } = useAuth()
+  const { uid, accessToken, refreshToken, storeTokens, login, logout } = useAuth()
   const isAuthenticated = !!accessToken
   const routes = useRoutes(isAuthenticated)
-
-  if (!ready) {
-    return <Loader message={'Game is preparing...'} />
-  }
 
   return (
     <Provider store={store}>

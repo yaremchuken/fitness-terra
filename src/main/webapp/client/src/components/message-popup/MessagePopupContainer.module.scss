@@ -1,10 +1,10 @@
-@import "../../utils/css/variables.scss";
+@import '../../utils/css/variables.scss';
 
 .messagePopupContainer {
   position: absolute;
   display: flex;
   z-index: 3000;
-  top: calc(1rem + #{$header_height});
+  top: calc(1rem + #{$header-height});
   right: 0px;
   overflow: hidden;
   min-width: 350px;

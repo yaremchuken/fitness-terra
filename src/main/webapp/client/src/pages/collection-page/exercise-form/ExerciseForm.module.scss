@@ -6,34 +6,10 @@ $form-shadow: #ffa580;
 $form-primary-highlight: #95a4ff;
 $form-secondary-highlight: #ffc8ff;
 
-.loginMenu {
+.form {
+  min-width: 500px;
   display: flex;
-}
-
-.menuBtn {
-  display: inline-block;
-  line-height: $font-size * 2;
-  padding: 0 20px;
-  background: #08e1ae;
-  letter-spacing: 2px;
-  transition: 0.2s all ease-in-out;
-  outline: none;
-  border: 1px solid black;
-  box-shadow: 3px 3px 1px $form-primary-highlight, 3px 3px 1px 1px black;
-  cursor: pointer;
-
-  &:hover {
-    background: black;
-    color: white;
-  }
-
-  &Selected {
-    background: $form-shadow;
-  }
-}
-
-.loginForm {
-  display: flex;
+  margin: 0 auto;
   flex-direction: column;
   padding: 20px;
   background: $form-bg;
@@ -87,6 +63,10 @@ $form-secondary-highlight: #ffc8ff;
     background: black;
     color: white;
   }
+}
+
+.controls {
+  display: flex;
 }
 
 .disabled {

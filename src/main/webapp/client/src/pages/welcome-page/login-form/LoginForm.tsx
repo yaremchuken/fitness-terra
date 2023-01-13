@@ -4,6 +4,7 @@ import LoginData from '../../../models/LoginData'
 import { login, register } from '../../../services/AuthService'
 import styles from './LoginForm.module.scss'
 import { useDisplayMessage } from '../../../hooks/UseDisplayMessage'
+import { MessageTone } from '../../../components/message-popup/MessagePopup'
 
 const LoginForm = () => {
   const auth = useContext(AuthContext)
@@ -40,14 +41,14 @@ const LoginForm = () => {
     setInProcess(true)
 
     if (loginData.password !== repeatedPassword) {
-      displayMessage('Passwords does not matches!')
+      displayMessage('Passwords does not matches!', MessageTone.ERROR)
       setInProcess(false)
     } else {
       register({ ...loginData })
         .then((data) => auth.storeTokens(data.uid, data.accessToken, data.refreshToken))
         .then(() => performLogin())
         .catch((err) => {
-          displayMessage(err.message)
+          displayMessage(err.message, MessageTone.ERROR)
           setInProcess(false)
         })
         .finally(() => setInProcess(false))
@@ -61,7 +62,7 @@ const LoginForm = () => {
         auth.login(data.uid, data.accessToken, data.refreshToken)
       })
       .catch((err) => {
-        displayMessage(err.response.data)
+        displayMessage(err.response.data, MessageTone.ERROR)
       })
       .finally(() => setInProcess(false))
   }

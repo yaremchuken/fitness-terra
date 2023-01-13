@@ -1,5 +1,6 @@
 import { AxiosHeaders } from 'axios'
 import { Store } from 'redux'
+import { clearStores } from '../actions/Action'
 import api from './Api'
 
 const storageName = 'fitnessterra'
@@ -19,12 +20,9 @@ const persistData = (data: StoredUserData) => {
 }
 
 const interceptors = (store: Store) => {
-  // const { dispatch } = store
-
   api.interceptors.request.use(
     (config) => {
       const data = getStoredData()
-      console.log(config.url, data)
 
       if (!config.url?.startsWith('auth') && data && data.accessToken) {
         config.headers = (config.headers ?? {}) as AxiosHeaders
@@ -39,24 +37,28 @@ const interceptors = (store: Store) => {
     (res) => res,
     async (error) => {
       const original = error.config
-      if (
-        error.response &&
-        error.response.status === 401 &&
-        error.response.data.startsWith('JWT expired') &&
-        !original._retry
-      ) {
-        original._retry = true
 
-        const data = getStoredData()
+      if (error.response && error.response.status === 401) {
+        if (error.response.data === 'User does not exists') {
+          localStorage.removeItem(storageName)
 
-        const rs = await api.post('auth/renew-token', {
-          uid: data.uid,
-          refreshToken: data.refreshToken,
-        })
+          if (store) {
+            store.dispatch(clearStores())
+          }
+        } else if (error.response.data.startsWith('JWT expired') && !original._retry) {
+          original._retry = true
 
-        persistData({ ...rs.data })
+          const data = getStoredData()
 
-        return api(original)
+          const rs = await api.post('auth/renew-token', {
+            uid: data.uid,
+            refreshToken: data.refreshToken,
+          })
+
+          persistData({ ...rs.data })
+
+          return api(original)
+        }
       }
 
       return Promise.reject(error)

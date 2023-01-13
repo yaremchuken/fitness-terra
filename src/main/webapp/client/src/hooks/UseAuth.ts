@@ -14,7 +14,6 @@ const useAuth = () => {
   const [uid, setUid] = useState<number | undefined>()
   const [accessToken, setAccessToken] = useState<string | undefined>()
   const [refreshToken, setRefreshToken] = useState<string | undefined>()
-  const [ready, setReady] = useState<boolean>(false)
 
   const getStoredData = (): StoredUserData => {
     return JSON.parse(localStorage.getItem(storageName) as string)
@@ -78,10 +77,9 @@ const useAuth = () => {
     } else {
       logout()
     }
-    setReady(true)
   }, [login, logout])
 
-  return { login, logout, accessToken, refreshToken, storeTokens, uid, ready }
+  return { login, logout, accessToken, refreshToken, storeTokens, uid }
 }
 
 export default useAuth

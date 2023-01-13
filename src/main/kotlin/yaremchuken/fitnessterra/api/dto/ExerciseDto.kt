@@ -5,12 +5,13 @@ import yaremchuken.fitnessterra.model.workout.ExerciseType
 import yaremchuken.fitnessterra.model.workout.MuscleGroup
 
 data class ExerciseDto(
+    val id: Long?,
     val title: String,
     val type: ExerciseType,
     val muscleGroups: Array<MuscleGroup>,
-    val repeats: Int?,
-    val duration: Int?,
-    val calories: Int?,
+    val repeats: Int,
+    val duration: Int,
+    val calories: Int,
     val equipments: Array<EquipmentType>,
     val weights: Array<Int>
 ) {
@@ -20,6 +21,7 @@ data class ExerciseDto(
 
         other as ExerciseDto
 
+        if (id != other.id) return false
         if (title != other.title) return false
         if (type != other.type) return false
         if (!muscleGroups.contentEquals(other.muscleGroups)) return false
@@ -33,12 +35,13 @@ data class ExerciseDto(
     }
 
     override fun hashCode(): Int {
-        var result = title.hashCode()
+        var result = id?.hashCode() ?: 0
+        result = 31 * result + title.hashCode()
         result = 31 * result + type.hashCode()
         result = 31 * result + muscleGroups.contentHashCode()
-        result = 31 * result + (repeats ?: 0)
-        result = 31 * result + (duration ?: 0)
-        result = 31 * result + (calories ?: 0)
+        result = 31 * result + repeats
+        result = 31 * result + duration
+        result = 31 * result + calories
         result = 31 * result + equipments.contentHashCode()
         result = 31 * result + weights.contentHashCode()
         return result
