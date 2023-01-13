@@ -1,35 +1,9 @@
 @import '../../../utils/css/index.scss';
 
-$font-size: 14px;
-$form-bg: #f8f4e5;
-$form-shadow: #ffa580;
-$form-primary-highlight: #95a4ff;
-$form-secondary-highlight: #ffc8ff;
-
 .loginMenu {
+  width: 300px;
   display: flex;
-}
-
-.menuBtn {
-  display: inline-block;
-  line-height: $font-size * 2;
-  padding: 0 20px;
-  background: #08e1ae;
-  letter-spacing: 2px;
-  transition: 0.2s all ease-in-out;
-  outline: none;
-  border: 1px solid black;
-  box-shadow: 3px 3px 1px $form-primary-highlight, 3px 3px 1px 1px black;
-  cursor: pointer;
-
-  &:hover {
-    background: black;
-    color: white;
-  }
-
-  &Selected {
-    background: $form-shadow;
-  }
+  justify-content: space-evenly;
 }
 
 .loginForm {
@@ -39,56 +13,4 @@ $form-secondary-highlight: #ffc8ff;
   background: $form-bg;
   border: 2px solid black;
   box-shadow: 15px 15px 1px $form-shadow, 15px 15px 1px 2px black;
-}
-
-.input {
-  display: block;
-  width: 100%;
-  font-size: $font-size;
-  line-height: $font-size * 2;
-  margin-bottom: $font-size * 2;
-  border: none;
-  border-bottom: 5px solid black;
-  background: $form-bg;
-  min-width: 250px;
-  padding-left: 5px;
-  outline: none;
-  color: black;
-
-  &:focus {
-    border-bottom: 5px solid $form-shadow;
-  }
-
-  &:-webkit-autofill,
-  &:-webkit-autofill:hover,
-  &:-webkit-autofill:focus {
-    border-bottom: 5px solid $form-primary-highlight;
-    -webkit-text-fill-color: $font-color;
-    -webkit-box-shadow: 0 0 0px 1000px $form-bg inset;
-    box-shadow: 0 0 0px 1000px $form-bg inset;
-    transition: background-color 5000s ease-in-out 0s;
-  }
-}
-
-.btn {
-  display: flex;
-  margin: 0 auto;
-  line-height: $font-size * 2;
-  padding: 0 20px;
-  background: $form-shadow;
-  letter-spacing: 2px;
-  transition: 0.2s all ease-in-out;
-  outline: none;
-  border: 1px solid black;
-  box-shadow: 3px 3px 1px $form-primary-highlight, 3px 3px 1px 1px black;
-  cursor: pointer;
-
-  &:hover {
-    background: black;
-    color: white;
-  }
-}
-
-.disabled {
-  opacity: 0.5;
 }

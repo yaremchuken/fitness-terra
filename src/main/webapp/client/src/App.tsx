@@ -10,11 +10,11 @@ import interceptors from './services/Interceptors'
 import store from './Store'
 
 const App = () => {
-  const { uid, accessToken, refreshToken, storeTokens, login, logout } = useAuth(store)
+  const { uid, accessToken, storeTokens, login, logout } = useAuth(store)
   const isAuthenticated = !!accessToken
   const routes = getRoutes(isAuthenticated)
 
-  interceptors(login, logout, uid, accessToken, refreshToken)
+  interceptors(login, logout)
 
   return (
     <Provider store={store}>
@@ -22,7 +22,6 @@ const App = () => {
         value={{
           uid,
           accessToken,
-          refreshToken,
           storeTokens,
           login,
           logout,

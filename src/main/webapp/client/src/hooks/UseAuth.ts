@@ -10,6 +10,10 @@ type StoredUserData = {
   refreshToken: string
 }
 
+export const getStoredData = (): StoredUserData => {
+  return JSON.parse(localStorage.getItem(storageName) as string)
+}
+
 const useAuth = (store: Store) => {
   const [uid, setUid] = useState<number | undefined>()
   const [accessToken, setAccessToken] = useState<string | undefined>()
@@ -18,10 +22,6 @@ const useAuth = (store: Store) => {
   const prepareStore = (uid: number): StoredUserData => {
     localStorage.setItem(storageName, JSON.stringify({ uid }))
     return { uid, accessToken: '', refreshToken: '' }
-  }
-
-  const getStoredData = (): StoredUserData => {
-    return JSON.parse(localStorage.getItem(storageName) as string)
   }
 
   const storeTokens = useCallback((uid: number, accessToken?: string, refreshToken?: string) => {

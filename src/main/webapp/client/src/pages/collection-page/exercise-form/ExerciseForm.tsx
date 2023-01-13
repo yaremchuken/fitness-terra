@@ -2,12 +2,15 @@ import { ChangeEvent, useState } from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import { create } from '../../../actions/exercise/ExerciseAction'
+import Button from '../../../components/form/button/Button'
+import Input from '../../../components/form/input/Input'
 import { MessageTone } from '../../../components/message-popup/MessagePopup'
 import { useDisplayMessage } from '../../../hooks/UseDisplayMessage'
 import Exercise from '../../../models/exercise/Exercise'
 import { ExerciseType } from '../../../models/exercise/ExerciseType'
-import { MuscleGroup } from '../../../models/exercise/MuscleGroup'
 import styles from './ExerciseForm.module.scss'
+
+const maxDuration = 3600
 
 type ExerciseFormProps = {
   create: (exercise: Exercise) => Promise<any>
@@ -27,80 +30,85 @@ const ExerciseForm = ({ create, editComplete }: ExerciseFormProps) => {
     equipments: [],
     weights: [],
   })
-  const [inProcess, setinProcess] = useState(false)
+  const [inProcess, setInProcess] = useState(false)
+
+  const formatTime = (seconds: number) => {
+    if (seconds > maxDuration) seconds = maxDuration
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds - mins * 60
+    return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`
+  }
+
+  // TODO: Drop down menu for repeats and duration
+
+  const toSecs = (time: string, onEmpty: number = 0) => {
+    if (/^\d+$/.test(time)) return +time
+    if (time.includes(':')) {
+      const tm = time.split(':')
+      if (Number.isNaN(+tm[0]) || Number.isNaN(+tm[1])) return onEmpty
+      return Math.min(maxDuration, +tm[1] + +tm[0] * 60)
+    }
+
+    return onEmpty
+  }
 
   const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-    setExerciseData({ ...exerciseData, [event.target.name]: event.target.value })
+    let value: string | number = event.target.value
+    if (event.target.name === 'duration') {
+      value = toSecs(value, exerciseData.duration)
+    }
+    setExerciseData({ ...exerciseData, [event.target.name]: value })
   }
 
   const onSubmit = () => {
-    setinProcess(true)
+    setInProcess(true)
     create(exerciseData)
       .then(() => {
         displayMessage('Exercise successfuly saved')
         editComplete()
       })
       .catch(() => displayMessage('Unable to save exercise!', MessageTone.ERROR))
-      .finally(() => setinProcess(false))
+      .finally(() => setInProcess(false))
   }
 
   return (
     <form className={styles.form} onSubmit={onSubmit}>
-      <input
-        className={styles.input}
-        placeholder='Title'
-        type='text'
+      <Input
+        title='Title'
         name='title'
         value={exerciseData.title}
         onChange={changeHandler}
         required
       />
-      <input
-        className={styles.input}
-        placeholder='Repeats'
-        type='number'
-        name='repeats'
-        value={exerciseData.repeats === 0 ? '' : exerciseData.repeats}
-        onChange={changeHandler}
-        required
-      />
-      <input
-        className={styles.input}
-        placeholder='Duration'
-        type='number'
-        name='duration'
-        value={exerciseData.duration === 0 ? '' : exerciseData.duration}
-        onChange={changeHandler}
-        required
-      />
-      <input
-        className={styles.input}
-        placeholder='Calories'
-        type='number'
+      <div className={styles.twoInRow}>
+        <Input
+          title='Repeats'
+          name='repeats'
+          type='number'
+          value={exerciseData.repeats === 0 ? '' : exerciseData.repeats}
+          onChange={changeHandler}
+          disabled={exerciseData.duration > 0}
+        />
+        <p>OR</p>
+        <Input
+          title='Duration'
+          name='duration'
+          value={formatTime(exerciseData.duration)}
+          onChange={changeHandler}
+          disabled={exerciseData.repeats > 0}
+        />
+      </div>
+      <Input
+        title='Calories lost'
         name='calories'
+        type='number'
         value={exerciseData.calories === 0 ? '' : exerciseData.calories}
         onChange={changeHandler}
-        required
       />
 
       <div className={styles.controls}>
-        <button
-          className={`${styles.btn} ${inProcess ? styles.disabled : ''}`}
-          type='button'
-          onClick={onSubmit}
-          disabled={inProcess}
-        >
-          SAVE
-        </button>
-
-        <button
-          className={`${styles.btn} ${inProcess ? styles.disabled : ''}`}
-          type='button'
-          onClick={editComplete}
-          disabled={inProcess}
-        >
-          CANCEL
-        </button>
+        <Button text='SAVE' disabled={inProcess} callback={onSubmit} />
+        <Button text='CANCEL' disabled={inProcess} callback={editComplete} />
       </div>
     </form>
   )

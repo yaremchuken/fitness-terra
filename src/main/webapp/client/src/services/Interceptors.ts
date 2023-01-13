@@ -1,18 +1,17 @@
 import { AxiosHeaders } from 'axios'
+import { getStoredData } from '../hooks/UseAuth'
 import api from './Api'
 
 const interceptors = (
   login: (uid: number, accessToken: string, refreshToken?: string) => void,
-  logout: () => void,
-  uid?: number,
-  accessToken?: String,
-  refreshToken?: String
+  logout: () => void
 ) => {
   api.interceptors.request.use(
     (config) => {
-      if (!config.url?.startsWith('auth') && accessToken) {
+      const data = getStoredData()
+      if (!config.url?.startsWith('auth') && data && data.accessToken) {
         config.headers = (config.headers ?? {}) as AxiosHeaders
-        config.headers.set('Authorization', `Bearer ${accessToken}`)
+        config.headers.set('Authorization', `Bearer ${data.accessToken}`)
       }
       return config
     },
@@ -30,9 +29,16 @@ const interceptors = (
         } else if (error.response.data.startsWith('JWT expired') && !original._retry) {
           original._retry = true
 
-          const rs = await api.post('auth/renew-token', { uid, refreshToken })
+          const data = getStoredData()
 
-          login(rs.data.uid, rs.data.accessToken, rs.data.refreshToken)
+          if (!data) logout()
+          else {
+            const rs = await api.post('auth/renew-token', {
+              uid: data.uid,
+              refreshToken: data.refreshToken,
+            })
+            login(rs.data.uid, rs.data.accessToken, rs.data.refreshToken)
+          }
 
           return api(original)
         }

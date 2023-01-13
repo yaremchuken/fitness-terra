@@ -5,6 +5,8 @@ import { login, register } from '../../../services/AuthService'
 import styles from './LoginForm.module.scss'
 import { useDisplayMessage } from '../../../hooks/UseDisplayMessage'
 import { MessageTone } from '../../../components/message-popup/MessagePopup'
+import Button from '../../../components/form/button/Button'
+import Input from '../../../components/form/input/Input'
 
 const LoginForm = () => {
   const auth = useContext(AuthContext)
@@ -20,21 +22,13 @@ const LoginForm = () => {
     else setLoginData({ ...loginData, [event.target.name]: event.target.value })
   }
 
-  const loginRegisterHandler = async (
-    event: React.KeyboardEvent<HTMLDivElement> | React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const submitHandler = async () => {
     if (inProcess) {
       return
     }
 
-    const btnPressed =
-      event.currentTarget.id === 'login_btn' || event.currentTarget.id === 'register_btn'
-    const enterPressed = 'code' in event && (event.code === 'Enter' || event.code === 'NumpadEnter')
-
-    if (btnPressed || enterPressed) {
-      if (registerMode) performRegister()
-      else performLogin()
-    }
+    if (registerMode) performRegister()
+    else performLogin()
   }
 
   const performRegister = async () => {
@@ -70,83 +64,51 @@ const LoginForm = () => {
   return (
     <>
       <div className={styles.loginMenu}>
-        <button
-          id='to_login_btn'
-          className={`${styles.menuBtn} ${inProcess ? styles.disabled : ''} ${
-            registerMode ? '' : styles.menuBtnSelected
-          }`}
-          type='button'
-          onClick={() => setRegisterMode(false)}
+        <Button
+          text='LOGIN'
+          callback={() => setRegisterMode(false)}
           disabled={inProcess}
-        >
-          login
-        </button>
-        <button
-          id='to_register_btn'
-          className={`${styles.menuBtn} ${inProcess ? styles.disabled : ''} ${
-            registerMode ? styles.menuBtnSelected : ''
-          }`}
-          type='button'
-          onClick={() => setRegisterMode(true)}
+          inactive={registerMode}
+        />
+        <Button
+          text='REGISTER'
+          callback={() => setRegisterMode(true)}
           disabled={inProcess}
-        >
-          register
-        </button>
+          inactive={!registerMode}
+        />
       </div>
 
-      <div className={styles.loginForm} onKeyPress={loginRegisterHandler}>
-        <form>
-          <input
-            className={styles.input}
-            placeholder='Username'
-            type='text'
-            name='username'
-            value={loginData.username}
-            onChange={changeHandler}
-            required
-          />
-          <input
-            className={styles.input}
-            placeholder='Password'
+      <form className={styles.loginForm} onSubmit={submitHandler}>
+        <Input
+          title='Username'
+          name='username'
+          value={loginData.username}
+          onChange={changeHandler}
+          required
+        />
+        <Input
+          title='Password'
+          name='password'
+          type='password'
+          value={loginData.password}
+          onChange={changeHandler}
+          required
+        />
+        {registerMode && (
+          <Input
+            title='Repeat password'
+            name='repeat-password'
             type='password'
-            name='password'
-            value={loginData.password}
+            value=''
             onChange={changeHandler}
-            required
           />
-          {registerMode && (
-            <input
-              className={styles.input}
-              placeholder='Repeat Password'
-              type='password'
-              name='repeat-password'
-              onChange={changeHandler}
-              required
-            />
-          )}
-          {registerMode ? (
-            <button
-              id='register_btn'
-              className={`${styles.btn} ${inProcess ? styles.disabled : ''}`}
-              type='button'
-              onClick={loginRegisterHandler}
-              disabled={inProcess}
-            >
-              REGISTER
-            </button>
-          ) : (
-            <button
-              id='login_btn'
-              className={`${styles.btn} ${inProcess ? styles.disabled : ''}`}
-              type='button'
-              onClick={loginRegisterHandler}
-              disabled={inProcess}
-            >
-              LOGIN
-            </button>
-          )}
-        </form>
-      </div>
+        )}
+        {registerMode ? (
+          <Button text='REGISTER' callback={submitHandler} disabled={inProcess} />
+        ) : (
+          <Button text='LOGIN' callback={submitHandler} disabled={inProcess} />
+        )}
+      </form>
     </>
   )
 }
