@@ -1,5 +1,6 @@
 package yaremchuken.fitnessterra.model.workout
 
+import jakarta.persistence.Convert
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -9,6 +10,7 @@ import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import yaremchuken.fitnessterra.model.BaseEntity
 import yaremchuken.fitnessterra.model.User
+import yaremchuken.fitnessterra.model.converter.EquipmentConverter
 
 /**
  * Basic exercise
@@ -24,7 +26,7 @@ class Exercise(
     val title: String,
 
     @Enumerated(EnumType.STRING)
-    val type: ExerciseType,
+    val type: ActivityType,
 
     /**
      * Muscles affected by exercise.
@@ -47,13 +49,8 @@ class Exercise(
     val calories: Int,
 
     /**
-     * Type of equipment using in exercise.
+     * Type of equipment using during the exercise.
      */
-    val equipments: Array<EquipmentType>,
-
-    /**
-     * Weight of equipment accordingly to equipments field, grams.
-     * 0 if not applicable.
-     */
-    val weights: Array<Int>
+    @Convert(converter = EquipmentConverter::class)
+    val equipment: Array<Equipment>,
 ): BaseEntity<Long>()

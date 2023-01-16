@@ -1,6 +1,6 @@
 import { Action, Dispatch } from 'redux'
 import Exercise from '../../models/exercise/Exercise'
-import { createApi, getAllApi } from '../../services/ExerciseService'
+import { getAllApi, saveApi } from '../../services/ExerciseService'
 import { ExerciseActionType } from './ExerciseActionType'
 
 export interface ExerciseAction extends Action<ExerciseActionType> {
@@ -22,7 +22,7 @@ export const exercisesLoaded = (exercises: Exercise[]) => {
 
 export const exerciseCreated = (exercise: Exercise) => {
   return {
-    type: ExerciseActionType.EXERCISE_CREATED,
+    type: ExerciseActionType.EXERCISE_SAVED,
     payload: exercise,
   }
 }
@@ -30,5 +30,5 @@ export const exerciseCreated = (exercise: Exercise) => {
 export const getAll = () => (dispatch: Dispatch) =>
   getAllApi().then((data) => dispatch(exercisesLoaded(data)))
 
-export const create = (exercise: Exercise) => (dispatch: Dispatch) =>
-  createApi(exercise).then((data) => dispatch(exerciseCreated(data)))
+export const save = (exercise: Exercise) => (dispatch: Dispatch) =>
+  saveApi(exercise).then((data) => dispatch(exerciseCreated(data)))

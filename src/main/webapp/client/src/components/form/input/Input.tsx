@@ -27,7 +27,7 @@ const Input = ({
 }: InputProps) => {
   return (
     <div className={styles.block}>
-      <p className={styles.title}>{title}</p>
+      <p className={`${styles.title} ${disabled ? styles.titleDisabled : ''}`}>{title}</p>
       <input
         className={`${styles.input} ${disabled ? styles.disabled : ''}`}
         placeholder={placeholder}

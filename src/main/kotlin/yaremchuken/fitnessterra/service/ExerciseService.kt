@@ -8,7 +8,7 @@ import yaremchuken.fitnessterra.repository.ExerciseRepository
 
 @Service
 class ExerciseService(private val exerciseRepository: ExerciseRepository) {
-    fun create(user: User, dto: ExerciseDto) = exerciseRepository.save(fromDto(user, dto))
+    fun save(user: User, dto: ExerciseDto) = exerciseRepository.save(fromDto(user, dto))
 
     fun getAll(user: User) = exerciseRepository.findAllByUser(user)
 
@@ -21,10 +21,12 @@ class ExerciseService(private val exerciseRepository: ExerciseRepository) {
             entity.repeats,
             entity.duration,
             entity.calories,
-            entity.equipments,
-            entity.weights)
+            entity.equipment)
 
-    fun fromDto(user: User, dto: ExerciseDto) =
-        Exercise(user, dto.title, dto.type, dto.muscleGroups, dto.repeats,
-            dto.duration, dto.calories, dto.equipments, dto.weights)
+    fun fromDto(user: User, dto: ExerciseDto): Exercise {
+        val exercise = Exercise(user, dto.title, dto.type, dto.muscleGroups, dto.repeats,
+                                dto.duration, dto.calories, dto.equipment)
+        exercise.id = dto.id
+        return exercise
+    }
 }

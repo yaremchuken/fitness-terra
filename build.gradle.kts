@@ -36,7 +36,11 @@ dependencies {
 	implementation("org.hibernate:hibernate-core:6.1.6.Final")
 	implementation("org.liquibase:liquibase-core")
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
-	implementation("com.fasterxml.uuid:java-uuid-generator:4.0.1")
+	implementation("com.fasterxml.uuid:java-uuid-generator:4.1.0")
+
+	implementation("org.eclipse:yasson:3.0.2")
+	implementation("org.glassfish:jakarta.json:2.0.1")
+	implementation("jakarta.json.bind:jakarta.json.bind-api:3.0.0")
 
 	runtimeOnly("org.springframework.boot:spring-boot-starter-tomcat")
 	runtimeOnly("org.postgresql:postgresql")

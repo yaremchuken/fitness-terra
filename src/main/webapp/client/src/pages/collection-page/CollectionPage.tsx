@@ -4,7 +4,7 @@ import { bindActionCreators, Dispatch } from 'redux'
 import { getAll } from '../../actions/exercise/ExerciseAction'
 import Exercise from '../../models/exercise/Exercise'
 import { StoreState } from '../../reducers/RootReducer'
-import ExerciseForm from './exercise-form/ExerciseForm'
+import ExerciseForm, { prefab } from './exercise-form/ExerciseForm'
 import styles from './CollectionPage.module.scss'
 import ExerciseCard from './exercise-card/ExerciseCard'
 
@@ -14,31 +14,35 @@ type CollectionPageProps = {
 }
 
 const CollectionPage = ({ exercises, getAll }: CollectionPageProps) => {
-  const [editMode, setEditMode] = useState<Exercise | undefined>()
+  const [editable, setEditable] = useState<Exercise | undefined>()
 
   useEffect(() => {
     getAll()
   }, [])
 
   const editComplete = () => {
-    setEditMode(undefined)
+    setEditable(undefined)
   }
 
   return (
     <div className={styles.page}>
-      {editMode ? (
+      {editable ? (
         <>
-          <h1 className={styles.title}>Add new Exercise</h1>
-          <ExerciseForm editComplete={editComplete} />
+          <h1 className={styles.title}>{editable.id ? 'Edit Exercise' : 'Add Exercise'}</h1>
+          <div className={styles.formContainer}>
+            <ExerciseForm editComplete={editComplete} exercise={editable} />
+          </div>
         </>
       ) : (
         <>
-          <h1 className={styles.title}>Exercises Collection</h1>
+          <h1 className={styles.title}>Exercises</h1>
           <ul className={styles.exercises}>
-            {exercises.map((e) => (
-              <ExerciseCard key={e.id} exercise={e} callback={() => setEditMode(e)} />
-            ))}
-            <ExerciseCard key={-1} callback={() => setEditMode({} as Exercise)} />
+            {exercises
+              .sort((a, b) => a.id! - b.id!)
+              .map((e) => (
+                <ExerciseCard key={e.id} exercise={e} callback={() => setEditable(e)} />
+              ))}
+            <ExerciseCard key={-1} callback={() => setEditable(prefab)} />
           </ul>
         </>
       )}

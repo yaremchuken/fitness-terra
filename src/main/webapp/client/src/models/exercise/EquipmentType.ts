@@ -1,5 +1,5 @@
 export enum EquipmentType {
-  BARBELL,
-  DUMBBELLS,
-  CARPET,
+  BARBELL = 'BARBELL',
+  DUMBBELLS = 'DUMBBELLS',
+  CARPET = 'CARPET',
 }

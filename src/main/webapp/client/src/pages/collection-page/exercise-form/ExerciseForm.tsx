@@ -1,35 +1,41 @@
 import { ChangeEvent, useState } from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
-import { create } from '../../../actions/exercise/ExerciseAction'
+import { save } from '../../../actions/exercise/ExerciseAction'
 import Button from '../../../components/form/button/Button'
 import Input from '../../../components/form/input/Input'
+import TilesSelector from '../../../components/form/tiles-selector/TilesSelector'
 import { MessageTone } from '../../../components/message-popup/MessagePopup'
 import { useDisplayMessage } from '../../../hooks/UseDisplayMessage'
 import Exercise from '../../../models/exercise/Exercise'
-import { ExerciseType } from '../../../models/exercise/ExerciseType'
+import { ActivityType } from '../../../models/exercise/ActivityType'
 import styles from './ExerciseForm.module.scss'
+import { MuscleGroup } from '../../../models/exercise/MuscleGroup'
+import { EquipmentType } from '../../../models/exercise/EquipmentType'
+import KeyAmountBlock from '../../../components/form/key-amount-block/KeyAmountBlock'
 
 const maxDuration = 3600
 
 type ExerciseFormProps = {
-  create: (exercise: Exercise) => Promise<any>
+  exercise: Exercise
+  save: (exercise: Exercise) => Promise<any>
   editComplete: () => void
 }
 
-const ExerciseForm = ({ create, editComplete }: ExerciseFormProps) => {
+export const prefab: Exercise = {
+  title: '',
+  type: ActivityType.WARMUP,
+  muscleGroups: [],
+  repeats: 0,
+  duration: 0,
+  calories: 0,
+  equipment: [{ type: EquipmentType.BARBELL, weight: 20000 }],
+}
+
+const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
   const displayMessage = useDisplayMessage()
 
-  const [exerciseData, setExerciseData] = useState<Exercise>({
-    title: '',
-    type: ExerciseType.CARDIO,
-    muscleGroups: [],
-    repeats: 0,
-    duration: 0,
-    calories: 0,
-    equipments: [],
-    weights: [],
-  })
+  const [exerciseData, setExerciseData] = useState<Exercise>(exercise)
   const [inProcess, setInProcess] = useState(false)
 
   const formatTime = (seconds: number) => {
@@ -60,9 +66,24 @@ const ExerciseForm = ({ create, editComplete }: ExerciseFormProps) => {
     setExerciseData({ ...exerciseData, [event.target.name]: value })
   }
 
+  const selectActivityHandler = (type: ActivityType) => {
+    setExerciseData({ ...exerciseData, type })
+  }
+
+  const selectMuscleGroupHandler = (group: MuscleGroup) => {
+    setExerciseData({
+      ...exerciseData,
+      muscleGroups: exerciseData.muscleGroups.includes(group)
+        ? exerciseData.muscleGroups.filter((g) => g !== group)
+        : [...exerciseData.muscleGroups, group],
+    })
+  }
+
+  const equipmentChangeHandler = (type: EquipmentType, weight: number) => {}
+
   const onSubmit = () => {
     setInProcess(true)
-    create(exerciseData)
+    save(exerciseData)
       .then(() => {
         displayMessage('Exercise successfuly saved')
         editComplete()
@@ -80,6 +101,32 @@ const ExerciseForm = ({ create, editComplete }: ExerciseFormProps) => {
         onChange={changeHandler}
         required
       />
+      <TilesSelector
+        title='Activity type'
+        values={Object.keys(ActivityType).map((type) => {
+          return {
+            type: type.toString(),
+            img: `${process.env.PUBLIC_URL}/assets/images/activity-type/${type}.jpg`,
+          }
+        })}
+        selected={[exerciseData.type]}
+        onSelect={(value: string) => {
+          selectActivityHandler(value as ActivityType)
+        }}
+      />
+      <TilesSelector
+        title='Muscle Groups'
+        values={Object.keys(MuscleGroup).map((group) => {
+          return {
+            type: group.toString(),
+            img: `${process.env.PUBLIC_URL}/assets/images/muscle-groups/${group}.jpg`,
+          }
+        })}
+        selected={exerciseData.muscleGroups}
+        onSelect={(value: string) => {
+          selectMuscleGroupHandler(value as MuscleGroup)
+        }}
+      />
       <div className={styles.twoInRow}>
         <Input
           title='Repeats'
@@ -93,13 +140,25 @@ const ExerciseForm = ({ create, editComplete }: ExerciseFormProps) => {
         <Input
           title='Duration'
           name='duration'
-          value={formatTime(exerciseData.duration)}
+          value={exerciseData.repeats > 0 ? '--:--' : formatTime(exerciseData.duration)}
           onChange={changeHandler}
           disabled={exerciseData.repeats > 0}
         />
       </div>
+      <KeyAmountBlock
+        title='Equipment'
+        onChange={(key, amount) => equipmentChangeHandler(key as EquipmentType, amount)}
+        elements={exerciseData.equipment.map((eq) => {
+          return {
+            key: eq.type,
+            amount: eq.weight * 0.001,
+            measurement: 'kg',
+            img: `${process.env.PUBLIC_URL}/assets/images/equipment/${eq.type}.jpg`,
+          }
+        })}
+      />
       <Input
-        title='Calories lost'
+        title='Calories burned'
         name='calories'
         type='number'
         value={exerciseData.calories === 0 ? '' : exerciseData.calories}
@@ -116,7 +175,7 @@ const ExerciseForm = ({ create, editComplete }: ExerciseFormProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    create: (exercise: Exercise) => create(exercise)(dispatch),
+    save: (exercise: Exercise) => save(exercise)(dispatch),
   }
 }
 

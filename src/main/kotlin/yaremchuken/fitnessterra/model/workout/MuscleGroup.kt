@@ -7,12 +7,12 @@ enum class MuscleGroup {
     NECK,
     SHOULDERS,
     CHEST,
+    BACK,
     BICEPS,
     TRICEPS,
     FOREARMS,
     ABS,
     GLUTES,
-    HAMSTRINGS,
     THIGHS,
     CALVES
 }

@@ -1,9 +1,9 @@
 package yaremchuken.fitnessterra.model.workout
 
 /**
- * Main purpose of exercises.
+ * Main activity of exercise.
  */
-enum class ExerciseType {
+enum class ActivityType {
     WARMUP,
     CARDIO,
     STRENGTH,

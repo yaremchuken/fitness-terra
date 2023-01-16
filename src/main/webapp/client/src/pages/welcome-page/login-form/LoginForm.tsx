@@ -99,7 +99,7 @@ const LoginForm = () => {
             title='Repeat password'
             name='repeat-password'
             type='password'
-            value=''
+            value={repeatedPassword}
             onChange={changeHandler}
           />
         )}

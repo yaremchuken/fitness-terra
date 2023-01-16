@@ -3,5 +3,5 @@ export enum ExerciseActionType {
 
   EXERCISES_REQUESTED = 'exercises_requested',
   EXERCISES_LOADED = 'exercises_loaded',
-  EXERCISE_CREATED = 'exercise_created',
+  EXERCISE_SAVED = 'exercise_saved',
 }

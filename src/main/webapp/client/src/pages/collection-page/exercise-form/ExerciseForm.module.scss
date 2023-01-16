@@ -1,6 +1,7 @@
 @import '../../../utils/css/index.scss';
 
 .form {
+  height: fit-content;
   min-width: 400px;
   display: flex;
   margin: 0 auto;
@@ -19,4 +20,5 @@
 .twoInRow {
   display: flex;
   gap: 20px;
+  justify-content: space-between;
 }

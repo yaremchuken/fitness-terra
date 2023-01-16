@@ -23,10 +23,14 @@ const interceptors = (
     async (error) => {
       const original = error.config
 
-      if (error.response && error.response.status === 401) {
+      if (error.response) {
         if (error.response.data === 'User does not exists') {
           logout()
-        } else if (error.response.data.startsWith('JWT expired') && !original._retry) {
+        } else if (
+          error.response.status === 401 &&
+          error.response.data.startsWith('JWT expired') &&
+          !original._retry
+        ) {
           original._retry = true
 
           const data = getStoredData()

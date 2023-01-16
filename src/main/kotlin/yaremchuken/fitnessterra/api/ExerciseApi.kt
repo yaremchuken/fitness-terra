@@ -20,9 +20,9 @@ class ExerciseApi(
 ): BaseApi(userService) {
     @PostMapping
     @ResponseBody
-    fun create(@RequestBody @NonNull body: ExerciseDto): ExerciseDto {
+    fun save(@RequestBody @NonNull body: ExerciseDto): ExerciseDto {
         val user = getUser() ?: throw UserNotExistsException()
-        val exercise = exerciseService.create(user, body)
+        val exercise = exerciseService.save(user, body)
         return exerciseService.toDto(exercise)
     }
 

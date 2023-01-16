@@ -27,10 +27,10 @@ const reducer = (state: State = initialState, action: ExerciseAction) => {
         exercises: action.payload,
       }
 
-    case ExerciseActionType.EXERCISE_CREATED:
+    case ExerciseActionType.EXERCISE_SAVED:
       return {
         ...state,
-        exercises: [...state.exercises, action.payload],
+        exercises: [...state.exercises.filter((e) => e.id !== action.payload.id), action.payload],
       }
 
     default:

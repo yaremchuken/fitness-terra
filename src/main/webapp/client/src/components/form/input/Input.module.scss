@@ -8,6 +8,10 @@
 .title {
   color: $font-color;
   padding: 0 0 5px 5px;
+
+  &Disabled {
+    opacity: 0.6;
+  }
 }
 
 .input {
