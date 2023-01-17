@@ -4,8 +4,8 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.MappedSuperclass
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.LastModifiedDate
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
 import org.springframework.data.util.ProxyUtils
 import java.io.Serializable
 import java.time.Instant
@@ -17,10 +17,10 @@ abstract class BaseEntity<T : Serializable> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: T? = null
 
-    @CreatedDate
+    @CreationTimestamp
     var createdAt: Instant? = null
 
-    @LastModifiedDate
+    @UpdateTimestamp
     var updatedAt: Instant? = null
 
     override fun equals(other: Any?): Boolean {
