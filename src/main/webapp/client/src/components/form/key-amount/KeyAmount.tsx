@@ -1,17 +1,29 @@
 import styles from './KeyAmount.module.scss'
 
 type KeyAmountProps = {
-  key: string
+  type: string
   img: string
   amount: number
-  measurement: string
-  onChange: (key: string, amount: number) => void
+  suffix: string
+  onChange: (type: string, amount: number) => void
+  onRemove: (type: string) => void
 }
 
-const KeyAmount = ({ key, amount, measurement, onChange }: KeyAmountProps) => {
+const KeyAmount = ({ type, img, amount, suffix, onChange, onRemove }: KeyAmountProps) => {
   return (
-    <li key={key} className={styles.keyAmount}>
-      {key}
+    <li className={styles.keyAmount}>
+      <p className={styles.title}>{type.length <= 6 ? type : type.substring(0, 7)}</p>
+      <div className={styles.imgContainer}>
+        <img src={img} alt={type} />
+      </div>
+      <input
+        className={styles.amount}
+        type='number'
+        value={amount}
+        onChange={(e) => onChange(type, +e.target.value)}
+      />
+      <p className={styles.suffix}>{suffix}</p>
+      <button type='button' className={styles.removeBtn} onClick={() => onRemove(type)}></button>
     </li>
   )
 }

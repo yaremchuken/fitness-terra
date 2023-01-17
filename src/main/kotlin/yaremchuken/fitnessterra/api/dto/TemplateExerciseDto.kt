@@ -4,7 +4,7 @@ import yaremchuken.fitnessterra.model.workout.ActivityType
 import yaremchuken.fitnessterra.model.workout.Equipment
 import yaremchuken.fitnessterra.model.workout.MuscleGroup
 
-data class ExerciseDto(
+data class TemplateExerciseDto(
     val id: Long?,
     val title: String,
     val type: ActivityType,
@@ -18,7 +18,7 @@ data class ExerciseDto(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as ExerciseDto
+        other as TemplateExerciseDto
 
         if (id != other.id) return false
         if (title != other.title) return false

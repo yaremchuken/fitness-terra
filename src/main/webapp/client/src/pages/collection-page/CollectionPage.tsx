@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch } from 'redux'
-import { getAll } from '../../actions/exercise/ExerciseAction'
+import { getAllTemplates } from '../../actions/exercise/ExerciseAction'
 import Exercise from '../../models/exercise/Exercise'
 import { StoreState } from '../../reducers/RootReducer'
 import ExerciseForm, { prefab } from './exercise-form/ExerciseForm'
@@ -10,14 +10,14 @@ import ExerciseCard from './exercise-card/ExerciseCard'
 
 type CollectionPageProps = {
   exercises: Exercise[]
-  getAll: () => void
+  getAllTemplates: () => void
 }
 
-const CollectionPage = ({ exercises, getAll }: CollectionPageProps) => {
+const CollectionPage = ({ exercises, getAllTemplates }: CollectionPageProps) => {
   const [editable, setEditable] = useState<Exercise | undefined>()
 
   useEffect(() => {
-    getAll()
+    getAllTemplates()
   }, [])
 
   const editComplete = () => {
@@ -57,7 +57,7 @@ const mapStateToProps = ({ exercise }: StoreState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
-      getAll,
+      getAllTemplates,
     },
     dispatch
   )

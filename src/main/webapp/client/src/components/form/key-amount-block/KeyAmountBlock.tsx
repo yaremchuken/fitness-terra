@@ -3,25 +3,27 @@ import styles from './KeyAmountBlock.module.scss'
 
 type KeyAmountBlockProps = {
   title: string
-  elements: { key: string; img: string; amount: number; measurement: string }[]
-  onChange: (key: string, amount: number) => void
+  elements: { type: string; img: string; amount: number; suffix: string }[]
+  onChange: (type: string, amount: number) => void
+  onRemove: (type: string) => void
 }
 
-const KeyAmountBlock = ({ title, elements, onChange }: KeyAmountBlockProps) => {
+const KeyAmountBlock = ({ title, elements, onChange, onRemove }: KeyAmountBlockProps) => {
   return (
-    <div className={styles.KeyAmountBlock}>
+    <div className={styles.block}>
       <p className={styles.title}>{title}</p>
       <ul className={styles.keyAmounts}>
-        {elements.map((el, idx) => (
+        {elements.map((el) => (
           <KeyAmount
-            key={el.key}
+            key={el.type}
+            type={el.type}
             img={el.img}
             amount={el.amount}
-            measurement={el.measurement}
+            suffix={el.suffix}
             onChange={onChange}
+            onRemove={onRemove}
           />
         ))}
-        <li className={styles.addBtn}>+</li>
       </ul>
     </div>
   )

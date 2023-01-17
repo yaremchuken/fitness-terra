@@ -1,13 +1,22 @@
 import styles from './TilesSelector.module.scss'
 
 type TilesSelectorProps = {
-  title: string
+  title?: string
   values: { type: string; img: string }[]
   onSelect: (value: string) => void
-  selected: string[]
+  onCancel?: () => void
+  selected?: string[]
+  padded?: boolean
 }
 
-const TilesSelector = ({ title, values, onSelect, selected = [] }: TilesSelectorProps) => {
+const TilesSelector = ({
+  title,
+  values,
+  onSelect,
+  onCancel,
+  selected = [],
+  padded = false,
+}: TilesSelectorProps) => {
   const selectionStr =
     selected.length > 0
       ? ` - ${selected.slice(0, Math.min(4, selected.length)).join(', ')}${
@@ -16,11 +25,14 @@ const TilesSelector = ({ title, values, onSelect, selected = [] }: TilesSelector
       : ''
 
   return (
-    <div className={styles.tilesSelector}>
-      <p className={styles.title}>
-        {title}
-        {selectionStr}
-      </p>
+    <div className={`${styles.tilesSelector} ${padded ? styles.padded : ''}`}>
+      {title && (
+        <p className={styles.title}>
+          {title}
+          {selectionStr}
+        </p>
+      )}
+
       <ul className={styles.tiles}>
         {values.map((value) => (
           <li
@@ -34,6 +46,11 @@ const TilesSelector = ({ title, values, onSelect, selected = [] }: TilesSelector
             </p>
           </li>
         ))}
+        {onCancel && (
+          <button className={styles.cancelBtn} type='button' onClick={onCancel}>
+            X
+          </button>
+        )}
       </ul>
     </div>
   )

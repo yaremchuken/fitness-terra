@@ -17,8 +17,8 @@ import yaremchuken.fitnessterra.model.converter.EquipmentConverter
  * Can contain amount of repetitions (like for push-back) or duration of exercise (like for jumping jack)
  */
 @Entity
-@Table(name = "exercise")
-class Exercise(
+@Table(name = "template_exercise")
+class TemplateExercise(
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     val user: User,

@@ -7,28 +7,28 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
-import yaremchuken.fitnessterra.api.dto.ExerciseDto
+import yaremchuken.fitnessterra.api.dto.TemplateExerciseDto
 import yaremchuken.fitnessterra.api.error.UserNotExistsException
-import yaremchuken.fitnessterra.service.ExerciseService
+import yaremchuken.fitnessterra.service.TemplateExerciseService
 import yaremchuken.fitnessterra.service.UserService
 
 @RestController
 @RequestMapping("api/exercise")
 class ExerciseApi(
     userService: UserService,
-    private val exerciseService: ExerciseService,
+    private val exerciseService: TemplateExerciseService,
 ): BaseApi(userService) {
-    @PostMapping
+    @PostMapping("template")
     @ResponseBody
-    fun save(@RequestBody @NonNull body: ExerciseDto): ExerciseDto {
+    fun save(@RequestBody @NonNull body: TemplateExerciseDto): TemplateExerciseDto {
         val user = getUser() ?: throw UserNotExistsException()
         val exercise = exerciseService.save(user, body)
         return exerciseService.toDto(exercise)
     }
 
-    @GetMapping
+    @GetMapping("template")
     @ResponseBody
-    fun getAll(): List<ExerciseDto> {
+    fun getAll(): List<TemplateExerciseDto> {
         val user = getUser() ?: throw UserNotExistsException()
         return exerciseService.getAll(user).map { it -> exerciseService.toDto(it) }
     }

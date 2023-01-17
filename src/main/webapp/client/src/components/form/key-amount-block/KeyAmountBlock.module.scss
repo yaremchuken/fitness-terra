@@ -1,3 +1,21 @@
-.keyAmountBlock {
+@import '../../../utils/css/index.scss';
+
+.block {
   display: flex;
+  flex-direction: column;
+}
+
+.title {
+  color: $font-color;
+  padding: 0 0 5px 5px;
+
+  &Disabled {
+    opacity: 0.6;
+  }
+}
+
+.keyAmounts {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
 }

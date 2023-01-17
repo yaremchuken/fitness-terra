@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
-import { save } from '../../../actions/exercise/ExerciseAction'
+import { saveTemplate } from '../../../actions/exercise/ExerciseAction'
 import Button from '../../../components/form/button/Button'
 import Input from '../../../components/form/input/Input'
 import TilesSelector from '../../../components/form/tiles-selector/TilesSelector'
@@ -29,7 +29,7 @@ export const prefab: Exercise = {
   repeats: 0,
   duration: 0,
   calories: 0,
-  equipment: [{ type: EquipmentType.BARBELL, weight: 20000 }],
+  equipment: [],
 }
 
 const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
@@ -37,6 +37,7 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
 
   const [exerciseData, setExerciseData] = useState<Exercise>(exercise)
   const [inProcess, setInProcess] = useState(false)
+  const [showEquipmentMenu, setShowEquipmentMenu] = useState(false)
 
   const formatTime = (seconds: number) => {
     if (seconds > maxDuration) seconds = maxDuration
@@ -46,6 +47,7 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
   }
 
   // TODO: Drop down menu for repeats and duration
+  // TODO: Possibility to remove exercise template
 
   const toSecs = (time: string, onEmpty: number = 0) => {
     if (/^\d+$/.test(time)) return +time
@@ -79,7 +81,32 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
     })
   }
 
-  const equipmentChangeHandler = (type: EquipmentType, weight: number) => {}
+  const equipmentAddHandler = (type: EquipmentType) => {
+    setExerciseData({
+      ...exerciseData,
+      equipment: [...exerciseData.equipment, { type, weight: 0 }],
+    })
+  }
+
+  const equipmentChangeHandler = (type: EquipmentType, weight: number) => {
+    let sanitized = Math.min(999.9, Math.max(0, weight))
+    sanitized = +sanitized.toFixed(1)
+
+    setExerciseData({
+      ...exerciseData,
+      equipment: [
+        ...exerciseData.equipment.filter((eq) => eq.type !== type),
+        { type, weight: sanitized * 1000 },
+      ],
+    })
+  }
+
+  const equipmentRemovedHandler = (type: EquipmentType) => {
+    setExerciseData({
+      ...exerciseData,
+      equipment: exerciseData.equipment.filter((eq) => eq.type !== type),
+    })
+  }
 
   const onSubmit = () => {
     setInProcess(true)
@@ -90,6 +117,12 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
       })
       .catch(() => displayMessage('Unable to save exercise!', MessageTone.ERROR))
       .finally(() => setInProcess(false))
+  }
+
+  const availableEquipment = () => {
+    return Object.keys(EquipmentType).filter(
+      (type) => !exerciseData.equipment.find((eq) => eq.type === type)
+    )
   }
 
   return (
@@ -105,7 +138,7 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
         title='Activity type'
         values={Object.keys(ActivityType).map((type) => {
           return {
-            type: type.toString(),
+            type,
             img: `${process.env.PUBLIC_URL}/assets/images/activity-type/${type}.jpg`,
           }
         })}
@@ -113,19 +146,21 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
         onSelect={(value: string) => {
           selectActivityHandler(value as ActivityType)
         }}
+        padded
       />
       <TilesSelector
         title='Muscle Groups'
-        values={Object.keys(MuscleGroup).map((group) => {
+        values={Object.keys(MuscleGroup).map((type) => {
           return {
-            type: group.toString(),
-            img: `${process.env.PUBLIC_URL}/assets/images/muscle-groups/${group}.jpg`,
+            type: type,
+            img: `${process.env.PUBLIC_URL}/assets/images/muscle-groups/${type}.jpg`,
           }
         })}
         selected={exerciseData.muscleGroups}
         onSelect={(value: string) => {
           selectMuscleGroupHandler(value as MuscleGroup)
         }}
+        padded
       />
       <div className={styles.twoInRow}>
         <Input
@@ -145,18 +180,44 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
           disabled={exerciseData.repeats > 0}
         />
       </div>
-      <KeyAmountBlock
-        title='Equipment'
-        onChange={(key, amount) => equipmentChangeHandler(key as EquipmentType, amount)}
-        elements={exerciseData.equipment.map((eq) => {
-          return {
-            key: eq.type,
-            amount: eq.weight * 0.001,
-            measurement: 'kg',
-            img: `${process.env.PUBLIC_URL}/assets/images/equipment/${eq.type}.jpg`,
-          }
-        })}
-      />
+      <div className={styles.equipment}>
+        <KeyAmountBlock
+          title='Equipment'
+          onChange={(type, amount) => equipmentChangeHandler(type as EquipmentType, amount)}
+          onRemove={(type) => equipmentRemovedHandler(type as EquipmentType)}
+          elements={exerciseData.equipment.map((eq) => {
+            return {
+              type: eq.type,
+              amount: eq.weight * 0.001,
+              suffix: 'KG',
+              img: `${process.env.PUBLIC_URL}/assets/images/equipment/${eq.type}.jpg`,
+            }
+          })}
+        />
+        <div className={styles.addEquipmentMenu}>
+          {showEquipmentMenu ? (
+            <TilesSelector
+              values={availableEquipment().map((type) => {
+                return {
+                  type,
+                  img: `${process.env.PUBLIC_URL}/assets/images/equipment/${type}.jpg`,
+                }
+              })}
+              onSelect={(value) => {
+                equipmentAddHandler(value as EquipmentType)
+                setShowEquipmentMenu(false)
+              }}
+              onCancel={() => setShowEquipmentMenu(false)}
+            />
+          ) : (
+            availableEquipment().length > 0 && (
+              <div className={styles.addBtn} onClick={() => setShowEquipmentMenu(true)}>
+                +
+              </div>
+            )
+          )}
+        </div>
+      </div>
       <Input
         title='Calories burned'
         name='calories'
@@ -175,7 +236,7 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    save: (exercise: Exercise) => save(exercise)(dispatch),
+    save: (exercise: Exercise) => saveTemplate(exercise)(dispatch),
   }
 }
 

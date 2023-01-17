@@ -1,3 +1,46 @@
 .keyAmount {
+  margin-bottom: 20px;
+  position: relative;
   display: flex;
+  gap: 5px;
+}
+
+.title {
+  position: absolute;
+  padding-left: 2px;
+  bottom: -12px;
+  font-size: 8px;
+  font-weight: bold;
+}
+
+.imgContainer {
+  width: 48px;
+  height: 48px;
+}
+
+.amount {
+  padding-left: 5px;
+  max-width: 80px;
+  font-size: x-large;
+}
+
+.suffix {
+  display: flex;
+  align-items: center;
+  font-size: x-large;
+}
+
+.removeBtn {
+  width: 48px;
+  height: 48px;
+  background-image: url('../../../img/icon_remove.jpg');
+  background-position: center;
+  background-size: contain;
+  outline: none;
+  border: 2px solid red;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 1px 1px 1px red;
+  }
 }
