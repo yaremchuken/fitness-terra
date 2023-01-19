@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import yaremchuken.fitnessterra.api.dto.TemplateExerciseDto
 import yaremchuken.fitnessterra.api.error.UserNotExistsException
-import yaremchuken.fitnessterra.service.TemplateExerciseService
-import yaremchuken.fitnessterra.service.UserService
+import yaremchuken.fitnessterra.service.dao.TemplateExerciseService
+import yaremchuken.fitnessterra.service.dao.UserService
 
 @RestController
 @RequestMapping("api/exercise")

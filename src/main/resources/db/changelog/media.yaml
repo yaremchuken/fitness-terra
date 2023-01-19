@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: media_0
+      author: admin
+      changes:
+        - createTable:
+            tableName: media
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: media_pkey
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: user_media_fk
+                    referencedColumnNames: id
+                    referencedTableName: user
+              - column:
+                  name: entity_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: entity_type
+                  type: character varying(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: url
+                  type: character varying(255)
+                  constraints:
+                    nullable: false

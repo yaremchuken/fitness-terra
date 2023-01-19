@@ -8,5 +8,22 @@ export const getAllTemplatesApi = async (): Promise<Exercise[]> => {
 }
 
 export const saveTemplateApi = async (exercise: Exercise): Promise<Exercise> => {
-  return api.post(`${baseUrl}/template`, exercise).then((res) => res.data)
+  return api
+    .post(`${baseUrl}/template`, exercise)
+    .then((res) => res.data)
+    .then((data) => {
+      if (exercise.media) {
+        api
+          .post(
+            `media`,
+            { id: data.id, type: 'EXERCISE_MEDIA', media: exercise.media },
+            {
+              headers: { 'Content-Type': 'multipart/form-data' },
+            }
+          )
+          .then(() => {
+            return Promise.resolve(data)
+          })
+      } else return Promise.resolve(data)
+    })
 }

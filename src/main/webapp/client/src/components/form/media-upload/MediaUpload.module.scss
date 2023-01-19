@@ -1,0 +1,42 @@
+.mediaUpload {
+  padding-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  padding-bottom: 5px;
+}
+
+.preview {
+  margin-top: 5px;
+  max-width: 300px;
+  position: relative;
+}
+
+.uploaded {
+  max-width: 300px;
+}
+
+.clearBtn {
+  width: 48px;
+  height: 48px;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-image: url(../../../img/icon_remove.jpg);
+  outline: none;
+  border: 2px solid red;
+  cursor: pointer;
+}
+
+.mediaInput {
+  padding: 10px 0 5px 0;
+}
+
+.inputLabel {
+  padding: 5px;
+  border: 1px solid black;
+  background-color: bisque;
+  cursor: pointer;
+}

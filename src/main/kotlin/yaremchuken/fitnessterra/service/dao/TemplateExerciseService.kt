@@ -1,4 +1,4 @@
-package yaremchuken.fitnessterra.service
+package yaremchuken.fitnessterra.service.dao
 
 import org.springframework.stereotype.Service
 import yaremchuken.fitnessterra.api.dto.TemplateExerciseDto
@@ -21,7 +21,8 @@ class TemplateExerciseService(private val exerciseRepository: TemplateExerciseRe
             entity.repeats,
             entity.duration,
             entity.calories,
-            entity.equipment)
+            entity.equipment,
+            null) // FIXME: DONT FORGET ABOUT MEDIA PERSISTENCE
 
     fun fromDto(user: User, dto: TemplateExerciseDto): TemplateExercise {
         val exercise = TemplateExercise(user, dto.title, dto.type, dto.muscleGroups, dto.repeats,

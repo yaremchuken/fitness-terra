@@ -18,7 +18,7 @@ class AmazonS3Service(
     private val amazonS3: AmazonS3
 ) {
     fun upload(fileName: String, bytes: ByteArray) {
-        val temp = File("${System.getProperty("java.io.tmpdir")}/${fileName}")
+        val temp = File("${System.getProperty("java.io.tmpdir")}/${fileName.replace("/", "-")}")
         temp.writeBytes(bytes)
         amazonS3.putObject(bucketName, fileName, temp)
         temp.deleteOnExit()

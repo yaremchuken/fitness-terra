@@ -2,7 +2,7 @@ package yaremchuken.fitnessterra.api
 
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import yaremchuken.fitnessterra.service.UserService
+import yaremchuken.fitnessterra.service.dao.UserService
 
 @RestController
 @RequestMapping("api/user")

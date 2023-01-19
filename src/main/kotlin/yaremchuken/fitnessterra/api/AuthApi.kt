@@ -17,9 +17,9 @@ import yaremchuken.fitnessterra.api.error.UserNotExistsException
 import yaremchuken.fitnessterra.model.RoleType
 import yaremchuken.fitnessterra.security.JwtAuthenticationException
 import yaremchuken.fitnessterra.security.JwtTokenProvider
-import yaremchuken.fitnessterra.service.RoleService
+import yaremchuken.fitnessterra.service.dao.RoleService
 import yaremchuken.fitnessterra.service.UserDetailsService
-import yaremchuken.fitnessterra.service.UserService
+import yaremchuken.fitnessterra.service.dao.UserService
 
 @RestController
 @RequestMapping("api/auth")

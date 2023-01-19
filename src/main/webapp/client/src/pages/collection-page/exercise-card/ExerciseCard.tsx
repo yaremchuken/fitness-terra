@@ -12,7 +12,7 @@ const ExerciseCard = ({ exercise, callback }: ExerciseCardProps) => {
       {exercise ? (
         <div className={styles.title}>{exercise.title}</div>
       ) : (
-        <div className={styles.add}>+</div>
+        <div className={styles.add}></div>
       )}
     </li>
   )

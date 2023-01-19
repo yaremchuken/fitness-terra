@@ -13,6 +13,7 @@ import styles from './ExerciseForm.module.scss'
 import { MuscleGroup } from '../../../models/exercise/MuscleGroup'
 import { EquipmentType } from '../../../models/exercise/EquipmentType'
 import KeyAmountBlock from '../../../components/form/key-amount-block/KeyAmountBlock'
+import MediaUpload from '../../../components/form/media-upload/MediaUpload'
 
 const maxDuration = 3600
 
@@ -125,6 +126,14 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
     )
   }
 
+  const onMediaUpload = (media: File) => {
+    setExerciseData({ ...exerciseData, media })
+  }
+
+  const clearMedia = () => {
+    setExerciseData({ ...exerciseData, media: undefined })
+  }
+
   return (
     <form className={styles.form} onSubmit={onSubmit}>
       <Input
@@ -162,6 +171,7 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
         }}
         padded
       />
+      <MediaUpload onUpload={onMediaUpload} onClear={clearMedia} />
       <div className={styles.twoInRow}>
         <Input
           title='Repeats'
@@ -211,9 +221,7 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
             />
           ) : (
             availableEquipment().length > 0 && (
-              <div className={styles.addBtn} onClick={() => setShowEquipmentMenu(true)}>
-                +
-              </div>
+              <div className={styles.addBtn} onClick={() => setShowEquipmentMenu(true)}></div>
             )
           )}
         </div>

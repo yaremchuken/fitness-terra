@@ -21,7 +21,7 @@ cloud:
   aws:
     bucket: fitness-terra
     region:
-      static: us-east-2
+      static: eu-north-1
       auto: false
     credentials:
       access-key:

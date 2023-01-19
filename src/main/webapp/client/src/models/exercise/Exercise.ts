@@ -11,6 +11,7 @@ type Exercise = {
   duration: number
   calories: number
   equipment: Equipment[]
+  media?: File
 }
 
 export default Exercise

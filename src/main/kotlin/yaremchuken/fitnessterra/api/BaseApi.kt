@@ -2,7 +2,7 @@ package yaremchuken.fitnessterra.api
 
 import org.springframework.security.core.context.SecurityContextHolder
 import yaremchuken.fitnessterra.model.User
-import yaremchuken.fitnessterra.service.UserService
+import yaremchuken.fitnessterra.service.dao.UserService
 
 abstract class BaseApi(private val userService: UserService) {
     protected fun getUser(): User? {
