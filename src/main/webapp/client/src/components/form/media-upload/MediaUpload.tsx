@@ -2,15 +2,16 @@ import { useState } from 'react'
 import styles from './MediaUpload.module.scss'
 
 type MediaUploadProps = {
+  title: string
   media?: File
   onUpload: (media: File) => void
   onClear: () => void
 }
 
-const MediaUpload = ({ media, onUpload, onClear }: MediaUploadProps) => {
+const MediaUpload = ({ title, media, onUpload, onClear }: MediaUploadProps) => {
   return (
     <div className={styles.mediaUpload}>
-      <p className={styles.title}>Exercise Preview</p>
+      <p className={styles.title}>{title}</p>
       {media ? (
         <div className={styles.preview}>
           <img className={styles.uploaded} src={URL.createObjectURL(media)}></img>

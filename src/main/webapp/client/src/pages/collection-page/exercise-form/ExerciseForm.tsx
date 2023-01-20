@@ -116,12 +116,12 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
     )
   }
 
-  const onMediaUpload = (media: File) => {
-    setTemplateData({ ...templateData, media })
+  const previewChosen = (preview?: File) => {
+    setTemplateData({ ...templateData, preview })
   }
 
-  const clearMedia = () => {
-    setTemplateData({ ...templateData, media: undefined })
+  const mediaChosen = (media?: File) => {
+    setTemplateData({ ...templateData, media })
   }
 
   return (
@@ -161,7 +161,20 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
         }}
         padded
       />
-      <MediaUpload onUpload={onMediaUpload} media={templateData.media} onClear={clearMedia} />
+      <div className={styles.twoInRow}>
+        <MediaUpload
+          title='Exercise Preview'
+          onUpload={previewChosen}
+          media={templateData.preview}
+          onClear={() => previewChosen()}
+        />
+        <MediaUpload
+          title='Exercise Visualization'
+          onUpload={mediaChosen}
+          media={templateData.media}
+          onClear={() => mediaChosen()}
+        />
+      </div>
       <div className={styles.twoInRow}>
         <Input
           title='Repeats'

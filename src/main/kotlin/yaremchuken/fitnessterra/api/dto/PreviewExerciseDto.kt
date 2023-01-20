@@ -4,15 +4,16 @@ import yaremchuken.fitnessterra.model.workout.ActivityType
 import yaremchuken.fitnessterra.model.workout.MuscleGroup
 import yaremchuken.fitnessterra.model.workout.TemplateExercise
 
-data class PreviewExerciseDto(
-    val id: Long,
+open class PreviewExerciseDto(
+    val id: Long?,
     val title: String,
     val type: ActivityType,
-    val muscleGroups: Array<MuscleGroup>
+    val muscleGroups: Array<MuscleGroup>,
+    var preview: ByteArray?
 ) {
     companion object {
         fun toDto(exercise: TemplateExercise) =
-            PreviewExerciseDto(exercise.id!!, exercise.title, exercise.type, exercise.muscleGroups)
+            PreviewExerciseDto(exercise.id!!, exercise.title, exercise.type, exercise.muscleGroups, null)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -27,6 +28,6 @@ data class PreviewExerciseDto(
     }
 
     override fun hashCode(): Int {
-        return id?.hashCode() ?: 0
+        return id.hashCode()
     }
 }

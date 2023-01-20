@@ -1,4 +1,5 @@
 import Exercise from '../models/exercise/Exercise'
+import { MediaType } from '../models/MediaType'
 import api from './Api'
 
 const baseUrl = 'exercise'
@@ -14,7 +15,12 @@ export const getTemplateApi = async (id: number): Promise<Exercise> => {
     .then((data) => {
       return {
         ...data,
-        media: data.media && new File([base64ToArrayBuffer(data.media)], `exercise_media_${id}`),
+        preview:
+          data.preview &&
+          new File([base64ToArrayBuffer(data.preview)], `${MediaType.EXERCISE_PREVIEW}_${id}`),
+        media:
+          data.media &&
+          new File([base64ToArrayBuffer(data.media)], `${MediaType.EXERCISE_MEDIA}_${id}`),
       }
     })
 }
@@ -24,10 +30,14 @@ export const saveTemplateApi = async (exercise: Exercise): Promise<Exercise> => 
     .post(
       `${baseUrl}/template`,
       {
+        exercise: new Blob(
+          [JSON.stringify({ ...exercise, preview: undefined, media: undefined })],
+          {
+            type: 'application/json',
+          }
+        ),
+        preview: exercise.preview,
         media: exercise.media,
-        exercise: new Blob([JSON.stringify({ ...exercise, media: undefined })], {
-          type: 'application/json',
-        }),
       },
       {
         headers: { 'Content-Type': 'multipart/form-data' },

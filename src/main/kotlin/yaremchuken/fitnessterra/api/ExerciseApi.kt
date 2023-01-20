@@ -34,7 +34,15 @@ class ExerciseApi(
     @ResponseBody
     fun getPreviews(): List<PreviewExerciseDto> {
         val user = getUser()
-        return exerciseService.getAll(user).map { it -> PreviewExerciseDto.toDto(it) }
+        val previews = exerciseService.getAll(user)
+        val dtos = previews.map { it -> PreviewExerciseDto.toDto(it) }
+        for (preview in previews) {
+            if (StringUtils.isNotBlank(preview.previewUrl)) {
+                dtos.find { it -> it.id == preview.id }!!.preview = amazonS3Service.download(preview.previewUrl!!)
+            }
+        }
+
+        return dtos
     }
 
     // TODO: if media was removed from template - remove it from S3
@@ -42,14 +50,22 @@ class ExerciseApi(
     @ResponseBody
     fun save(
         @RequestPart("exercise") dto: TemplateExerciseDto,
+        @RequestPart("preview") preview: MultipartFile?,
         @RequestPart("media") media: MultipartFile?
     ): PreviewExerciseDto {
         val user = getUser()
         val exercise = exerciseService.save(user, dto)
-        if (media != null && media.size > 0) {
-            val url = Utils.createS3Url(MediaEntityType.EXERCISE_MEDIA, user, exercise.id!!)
-            amazonS3Service.upload(url, media.bytes)
-            exercise.mediaUrl = url
+        if (preview != null || media != null) {
+            if (preview != null && preview.size > 0) {
+                val url = Utils.createS3Url(MediaEntityType.EXERCISE_PREVIEW, user, exercise.id!!)
+                amazonS3Service.upload(url, preview.bytes)
+                exercise.previewUrl = url
+            }
+            if (media != null && media.size > 0) {
+                val url = Utils.createS3Url(MediaEntityType.EXERCISE_MEDIA, user, exercise.id!!)
+                amazonS3Service.upload(url, media.bytes)
+                exercise.mediaUrl = url
+            }
             exerciseService.save(exercise)
         }
 
@@ -63,8 +79,11 @@ class ExerciseApi(
         val exercise = exerciseService.get(id).orElseThrow { EntityNotExistsException() }
         if (user.id != exercise.user.id) throw EntityNotExistsException()
         val dto = exerciseService.toDto(exercise)
+        if (StringUtils.isNotBlank(exercise.previewUrl)) {
+            dto.preview = amazonS3Service.download(exercise.previewUrl!!)
+        }
         if (StringUtils.isNotBlank(exercise.mediaUrl)) {
-            dto.media = amazonS3Service.download(Utils.createS3Url(MediaEntityType.EXERCISE_MEDIA, user, exercise.id!!))
+            dto.media = amazonS3Service.download(exercise.mediaUrl!!)
         }
         return dto
     }

@@ -1,0 +1,4 @@
+export enum MediaType {
+  EXERCISE_PREVIEW = 'EXERCISE_PREVIEW',
+  EXERCISE_MEDIA = 'EXERCISE_MEDIA',
+}

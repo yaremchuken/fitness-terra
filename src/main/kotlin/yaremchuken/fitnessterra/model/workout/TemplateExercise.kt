@@ -34,7 +34,12 @@ class TemplateExercise(
     val muscleGroups: Array<MuscleGroup>,
 
     /**
-     * S3 storage URL
+     * Address of S3 storage for preview picture
+     */
+    var previewUrl: String?,
+
+    /**
+     * Address of S3 storage for media file
      */
     var mediaUrl: String?,
 

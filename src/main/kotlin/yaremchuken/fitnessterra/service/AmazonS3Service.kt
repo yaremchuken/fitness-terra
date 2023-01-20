@@ -6,6 +6,9 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream
 import com.amazonaws.util.IOUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import yaremchuken.fitnessterra.model.MediaEntityType
+import yaremchuken.fitnessterra.model.User
+import yaremchuken.fitnessterra.utils.Utils
 import java.io.File
 import java.time.LocalDateTime
 import java.time.ZoneOffset
@@ -42,8 +45,9 @@ class AmazonS3Service(
             fileName,
             Date.from(LocalDateTime.now().plusDays(1).toInstant(ZoneOffset.UTC)))
 
-    fun getKeys(): List<String> =
-        amazonS3.listObjectsV2(bucketName)
+    fun getKeys(type: MediaEntityType, user: User): List<String> =
+        amazonS3
+            .listObjectsV2(bucketName, Utils.createS3Url(type, user))
             .objectSummaries
             .stream()
             .map { it.key }

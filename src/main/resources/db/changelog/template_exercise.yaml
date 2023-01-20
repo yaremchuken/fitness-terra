@@ -44,6 +44,9 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: preview_url
+                  type: character varying(255)
+              - column:
                   name: media_url
                   type: character varying(255)
               - column:

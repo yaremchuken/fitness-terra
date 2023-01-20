@@ -7,6 +7,7 @@ export type ExercisePreview = {
   title: string
   type: ActivityType
   muscleGroups: MuscleGroup[]
+  preview?: File
 }
 
 type Exercise = ExercisePreview & {
