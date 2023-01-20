@@ -2,11 +2,14 @@ import { ActivityType } from './ActivityType'
 import { Equipment } from './Equipment'
 import { MuscleGroup } from './MuscleGroup'
 
-type Exercise = {
+export type ExercisePreview = {
   id?: number
   title: string
   type: ActivityType
   muscleGroups: MuscleGroup[]
+}
+
+type Exercise = ExercisePreview & {
   repeats: number
   duration: number
   calories: number

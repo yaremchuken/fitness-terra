@@ -1,48 +1,64 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch } from 'redux'
-import { getAllTemplates } from '../../actions/exercise/ExerciseAction'
-import Exercise from '../../models/exercise/Exercise'
+import {
+  getPreviews,
+  templateClose,
+  createExerciseTemplate,
+  getTemplate,
+} from '../../actions/exercise/ExerciseAction'
+import Exercise, { ExercisePreview } from '../../models/exercise/Exercise'
 import { StoreState } from '../../reducers/RootReducer'
-import ExerciseForm, { prefab } from './exercise-form/ExerciseForm'
+import ExerciseForm from './exercise-form/ExerciseForm'
 import styles from './CollectionPage.module.scss'
-import ExerciseCard from './exercise-card/ExerciseCard'
+import ExercisePreviewCard from './exercise-preview-card/ExercisePreviewCard'
+
+// TODO: Loader while waiting exercise to download its media
 
 type CollectionPageProps = {
-  exercises: Exercise[]
-  getAllTemplates: () => void
+  previews: ExercisePreview[]
+  template?: Exercise
+  getPreviews: () => void
+  getTemplate: (id: number) => void
+  createExerciseTemplate: () => void
+  templateClose: () => void
 }
 
-const CollectionPage = ({ exercises, getAllTemplates }: CollectionPageProps) => {
-  const [editable, setEditable] = useState<Exercise | undefined>()
-
+const CollectionPage = ({
+  previews,
+  template,
+  getPreviews,
+  getTemplate,
+  createExerciseTemplate,
+  templateClose,
+}: CollectionPageProps) => {
   useEffect(() => {
-    getAllTemplates()
-  }, [])
+    getPreviews()
+  }, [getPreviews])
 
-  const editComplete = () => {
-    setEditable(undefined)
+  const fetchTemplate = (id?: number) => {
+    if (id) getTemplate(id)
   }
 
   return (
     <div className={styles.page}>
-      {editable ? (
+      {template ? (
         <>
-          <h1 className={styles.title}>{editable.id ? 'Edit Exercise' : 'Add Exercise'}</h1>
+          <h1 className={styles.title}>{template.id ? 'Edit Exercise' : 'Add Exercise'}</h1>
           <div className={styles.formContainer}>
-            <ExerciseForm editComplete={editComplete} exercise={editable} />
+            <ExerciseForm close={templateClose} template={template} />
           </div>
         </>
       ) : (
         <>
           <h1 className={styles.title}>Exercises</h1>
           <ul className={styles.exercises}>
-            {exercises
+            {previews
               .sort((a, b) => a.id! - b.id!)
               .map((e) => (
-                <ExerciseCard key={e.id} exercise={e} callback={() => setEditable(e)} />
+                <ExercisePreviewCard key={e.id} preview={e} callback={() => fetchTemplate(e.id)} />
               ))}
-            <ExerciseCard key={-1} callback={() => setEditable(prefab)} />
+            <ExercisePreviewCard key={-1} callback={createExerciseTemplate} />
           </ul>
         </>
       )}
@@ -51,13 +67,17 @@ const CollectionPage = ({ exercises, getAllTemplates }: CollectionPageProps) => 
 }
 
 const mapStateToProps = ({ exercise }: StoreState) => ({
-  exercises: exercise.exercises,
+  previews: exercise.previews,
+  template: exercise.template,
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) =>
   bindActionCreators(
     {
-      getAllTemplates,
+      getPreviews,
+      createExerciseTemplate,
+      getTemplate,
+      templateClose,
     },
     dispatch
   )

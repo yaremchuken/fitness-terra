@@ -8,9 +8,14 @@ import yaremchuken.fitnessterra.repository.TemplateExerciseRepository
 
 @Service
 class TemplateExerciseService(private val exerciseRepository: TemplateExerciseRepository) {
+
+    fun save(exercise: TemplateExercise) = exerciseRepository.save(exercise)
+
     fun save(user: User, dto: TemplateExerciseDto) = exerciseRepository.save(fromDto(user, dto))
 
     fun getAll(user: User) = exerciseRepository.findAllByUser(user)
+
+    fun get(id: Long) = exerciseRepository.findById(id)
 
     fun toDto(entity: TemplateExercise) =
         TemplateExerciseDto(
@@ -22,11 +27,20 @@ class TemplateExerciseService(private val exerciseRepository: TemplateExerciseRe
             entity.duration,
             entity.calories,
             entity.equipment,
-            null) // FIXME: DONT FORGET ABOUT MEDIA PERSISTENCE
+            null)
 
     fun fromDto(user: User, dto: TemplateExerciseDto): TemplateExercise {
-        val exercise = TemplateExercise(user, dto.title, dto.type, dto.muscleGroups, dto.repeats,
-                                dto.duration, dto.calories, dto.equipment)
+        val exercise =
+            TemplateExercise(
+                user,
+                dto.title,
+                dto.type,
+                dto.muscleGroups,
+                null,
+                dto.equipment,
+                dto.repeats,
+                dto.duration,
+                dto.calories)
         exercise.id = dto.id
         return exercise
     }

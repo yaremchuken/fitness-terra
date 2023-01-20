@@ -34,6 +34,17 @@ class TemplateExercise(
     val muscleGroups: Array<MuscleGroup>,
 
     /**
+     * S3 storage URL
+     */
+    var mediaUrl: String?,
+
+    /**
+     * Type of equipment using during the exercise.
+     */
+    @Convert(converter = EquipmentConverter::class)
+    val equipment: Array<Equipment>,
+
+    /**
      * Amount of repetitions.
      */
     val repeats: Int,
@@ -47,10 +58,4 @@ class TemplateExercise(
      * Amount of calories loss while exercising.
      */
     val calories: Int,
-
-    /**
-     * Type of equipment using during the exercise.
-     */
-    @Convert(converter = EquipmentConverter::class)
-    val equipment: Array<Equipment>,
 ): BaseEntity<Long>()

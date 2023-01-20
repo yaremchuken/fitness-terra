@@ -13,7 +13,7 @@ data class TemplateExerciseDto(
     val duration: Int,
     val calories: Int,
     val equipment: Array<Equipment>,
-    val media: ByteArray?
+    var media: ByteArray?
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -45,4 +45,3 @@ data class TemplateExerciseDto(
         return result
     }
 }
-

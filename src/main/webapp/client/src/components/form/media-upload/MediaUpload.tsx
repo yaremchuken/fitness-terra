@@ -2,23 +2,21 @@ import { useState } from 'react'
 import styles from './MediaUpload.module.scss'
 
 type MediaUploadProps = {
+  media?: File
   onUpload: (media: File) => void
   onClear: () => void
 }
 
-const MediaUpload = ({ onUpload, onClear }: MediaUploadProps) => {
-  const [preview, setPreview] = useState<string | undefined>()
-
+const MediaUpload = ({ media, onUpload, onClear }: MediaUploadProps) => {
   return (
     <div className={styles.mediaUpload}>
       <p className={styles.title}>Exercise Preview</p>
-      {preview ? (
+      {media ? (
         <div className={styles.preview}>
-          <img className={styles.uploaded} src={preview}></img>
+          <img className={styles.uploaded} src={URL.createObjectURL(media)}></img>
           <button
             className={styles.clearBtn}
             onClick={() => {
-              setPreview(undefined)
               onClear()
             }}
           ></button>
@@ -33,13 +31,8 @@ const MediaUpload = ({ onUpload, onClear }: MediaUploadProps) => {
             hidden
             onChange={(e) => {
               const img = e.target.files?.item(0)
-              if (img) {
-                onUpload(img)
-                setPreview(URL.createObjectURL(img))
-              } else {
-                setPreview(undefined)
-                onClear()
-              }
+              if (img) onUpload(img)
+              else onClear()
             }}
           />
           <label htmlFor='mediaUpload' className={styles.inputLabel}>

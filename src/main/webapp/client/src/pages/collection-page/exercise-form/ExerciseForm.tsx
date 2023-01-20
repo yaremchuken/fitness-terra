@@ -18,25 +18,15 @@ import MediaUpload from '../../../components/form/media-upload/MediaUpload'
 const maxDuration = 3600
 
 type ExerciseFormProps = {
-  exercise: Exercise
-  save: (exercise: Exercise) => Promise<any>
-  editComplete: () => void
+  template: Exercise
+  save: (template: Exercise) => Promise<any>
+  close: () => void
 }
 
-export const prefab: Exercise = {
-  title: '',
-  type: ActivityType.WARMUP,
-  muscleGroups: [],
-  repeats: 0,
-  duration: 0,
-  calories: 0,
-  equipment: [],
-}
-
-const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
+const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
   const displayMessage = useDisplayMessage()
 
-  const [exerciseData, setExerciseData] = useState<Exercise>(exercise)
+  const [templateData, setTemplateData] = useState<Exercise>(template)
   const [inProcess, setInProcess] = useState(false)
   const [showEquipmentMenu, setShowEquipmentMenu] = useState(false)
 
@@ -64,28 +54,28 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
   const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     let value: string | number = event.target.value
     if (event.target.name === 'duration') {
-      value = toSecs(value, exerciseData.duration)
+      value = toSecs(value, templateData.duration)
     }
-    setExerciseData({ ...exerciseData, [event.target.name]: value })
+    setTemplateData({ ...templateData, [event.target.name]: value })
   }
 
   const selectActivityHandler = (type: ActivityType) => {
-    setExerciseData({ ...exerciseData, type })
+    setTemplateData({ ...templateData, type })
   }
 
   const selectMuscleGroupHandler = (group: MuscleGroup) => {
-    setExerciseData({
-      ...exerciseData,
-      muscleGroups: exerciseData.muscleGroups.includes(group)
-        ? exerciseData.muscleGroups.filter((g) => g !== group)
-        : [...exerciseData.muscleGroups, group],
+    setTemplateData({
+      ...templateData,
+      muscleGroups: templateData.muscleGroups.includes(group)
+        ? templateData.muscleGroups.filter((g) => g !== group)
+        : [...templateData.muscleGroups, group],
     })
   }
 
   const equipmentAddHandler = (type: EquipmentType) => {
-    setExerciseData({
-      ...exerciseData,
-      equipment: [...exerciseData.equipment, { type, weight: 0 }],
+    setTemplateData({
+      ...templateData,
+      equipment: [...templateData.equipment, { type, weight: 0 }],
     })
   }
 
@@ -93,28 +83,28 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
     let sanitized = Math.min(999.9, Math.max(0, weight))
     sanitized = +sanitized.toFixed(1)
 
-    setExerciseData({
-      ...exerciseData,
+    setTemplateData({
+      ...templateData,
       equipment: [
-        ...exerciseData.equipment.filter((eq) => eq.type !== type),
+        ...templateData.equipment.filter((eq) => eq.type !== type),
         { type, weight: sanitized * 1000 },
       ],
     })
   }
 
   const equipmentRemovedHandler = (type: EquipmentType) => {
-    setExerciseData({
-      ...exerciseData,
-      equipment: exerciseData.equipment.filter((eq) => eq.type !== type),
+    setTemplateData({
+      ...templateData,
+      equipment: templateData.equipment.filter((eq) => eq.type !== type),
     })
   }
 
   const onSubmit = () => {
     setInProcess(true)
-    save(exerciseData)
+    save(templateData)
       .then(() => {
         displayMessage('Exercise successfuly saved')
-        editComplete()
+        close()
       })
       .catch(() => displayMessage('Unable to save exercise!', MessageTone.ERROR))
       .finally(() => setInProcess(false))
@@ -122,16 +112,16 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
 
   const availableEquipment = () => {
     return Object.keys(EquipmentType).filter(
-      (type) => !exerciseData.equipment.find((eq) => eq.type === type)
+      (type) => !templateData.equipment.find((eq) => eq.type === type)
     )
   }
 
   const onMediaUpload = (media: File) => {
-    setExerciseData({ ...exerciseData, media })
+    setTemplateData({ ...templateData, media })
   }
 
   const clearMedia = () => {
-    setExerciseData({ ...exerciseData, media: undefined })
+    setTemplateData({ ...templateData, media: undefined })
   }
 
   return (
@@ -139,7 +129,7 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
       <Input
         title='Title'
         name='title'
-        value={exerciseData.title}
+        value={templateData.title}
         onChange={changeHandler}
         required
       />
@@ -151,7 +141,7 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
             img: `${process.env.PUBLIC_URL}/assets/images/activity-type/${type}.jpg`,
           }
         })}
-        selected={[exerciseData.type]}
+        selected={[templateData.type]}
         onSelect={(value: string) => {
           selectActivityHandler(value as ActivityType)
         }}
@@ -165,29 +155,29 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
             img: `${process.env.PUBLIC_URL}/assets/images/muscle-groups/${type}.jpg`,
           }
         })}
-        selected={exerciseData.muscleGroups}
+        selected={templateData.muscleGroups}
         onSelect={(value: string) => {
           selectMuscleGroupHandler(value as MuscleGroup)
         }}
         padded
       />
-      <MediaUpload onUpload={onMediaUpload} onClear={clearMedia} />
+      <MediaUpload onUpload={onMediaUpload} media={templateData.media} onClear={clearMedia} />
       <div className={styles.twoInRow}>
         <Input
           title='Repeats'
           name='repeats'
           type='number'
-          value={exerciseData.repeats === 0 ? '' : exerciseData.repeats}
+          value={templateData.repeats === 0 ? '' : templateData.repeats}
           onChange={changeHandler}
-          disabled={exerciseData.duration > 0}
+          disabled={templateData.duration > 0}
         />
         <p>OR</p>
         <Input
           title='Duration'
           name='duration'
-          value={exerciseData.repeats > 0 ? '--:--' : formatTime(exerciseData.duration)}
+          value={templateData.repeats > 0 ? '--:--' : formatTime(templateData.duration)}
           onChange={changeHandler}
-          disabled={exerciseData.repeats > 0}
+          disabled={templateData.repeats > 0}
         />
       </div>
       <div className={styles.equipment}>
@@ -195,7 +185,7 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
           title='Equipment'
           onChange={(type, amount) => equipmentChangeHandler(type as EquipmentType, amount)}
           onRemove={(type) => equipmentRemovedHandler(type as EquipmentType)}
-          elements={exerciseData.equipment.map((eq) => {
+          elements={templateData.equipment.map((eq) => {
             return {
               type: eq.type,
               amount: eq.weight * 0.001,
@@ -230,13 +220,13 @@ const ExerciseForm = ({ exercise, save, editComplete }: ExerciseFormProps) => {
         title='Calories burned'
         name='calories'
         type='number'
-        value={exerciseData.calories === 0 ? '' : exerciseData.calories}
+        value={templateData.calories === 0 ? '' : templateData.calories}
         onChange={changeHandler}
       />
 
       <div className={styles.controls}>
         <Button text='SAVE' disabled={inProcess} callback={onSubmit} />
-        <Button text='CANCEL' disabled={inProcess} callback={editComplete} />
+        <Button text='CANCEL' disabled={inProcess} callback={close} />
       </div>
     </form>
   )
