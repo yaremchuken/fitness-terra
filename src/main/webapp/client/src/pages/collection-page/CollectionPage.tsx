@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch } from 'redux'
 import {
@@ -12,14 +12,13 @@ import { StoreState } from '../../reducers/RootReducer'
 import ExerciseForm from './exercise-form/ExerciseForm'
 import styles from './CollectionPage.module.scss'
 import ExercisePreviewCard from './exercise-preview-card/ExercisePreviewCard'
-
-// TODO: Loader while waiting exercise to download its media
+import Loader from '../../components/loader/Loader'
 
 type CollectionPageProps = {
   previews: ExercisePreview[]
   template?: Exercise
-  getPreviews: () => void
-  getTemplate: (id: number) => void
+  getPreviews: () => Promise<any>
+  getTemplate: (id: number) => Promise<any>
   createExerciseTemplate: () => void
   templateClose: () => void
 }
@@ -32,12 +31,22 @@ const CollectionPage = ({
   createExerciseTemplate,
   templateClose,
 }: CollectionPageProps) => {
+  const [loader, setLoader] = useState<string | undefined>('Preloading')
+
   useEffect(() => {
-    getPreviews()
+    setLoader('Loading Exercises')
+    getPreviews().then(() => setLoader(undefined))
   }, [getPreviews])
 
   const fetchTemplate = (id?: number) => {
-    if (id) getTemplate(id)
+    if (id) {
+      setLoader('Loading Exercise')
+      getTemplate(id).then(() => setLoader(undefined))
+    }
+  }
+
+  if (loader) {
+    return <Loader message={loader} />
   }
 
   return (
@@ -71,15 +80,18 @@ const mapStateToProps = ({ exercise }: StoreState) => ({
   template: exercise.template,
 })
 
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators(
-    {
-      getPreviews,
-      createExerciseTemplate,
-      getTemplate,
-      templateClose,
-    },
-    dispatch
-  )
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    ...bindActionCreators(
+      {
+        createExerciseTemplate,
+        templateClose,
+      },
+      dispatch
+    ),
+    getPreviews: () => getPreviews()(dispatch),
+    getTemplate: (id: number) => getTemplate(id)(dispatch),
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(CollectionPage)

@@ -5,11 +5,12 @@ type KeyAmountProps = {
   img: string
   amount: number
   suffix: string
+  disabled?: boolean
   onChange: (type: string, amount: number) => void
   onRemove: (type: string) => void
 }
 
-const KeyAmount = ({ type, img, amount, suffix, onChange, onRemove }: KeyAmountProps) => {
+const KeyAmount = ({ type, img, amount, suffix, disabled, onChange, onRemove }: KeyAmountProps) => {
   return (
     <li className={styles.keyAmount}>
       <p className={styles.title}>{type.length <= 6 ? type : type.substring(0, 7)}</p>
@@ -20,10 +21,20 @@ const KeyAmount = ({ type, img, amount, suffix, onChange, onRemove }: KeyAmountP
         className={styles.amount}
         type='number'
         value={amount}
-        onChange={(e) => onChange(type, +e.target.value)}
+        onChange={(e) => {
+          if (!disabled) onChange(type, +e.target.value)
+        }}
+        disabled={disabled}
       />
       <p className={styles.suffix}>{suffix}</p>
-      <button type='button' className={styles.removeBtn} onClick={() => onRemove(type)}></button>
+      <button
+        type='button'
+        className={styles.removeBtn}
+        onClick={() => {
+          if (!disabled) onRemove(type)
+        }}
+        disabled={disabled}
+      ></button>
     </li>
   )
 }

@@ -14,6 +14,7 @@ import { MuscleGroup } from '../../../models/exercise/MuscleGroup'
 import { EquipmentType } from '../../../models/exercise/EquipmentType'
 import KeyAmountBlock from '../../../components/form/key-amount-block/KeyAmountBlock'
 import MediaUpload from '../../../components/form/media-upload/MediaUpload'
+import Loader from '../../../components/loader/Loader'
 
 const maxDuration = 3600
 
@@ -26,6 +27,7 @@ type ExerciseFormProps = {
 const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
   const displayMessage = useDisplayMessage()
 
+  const [loader, setLoader] = useState<string | undefined>()
   const [templateData, setTemplateData] = useState<Exercise>(template)
   const [inProcess, setInProcess] = useState(false)
   const [showEquipmentMenu, setShowEquipmentMenu] = useState(false)
@@ -101,13 +103,17 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
 
   const onSubmit = () => {
     setInProcess(true)
+    setLoader('Uploading Exercise Data')
     save(templateData)
       .then(() => {
         displayMessage('Exercise successfuly saved')
         close()
       })
       .catch(() => displayMessage('Unable to save exercise!', MessageTone.ERROR))
-      .finally(() => setInProcess(false))
+      .finally(() => {
+        setInProcess(false)
+        setLoader(undefined)
+      })
   }
 
   const availableEquipment = () => {
@@ -126,12 +132,14 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
 
   return (
     <form className={styles.form} onSubmit={onSubmit}>
+      {loader && <Loader message={loader} />}
       <Input
         title='Title'
         name='title'
         value={templateData.title}
         onChange={changeHandler}
         required
+        disabled={inProcess}
       />
       <TilesSelector
         title='Activity type'
@@ -146,6 +154,7 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
           selectActivityHandler(value as ActivityType)
         }}
         padded
+        disabled={inProcess}
       />
       <TilesSelector
         title='Muscle Groups'
@@ -160,18 +169,23 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
           selectMuscleGroupHandler(value as MuscleGroup)
         }}
         padded
+        disabled={inProcess}
       />
       <div className={styles.twoInRow}>
         <MediaUpload
           title='Exercise Preview'
           onUpload={previewChosen}
+          maxSize={1024}
           media={templateData.preview}
+          disabled={inProcess}
           onClear={() => previewChosen()}
         />
         <MediaUpload
           title='Exercise Visualization'
           onUpload={mediaChosen}
+          maxSize={5120}
           media={templateData.media}
+          disabled={inProcess}
           onClear={() => mediaChosen()}
         />
       </div>
@@ -182,7 +196,7 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
           type='number'
           value={templateData.repeats === 0 ? '' : templateData.repeats}
           onChange={changeHandler}
-          disabled={templateData.duration > 0}
+          disabled={templateData.duration > 0 || inProcess}
         />
         <p>OR</p>
         <Input
@@ -190,7 +204,7 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
           name='duration'
           value={templateData.repeats > 0 ? '--:--' : formatTime(templateData.duration)}
           onChange={changeHandler}
-          disabled={templateData.repeats > 0}
+          disabled={templateData.repeats > 0 || inProcess}
         />
       </div>
       <div className={styles.equipment}>
@@ -206,6 +220,7 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
               img: `${process.env.PUBLIC_URL}/assets/images/equipment/${eq.type}.jpg`,
             }
           })}
+          disabled={inProcess}
         />
         <div className={styles.addEquipmentMenu}>
           {showEquipmentMenu ? (
@@ -221,10 +236,16 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
                 setShowEquipmentMenu(false)
               }}
               onCancel={() => setShowEquipmentMenu(false)}
+              disabled={inProcess}
             />
           ) : (
             availableEquipment().length > 0 && (
-              <div className={styles.addBtn} onClick={() => setShowEquipmentMenu(true)}></div>
+              <div
+                className={styles.addBtn}
+                onClick={() => {
+                  if (!inProcess) setShowEquipmentMenu(true)
+                }}
+              ></div>
             )
           )}
         </div>
@@ -235,6 +256,7 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
         type='number'
         value={templateData.calories === 0 ? '' : templateData.calories}
         onChange={changeHandler}
+        disabled={inProcess}
       />
 
       <div className={styles.controls}>

@@ -7,6 +7,7 @@ type TilesSelectorProps = {
   onCancel?: () => void
   selected?: string[]
   padded?: boolean
+  disabled?: boolean
 }
 
 const TilesSelector = ({
@@ -16,6 +17,7 @@ const TilesSelector = ({
   onCancel,
   selected = [],
   padded = false,
+  disabled = false,
 }: TilesSelectorProps) => {
   const selectionStr =
     selected.length > 0
@@ -38,7 +40,9 @@ const TilesSelector = ({
           <li
             key={value.type}
             className={`${styles.tile} ${selected.includes(value.type) ? styles.selected : ''}`}
-            onClick={() => onSelect(value.type)}
+            onClick={() => {
+              if (!disabled) onSelect(value.type)
+            }}
           >
             <img src={value.img} alt={value.type} />
             <p className={styles.tileName}>
@@ -47,7 +51,13 @@ const TilesSelector = ({
           </li>
         ))}
         {onCancel && (
-          <button className={styles.cancelBtn} type='button' onClick={onCancel}>
+          <button
+            className={styles.cancelBtn}
+            type='button'
+            onClick={() => {
+              if (!disabled) onCancel()
+            }}
+          >
             X
           </button>
         )}
