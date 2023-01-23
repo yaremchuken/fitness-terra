@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: template_exercise_0
+      id: exercise_template_0
       author: admin
       changes:
         - createTable:
-            tableName: template_exercise
+            tableName: exercise_template
             columns:
               - column:
                   name: id
@@ -13,7 +13,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
-                    primaryKeyName: template_exercise_pkey
+                    primaryKeyName: exercise_template_pkey
               - column:
                   name: created_at
                   type: timestamp with time zone
@@ -25,7 +25,7 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
-                    foreignKeyName: user_template_exercise_fk
+                    foreignKeyName: user_exercise_template_fk
                     referencedColumnNames: id
                     referencedTableName: user
               - column:

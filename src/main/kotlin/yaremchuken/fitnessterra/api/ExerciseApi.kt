@@ -5,20 +5,17 @@ import org.springframework.lang.NonNull
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.multipart.MultipartFile
-import yaremchuken.fitnessterra.api.dto.PreviewExerciseDto
-import yaremchuken.fitnessterra.api.dto.TemplateExerciseDto
+import yaremchuken.fitnessterra.api.dto.ExercisePreviewDto
+import yaremchuken.fitnessterra.api.dto.ExerciseDto
 import yaremchuken.fitnessterra.api.error.EntityNotExistsException
-import yaremchuken.fitnessterra.api.error.UserNotExistsException
 import yaremchuken.fitnessterra.model.MediaEntityType
 import yaremchuken.fitnessterra.service.AmazonS3Service
-import yaremchuken.fitnessterra.service.dao.TemplateExerciseService
+import yaremchuken.fitnessterra.service.dao.ExerciseTemplateService
 import yaremchuken.fitnessterra.service.dao.UserService
 import yaremchuken.fitnessterra.utils.Utils
 
@@ -26,16 +23,16 @@ import yaremchuken.fitnessterra.utils.Utils
 @RequestMapping("api/exercise")
 class ExerciseApi(
     userService: UserService,
-    private val exerciseService: TemplateExerciseService,
+    private val exerciseService: ExerciseTemplateService,
     private val amazonS3Service: AmazonS3Service
 ): BaseApi(userService) {
 
     @GetMapping("previews")
     @ResponseBody
-    fun getPreviews(): List<PreviewExerciseDto> {
+    fun getPreviews(): List<ExercisePreviewDto> {
         val user = getUser()
         val previews = exerciseService.getAll(user)
-        val dtos = previews.map { it -> PreviewExerciseDto.toDto(it, getPreview(it.previewUrl)) }
+        val dtos = previews.map { it -> ExercisePreviewDto.toDto(it, getPreview(it.previewUrl)) }
         return dtos
     }
 
@@ -45,10 +42,10 @@ class ExerciseApi(
     @PostMapping("template", headers = ["content-type=multipart/*"])
     @ResponseBody
     fun save(
-        @RequestPart("exercise") dto: TemplateExerciseDto,
+        @RequestPart("exercise") dto: ExerciseDto,
         @RequestPart("preview") preview: MultipartFile?,
         @RequestPart("media") media: MultipartFile?
-    ): PreviewExerciseDto {
+    ): ExercisePreviewDto {
         val user = getUser()
         val exercise = exerciseService.save(user, dto)
         if (preview != null || media != null) {
@@ -65,12 +62,12 @@ class ExerciseApi(
             exerciseService.save(exercise)
         }
 
-        return PreviewExerciseDto.toDto(exercise, preview?.bytes)
+        return ExercisePreviewDto.toDto(exercise, preview?.bytes)
     }
 
     @GetMapping("template/{id}")
     @ResponseBody
-    fun get(@PathVariable @NonNull id: Long): TemplateExerciseDto {
+    fun get(@PathVariable @NonNull id: Long): ExerciseDto {
         val user = getUser()
         val exercise = exerciseService.get(id).orElseThrow { EntityNotExistsException() }
         if (user.id != exercise.user.id) throw EntityNotExistsException()

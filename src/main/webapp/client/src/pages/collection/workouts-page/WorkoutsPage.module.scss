@@ -1,0 +1,36 @@
+@import '../../../utils/css/index.scss';
+
+.page {
+  margin: auto;
+  padding-top: 20px;
+
+  height: 100%;
+  width: 100%;
+  max-width: $screen-width;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-y: auto;
+}
+
+.title {
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.workouts {
+  padding: 0 20px;
+  display: flex;
+  gap: 12px;
+  list-style-type: none;
+}
+
+.formContainer {
+  margin: 0 auto;
+  margin-bottom: 30px;
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+}

@@ -1,24 +1,24 @@
 package yaremchuken.fitnessterra.service.dao
 
 import org.springframework.stereotype.Service
-import yaremchuken.fitnessterra.api.dto.TemplateExerciseDto
+import yaremchuken.fitnessterra.api.dto.ExerciseDto
 import yaremchuken.fitnessterra.model.User
-import yaremchuken.fitnessterra.model.workout.TemplateExercise
-import yaremchuken.fitnessterra.repository.TemplateExerciseRepository
+import yaremchuken.fitnessterra.model.workout.ExerciseTemplate
+import yaremchuken.fitnessterra.repository.ExerciseTemplateRepository
 
 @Service
-class TemplateExerciseService(private val exerciseRepository: TemplateExerciseRepository) {
+class ExerciseTemplateService(private val exerciseRepository: ExerciseTemplateRepository) {
 
-    fun save(exercise: TemplateExercise) = exerciseRepository.save(exercise)
+    fun save(exercise: ExerciseTemplate) = exerciseRepository.save(exercise)
 
-    fun save(user: User, dto: TemplateExerciseDto) = exerciseRepository.save(fromDto(user, dto))
+    fun save(user: User, dto: ExerciseDto) = exerciseRepository.save(fromDto(user, dto))
 
     fun getAll(user: User) = exerciseRepository.findAllByUser(user)
 
     fun get(id: Long) = exerciseRepository.findById(id)
 
-    fun toDto(entity: TemplateExercise) =
-        TemplateExerciseDto(
+    fun toDto(entity: ExerciseTemplate) =
+        ExerciseDto(
             entity.id,
             entity.title,
             entity.type,
@@ -30,9 +30,9 @@ class TemplateExerciseService(private val exerciseRepository: TemplateExerciseRe
             entity.equipment,
             null)
 
-    fun fromDto(user: User, dto: TemplateExerciseDto): TemplateExercise {
+    fun fromDto(user: User, dto: ExerciseDto): ExerciseTemplate {
         val exercise =
-            TemplateExercise(
+            ExerciseTemplate(
                 user,
                 dto.title,
                 dto.type,

@@ -6,7 +6,7 @@ databaseChangeLog:
       file: role.yaml
       relativeToChangelogFile: true
   - include:
-      file: template_exercise.yaml
+      file: exercise_template.yaml
       relativeToChangelogFile: true
   - include:
       file: exercise.yaml

@@ -4,7 +4,7 @@ import yaremchuken.fitnessterra.model.workout.ActivityType
 import yaremchuken.fitnessterra.model.workout.Equipment
 import yaremchuken.fitnessterra.model.workout.MuscleGroup
 
-class TemplateExerciseDto(
+class ExerciseDto(
     id: Long?,
     title: String,
     type: ActivityType,
@@ -15,12 +15,12 @@ class TemplateExerciseDto(
     val calories: Int,
     val equipment: Array<Equipment>,
     var media: ByteArray?
-): PreviewExerciseDto(id, title, type, muscleGroups, preview) {
+): ExercisePreviewDto(id, title, type, muscleGroups, preview) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as TemplateExerciseDto
+        other as ExerciseDto
 
         if (id != other.id) return false
         if (title != other.title) return false

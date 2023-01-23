@@ -25,9 +25,9 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
-                    foreignKeyName: template_exercise_exercise_fk
+                    foreignKeyName: exercise_template_exercise_fk
                     referencedColumnNames: id
-                    referencedTableName: template_exercise
+                    referencedTableName: exercise_template
               - column:
                   name: repeats
                   type: integer

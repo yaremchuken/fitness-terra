@@ -24,7 +24,7 @@ class Workout(
      * Exercises included in this workout.
      */
     @ManyToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
-    val exercises: MutableList<TemplateExercise> = ArrayList(),
+    val exercises: MutableList<ExerciseTemplate> = ArrayList(),
 
     /**
      * Pauses between exercises, seconds.
