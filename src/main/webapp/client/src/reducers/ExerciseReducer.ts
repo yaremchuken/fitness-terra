@@ -1,7 +1,7 @@
 import { ExerciseAction } from '../actions/exercise/ExerciseAction'
 import { ExerciseActionType } from '../actions/exercise/ExerciseActionType'
 import { ActivityType } from '../models/exercise/ActivityType'
-import Exercise from '../models/exercise/Exercise'
+import Exercise, { ExercisePreview } from '../models/exercise/Exercise'
 
 export const prefab: Exercise = {
   title: '',
@@ -14,7 +14,7 @@ export const prefab: Exercise = {
 }
 
 export type State = {
-  previews: Exercise[]
+  previews: ExercisePreview[]
   template?: Exercise
 }
 

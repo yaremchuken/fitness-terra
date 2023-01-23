@@ -35,15 +35,11 @@ class ExerciseApi(
     fun getPreviews(): List<PreviewExerciseDto> {
         val user = getUser()
         val previews = exerciseService.getAll(user)
-        val dtos = previews.map { it -> PreviewExerciseDto.toDto(it) }
-        for (preview in previews) {
-            if (StringUtils.isNotBlank(preview.previewUrl)) {
-                dtos.find { it -> it.id == preview.id }!!.preview = amazonS3Service.download(preview.previewUrl!!)
-            }
-        }
-
+        val dtos = previews.map { it -> PreviewExerciseDto.toDto(it, getPreview(it.previewUrl)) }
         return dtos
     }
+
+    private fun getPreview(url: String?) = if (StringUtils.isNotBlank(url)) amazonS3Service.download(url!!) else null
 
     // TODO: if media was removed from template - remove it from S3
     @PostMapping("template", headers = ["content-type=multipart/*"])
@@ -69,7 +65,7 @@ class ExerciseApi(
             exerciseService.save(exercise)
         }
 
-        return PreviewExerciseDto.toDto(exercise)
+        return PreviewExerciseDto.toDto(exercise, preview?.bytes)
     }
 
     @GetMapping("template/{id}")

@@ -1,11 +1,21 @@
-import Exercise from '../models/exercise/Exercise'
+import Exercise, { ExercisePreview } from '../models/exercise/Exercise'
 import { MediaType } from '../models/MediaType'
 import api from './Api'
 
 const baseUrl = 'exercise'
 
-export const getPreviewsApi = async (): Promise<Exercise[]> => {
-  return api.get(`${baseUrl}/previews`).then((res) => res.data)
+export const getPreviewsApi = async (): Promise<ExercisePreview[]> => {
+  return api
+    .get(`${baseUrl}/previews`)
+    .then((res) => res.data)
+    .then((data) => {
+      return data.map((ex: any) => {
+        return {
+          ...ex,
+          preview: ex.preview && base64toFile(ex.preview, MediaType.EXERCISE_PREVIEW, ex.id),
+        }
+      })
+    })
 }
 
 export const getTemplateApi = async (id: number): Promise<Exercise> => {
@@ -15,17 +25,13 @@ export const getTemplateApi = async (id: number): Promise<Exercise> => {
     .then((data) => {
       return {
         ...data,
-        preview:
-          data.preview &&
-          new File([base64ToArrayBuffer(data.preview)], `${MediaType.EXERCISE_PREVIEW}_${id}`),
-        media:
-          data.media &&
-          new File([base64ToArrayBuffer(data.media)], `${MediaType.EXERCISE_MEDIA}_${id}`),
+        preview: data.preview && base64toFile(data.preview, MediaType.EXERCISE_PREVIEW, id),
+        media: data.media && base64toFile(data.media, MediaType.EXERCISE_MEDIA, id),
       }
     })
 }
 
-export const saveTemplateApi = async (exercise: Exercise): Promise<Exercise> => {
+export const saveTemplateApi = async (exercise: Exercise): Promise<ExercisePreview> => {
   return api
     .post(
       `${baseUrl}/template`,
@@ -44,6 +50,16 @@ export const saveTemplateApi = async (exercise: Exercise): Promise<Exercise> => 
       }
     )
     .then((res) => res.data)
+    .then((data) => {
+      return {
+        ...data,
+        preview: data.preview && base64toFile(data.preview, MediaType.EXERCISE_PREVIEW, data.id),
+      }
+    })
+}
+
+const base64toFile = (base64: string, type: MediaType, id: number) => {
+  return new File([base64ToArrayBuffer(base64)], `${type}_${id}`)
 }
 
 const base64ToArrayBuffer = (base64: string) => {

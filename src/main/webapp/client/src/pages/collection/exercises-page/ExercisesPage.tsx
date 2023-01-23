@@ -6,15 +6,15 @@ import {
   templateClose,
   createExerciseTemplate,
   getTemplate,
-} from '../../actions/exercise/ExerciseAction'
-import Exercise, { ExercisePreview } from '../../models/exercise/Exercise'
-import { StoreState } from '../../reducers/RootReducer'
+} from '../../../actions/exercise/ExerciseAction'
+import Exercise, { ExercisePreview } from '../../../models/exercise/Exercise'
+import { StoreState } from '../../../reducers/RootReducer'
 import ExerciseForm from './exercise-form/ExerciseForm'
-import styles from './CollectionPage.module.scss'
+import styles from './ExercisesPage.module.scss'
 import ExercisePreviewCard from './exercise-preview-card/ExercisePreviewCard'
-import Loader from '../../components/loader/Loader'
+import Loader from '../../../components/loader/Loader'
 
-type CollectionPageProps = {
+type ExercisesPageProps = {
   previews: ExercisePreview[]
   template?: Exercise
   getPreviews: () => Promise<any>
@@ -23,17 +23,20 @@ type CollectionPageProps = {
   templateClose: () => void
 }
 
-const CollectionPage = ({
+const ExercisesPage = ({
   previews,
   template,
   getPreviews,
   getTemplate,
   createExerciseTemplate,
   templateClose,
-}: CollectionPageProps) => {
+}: ExercisesPageProps) => {
   const [loader, setLoader] = useState<string | undefined>('Preloading')
 
   useEffect(() => {
+    if (template) {
+      templateClose()
+    }
     setLoader('Loading Exercises')
     getPreviews().then(() => setLoader(undefined))
   }, [getPreviews])
@@ -94,4 +97,4 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CollectionPage)
+export default connect(mapStateToProps, mapDispatchToProps)(ExercisesPage)

@@ -1,5 +1,5 @@
 import { Action, Dispatch } from 'redux'
-import Exercise from '../../models/exercise/Exercise'
+import Exercise, { ExercisePreview } from '../../models/exercise/Exercise'
 import { getPreviewsApi, getTemplateApi, saveTemplateApi } from '../../services/ExerciseService'
 import { ExerciseActionType } from './ExerciseActionType'
 
@@ -7,13 +7,13 @@ export interface ExerciseAction extends Action<ExerciseActionType> {
   payload?: any
 }
 
-export const requestExercises = () => {
+export const requestPreviews = () => {
   return {
     type: ExerciseActionType.PREVIEWS_REQUESTED,
   }
 }
 
-export const exercisesLoaded = (exercises: Exercise[]) => {
+const previewsLoaded = (exercises: ExercisePreview[]) => {
   return {
     type: ExerciseActionType.PREVIEWS_LOADED,
     payload: exercises,
@@ -26,17 +26,17 @@ export const createExerciseTemplate = () => {
   }
 }
 
-export const exerciseLoaded = (exercise: Exercise) => {
+const templateLoaded = (exercise: Exercise) => {
   return {
     type: ExerciseActionType.TEMPLATE_LOADED,
     payload: exercise,
   }
 }
 
-export const exerciseCreated = (exercise: Exercise) => {
+const templateSaved = (preview: ExercisePreview) => {
   return {
     type: ExerciseActionType.TEMPLATE_SAVED,
-    payload: exercise,
+    payload: preview,
   }
 }
 
@@ -46,11 +46,13 @@ export const templateClose = () => {
   }
 }
 
-export const getPreviews = () => (dispatch: Dispatch) =>
-  getPreviewsApi().then((data) => dispatch(exercisesLoaded(data)))
+export const getPreviews = () => (dispatch: Dispatch) => {
+  dispatch(requestPreviews())
+  return getPreviewsApi().then((data) => dispatch(previewsLoaded(data)))
+}
 
 export const getTemplate = (id: number) => (dispatch: Dispatch) =>
-  getTemplateApi(id).then((data) => dispatch(exerciseLoaded(data)))
+  getTemplateApi(id).then((data) => dispatch(templateLoaded(data)))
 
 export const saveTemplate = (exercise: Exercise) => (dispatch: Dispatch) =>
-  saveTemplateApi(exercise).then((data) => dispatch(exerciseCreated(data)))
+  saveTemplateApi(exercise).then((data) => dispatch(templateSaved(data)))

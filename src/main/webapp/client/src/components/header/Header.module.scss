@@ -1,6 +1,8 @@
 @import '../../utils/css/index.scss';
 
 .header {
+  max-height: $header-height;
+  min-height: $header-height;
   font-size: 24px;
 
   background-color: lavender;
@@ -18,7 +20,6 @@
 .title {
   padding: 15px;
   align-self: center;
-  // color: lavender;
   margin-left: 20px;
   margin-right: auto;
 }
@@ -27,19 +28,33 @@
   display: flex;
 }
 
+.collectionBar {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.dropMenu {
+  position: absolute;
+  top: $header-height;
+}
+
 .btn {
   margin: 0 25px;
   font-family: inherit;
   font-size: 16px;
-  display: flex;
-  justify-content: center;
   cursor: pointer;
   border: none;
   outline: none;
-  background-color: transparent;
+  background-color: lavender;
   align-items: center;
 
   &:hover {
     color: chocolate;
   }
+}
+
+.navBtn {
+  width: 120px;
+  padding: 5px;
 }

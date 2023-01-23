@@ -12,8 +12,8 @@ open class PreviewExerciseDto(
     var preview: ByteArray?
 ) {
     companion object {
-        fun toDto(exercise: TemplateExercise) =
-            PreviewExerciseDto(exercise.id!!, exercise.title, exercise.type, exercise.muscleGroups, null)
+        fun toDto(exercise: TemplateExercise, preview: ByteArray?) =
+            PreviewExerciseDto(exercise.id!!, exercise.title, exercise.type, exercise.muscleGroups, preview)
     }
 
     override fun equals(other: Any?): Boolean {
