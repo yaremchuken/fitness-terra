@@ -1,7 +1,7 @@
 import { ExerciseAction } from '../actions/exercise/ExerciseAction'
 import { ExerciseActionType } from '../actions/exercise/ExerciseActionType'
-import { ActivityType } from '../models/exercise/ActivityType'
-import Exercise, { ExercisePreview } from '../models/exercise/Exercise'
+import { ActivityType } from '../models/workout/ActivityType'
+import Exercise, { ExercisePreview } from '../models/workout/Exercise'
 
 export const prefab: Exercise = {
   title: '',

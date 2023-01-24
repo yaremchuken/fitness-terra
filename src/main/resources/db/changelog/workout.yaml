@@ -29,6 +29,9 @@ databaseChangeLog:
                     referencedColumnNames: id
                     referencedTableName: user
               - column:
+                  name: title
+                  type: character varying(255)
+              - column:
                   name: breaks
                   type: integer[]
         - createTable:

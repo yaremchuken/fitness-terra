@@ -3,5 +3,6 @@ package yaremchuken.fitnessterra.api.dto
 class WorkoutDto(
     id: Long?,
     title: String,
-    previews: Array<ExerciseDto>
+    previews: Array<ExerciseDto>,
+    breaks: Array<Int>
 )

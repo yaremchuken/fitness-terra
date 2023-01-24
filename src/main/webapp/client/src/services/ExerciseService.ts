@@ -1,6 +1,7 @@
-import Exercise, { ExercisePreview } from '../models/exercise/Exercise'
+import Exercise, { ExercisePreview } from '../models/workout/Exercise'
 import { MediaType } from '../models/MediaType'
 import api from './Api'
+import { base64toFile } from '../utils/Utils'
 
 const baseUrl = 'exercise'
 
@@ -56,19 +57,4 @@ export const saveTemplateApi = async (exercise: Exercise): Promise<ExercisePrevi
         preview: data.preview && base64toFile(data.preview, MediaType.EXERCISE_PREVIEW, data.id),
       }
     })
-}
-
-const base64toFile = (base64: string, type: MediaType, id: number) => {
-  return new File([base64ToArrayBuffer(base64)], `${type}_${id}`)
-}
-
-const base64ToArrayBuffer = (base64: string) => {
-  var binaryString = window.atob(base64)
-  var binaryLen = binaryString.length
-  var bytes = new Uint8Array(binaryLen)
-  for (var i = 0; i < binaryLen; i++) {
-    var ascii = binaryString.charCodeAt(i)
-    bytes[i] = ascii
-  }
-  return bytes
 }

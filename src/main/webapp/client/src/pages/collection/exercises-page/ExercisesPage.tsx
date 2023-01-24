@@ -7,7 +7,7 @@ import {
   createExerciseTemplate,
   getTemplate,
 } from '../../../actions/exercise/ExerciseAction'
-import Exercise, { ExercisePreview } from '../../../models/exercise/Exercise'
+import Exercise, { ExercisePreview } from '../../../models/workout/Exercise'
 import { StoreState } from '../../../reducers/RootReducer'
 import ExerciseForm from './exercise-form/ExerciseForm'
 import styles from './ExercisesPage.module.scss'
@@ -33,13 +33,16 @@ const ExercisesPage = ({
 }: ExercisesPageProps) => {
   const [loader, setLoader] = useState<string | undefined>('Preloading')
 
+  /* eslint react-hooks/exhaustive-deps: 0 */
   useEffect(() => {
     if (template) {
       templateClose()
     }
-    setLoader('Loading Exercises')
-    getPreviews().then(() => setLoader(undefined))
-  }, [getPreviews])
+    if (previews.length === 0) {
+      setLoader('Loading Exercises')
+      getPreviews().then(() => setLoader(undefined))
+    } else setLoader(undefined)
+  }, [])
 
   const fetchTemplate = (id?: number) => {
     if (id) {

@@ -17,6 +17,8 @@ class ExerciseTemplateService(private val exerciseRepository: ExerciseTemplateRe
 
     fun get(id: Long) = exerciseRepository.findById(id)
 
+    fun get(user: User, ids: Collection<Long>) = exerciseRepository.findByUserAndIdIsIn(user, ids)
+
     fun toDto(entity: ExerciseTemplate) =
         ExerciseDto(
             entity.id,

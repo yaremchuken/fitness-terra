@@ -20,11 +20,13 @@ class Workout(
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     val user: User,
 
+    val title: String,
+
     /**
      * Exercises included in this workout.
      */
     @ManyToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
-    val exercises: MutableList<ExerciseTemplate> = ArrayList(),
+    val exercises: MutableList<Exercise> = ArrayList(),
 
     /**
      * Pauses between exercises, seconds.

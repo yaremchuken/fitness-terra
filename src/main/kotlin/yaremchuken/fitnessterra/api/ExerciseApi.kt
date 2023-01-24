@@ -1,11 +1,14 @@
 package yaremchuken.fitnessterra.api
 
+import org.apache.commons.collections4.CollectionUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.lang.NonNull
+import org.springframework.lang.Nullable
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
@@ -18,6 +21,7 @@ import yaremchuken.fitnessterra.service.AmazonS3Service
 import yaremchuken.fitnessterra.service.dao.ExerciseTemplateService
 import yaremchuken.fitnessterra.service.dao.UserService
 import yaremchuken.fitnessterra.utils.Utils
+import java.util.Collections
 
 @RestController
 @RequestMapping("api/exercise")
@@ -27,16 +31,18 @@ class ExerciseApi(
     private val amazonS3Service: AmazonS3Service
 ): BaseApi(userService) {
 
+    // TODO: Cache binary files (exercise previews, etc...) in Redis
+
     @GetMapping("previews")
     @ResponseBody
-    fun getPreviews(): List<ExercisePreviewDto> {
+    fun getPreviews(@RequestParam @Nullable id: Collection<Long>?): List<ExercisePreviewDto> {
         val user = getUser()
-        val previews = exerciseService.getAll(user)
-        val dtos = previews.map { it -> ExercisePreviewDto.toDto(it, getPreview(it.previewUrl)) }
+        val previews =
+            if (CollectionUtils.isNotEmpty(id)) exerciseService.get(user, id!!)
+            else exerciseService.getAll(user)
+        val dtos = previews.map { it -> ExercisePreviewDto.toDto(it, amazonS3Service.download(it.previewUrl)) }
         return dtos
     }
-
-    private fun getPreview(url: String?) = if (StringUtils.isNotBlank(url)) amazonS3Service.download(url!!) else null
 
     // TODO: if media was removed from template - remove it from S3
     @PostMapping("template", headers = ["content-type=multipart/*"])

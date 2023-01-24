@@ -1,4 +1,4 @@
-import { ExercisePreview } from '../../../../models/exercise/Exercise'
+import { ExercisePreview } from '../../../../models/workout/Exercise'
 import styles from './ExercisePreviewCard.module.scss'
 
 type ExercisePreviewCardProps = {

@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.S3Object
 import com.amazonaws.services.s3.model.S3ObjectInputStream
 import com.amazonaws.util.IOUtils
+import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import yaremchuken.fitnessterra.model.MediaEntityType
@@ -27,7 +28,8 @@ class AmazonS3Service(
         temp.deleteOnExit()
     }
 
-    fun download(fileName: String): ByteArray {
+    fun download(fileName: String?): ByteArray? {
+        if (StringUtils.isBlank(fileName)) return null
         val data: S3Object = amazonS3.getObject(bucketName, fileName)
         val objectContent: S3ObjectInputStream = data.objectContent
         val bytes = IOUtils.toByteArray(objectContent)
