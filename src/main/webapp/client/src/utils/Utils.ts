@@ -1,3 +1,5 @@
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { TouchBackend } from 'react-dnd-touch-backend'
 import { MediaType } from '../models/MediaType'
 
 export const base64toFile = (base64: string, type: MediaType, id: number) => {
@@ -13,4 +15,8 @@ const base64ToArrayBuffer = (base64: string) => {
     bytes[i] = ascii
   }
   return bytes
+}
+
+export const getDndBackend = () => {
+  return 'ontouchstart' in window || navigator.maxTouchPoints ? TouchBackend : HTML5Backend
 }

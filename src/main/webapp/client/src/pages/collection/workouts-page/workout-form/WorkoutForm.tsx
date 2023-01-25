@@ -1,14 +1,20 @@
 import { useState } from 'react'
+import { DndProvider } from 'react-dnd'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import { saveWorkout } from '../../../../actions/workout/WorkoutAction'
+import DragBox from '../../../../components/drag-box/DragBox'
+import DropBox from '../../../../components/drop-box/DropBox'
 import Button from '../../../../components/form/button/Button'
 import Loader from '../../../../components/loader/Loader'
 import { MessageTone } from '../../../../components/message-popup/MessagePopup'
 import { useDisplayMessage } from '../../../../hooks/UseDisplayMessage'
-import { ExercisePreview } from '../../../../models/workout/Exercise'
+import Exercise, { ExercisePreview } from '../../../../models/workout/Exercise'
 import Workout from '../../../../models/workout/Workout'
 import { StoreState } from '../../../../reducers/RootReducer'
+import { getDndBackend } from '../../../../utils/Utils'
+import ExercisePreviewCard from '../../exercises-page/exercise-preview-card/ExercisePreviewCard'
+import ExerciseBlock, { ExerciseInfo } from '../exercise-block/ExerciseBlock'
 import styles from './WorkoutForm.module.scss'
 
 const maxDuration = 3600
@@ -26,6 +32,7 @@ const WorkoutForm = ({ previews, workout, save, close }: WorkoutFormProps) => {
   const [loader, setLoader] = useState<string | undefined>()
   const [workoutData, setWorkoutData] = useState<Workout>(workout)
   const [inProcess, setInProcess] = useState(false)
+  const [exercises, setExercises] = useState<ExerciseInfo[]>([])
 
   const formatTime = (seconds: number) => {
     if (seconds > maxDuration) seconds = maxDuration
@@ -45,13 +52,10 @@ const WorkoutForm = ({ previews, workout, save, close }: WorkoutFormProps) => {
     return onEmpty
   }
 
-  //   const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-  //     let value: string | number = event.target.value
-  //     if (event.target.name === 'break') {
-  //       value = toSecs(value, workoutData.duration)
-  //     }
-  //     setWorkoutData({ ...workoutData, [event.target.name]: value })
-  //   }
+  const addExercise = (id: number) => {
+    const preview = previews.find((prv) => prv.id === id)!
+    setExercises([...exercises, { templateId: preview.id!, order: exercises.length }])
+  }
 
   const onSubmit = () => {
     setInProcess(true)
@@ -69,13 +73,33 @@ const WorkoutForm = ({ previews, workout, save, close }: WorkoutFormProps) => {
   }
 
   return (
-    <form className={styles.form} onSubmit={onSubmit}>
-      {loader && <Loader message={loader} />}
-      <div className={styles.controls}>
-        <Button text='SAVE' disabled={inProcess} callback={onSubmit} />
-        <Button text='CANCEL' disabled={inProcess} callback={close} />
+    <DndProvider backend={getDndBackend()}>
+      <div className={styles.wrapper}>
+        <form className={styles.form} onSubmit={onSubmit}>
+          {loader && <Loader message={loader} />}
+          <div className={styles.container}>
+            {exercises.map((ex) => (
+              <ExerciseBlock key={ex.order} info={ex} />
+            ))}
+            <DropBox text='drag exercise here' type='exerciseId' callback={addExercise} />
+          </div>
+          <div className={styles.controls}>
+            <Button text='SAVE' disabled={inProcess} callback={onSubmit} />
+            <Button text='CANCEL' disabled={inProcess} callback={close} />
+          </div>
+        </form>
+        <ul className={styles.exercises}>
+          {previews.map((ex) => (
+            <DragBox
+              key={ex.id}
+              item={{ id: ex.id }}
+              children={<ExercisePreviewCard preview={ex} />}
+              type='exerciseId'
+            />
+          ))}
+        </ul>
       </div>
-    </form>
+    </DndProvider>
   )
 }
 

@@ -1,17 +1,19 @@
+import { useDrag } from 'react-dnd'
 import { ExercisePreview } from '../../../../models/workout/Exercise'
 import styles from './ExercisePreviewCard.module.scss'
 
 type ExercisePreviewCardProps = {
   preview?: ExercisePreview
-  callback: (preview?: ExercisePreview) => void
+  callback?: (preview?: ExercisePreview) => void
 }
 
 const ExercisePreviewCard = ({ preview, callback }: ExercisePreviewCardProps) => {
   return (
     <li
       className={styles.card}
-      onClick={() => callback(preview)}
+      onClick={() => callback && callback(preview)}
       style={{
+        cursor: callback ? 'pointer' : 'default',
         backgroundImage: preview?.preview
           ? `url(${URL.createObjectURL(preview.preview)})`
           : undefined,
