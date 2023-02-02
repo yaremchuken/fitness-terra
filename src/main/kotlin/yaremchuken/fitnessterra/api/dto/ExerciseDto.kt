@@ -10,12 +10,12 @@ class ExerciseDto(
     type: ActivityType,
     muscleGroups: Array<MuscleGroup>,
     preview: ByteArray?,
-    val repeats: Int,
-    val duration: Int,
-    val calories: Int,
-    val equipment: Array<Equipment>,
+    repeats: Int,
+    duration: Int,
+    calories: Int,
+    equipment: Array<Equipment>,
     var media: ByteArray?
-): ExercisePreviewDto(id, title, type, muscleGroups, preview) {
+): ExercisePreviewDto(id, title, type, muscleGroups, repeats, duration, calories, equipment, preview) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

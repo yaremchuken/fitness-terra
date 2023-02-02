@@ -14,7 +14,7 @@ import Workout from '../../../../models/workout/Workout'
 import { StoreState } from '../../../../reducers/RootReducer'
 import { getDndBackend } from '../../../../utils/Utils'
 import ExercisePreviewCard from '../../exercises-page/exercise-preview-card/ExercisePreviewCard'
-import ExerciseBlock, { ExerciseInfo } from '../exercise-block/ExerciseBlock'
+import ExerciseBlock, { IndexedExercise } from '../exercise-block/ExerciseBlock'
 import styles from './WorkoutForm.module.scss'
 
 const maxDuration = 3600
@@ -32,7 +32,8 @@ const WorkoutForm = ({ previews, workout, save, close }: WorkoutFormProps) => {
   const [loader, setLoader] = useState<string | undefined>()
   const [workoutData, setWorkoutData] = useState<Workout>(workout)
   const [inProcess, setInProcess] = useState(false)
-  const [exercises, setExercises] = useState<ExerciseInfo[]>([])
+  const [exercises, setExercises] = useState<IndexedExercise[]>([])
+  const [rests, setRests] = useState<number[]>([])
 
   const formatTime = (seconds: number) => {
     if (seconds > maxDuration) seconds = maxDuration
@@ -54,7 +55,32 @@ const WorkoutForm = ({ previews, workout, save, close }: WorkoutFormProps) => {
 
   const addExercise = (id: number) => {
     const preview = previews.find((prv) => prv.id === id)!
-    setExercises([...exercises, { templateId: preview.id!, order: exercises.length }])
+    const copy = JSON.parse(JSON.stringify(preview))
+    if (exercises.length > 0) {
+      setRests([...rests, 10])
+    }
+    setExercises([...exercises, { ...copy, preview: preview.preview, index: exercises.length }])
+  }
+
+  const changeExercise = (index: number, type: string, value: number) => {
+    let changed = exercises[index]
+
+    if (type === 'equipment') {
+      changed.equipment[0].weight = value
+    } else (changed as any)[type] = value
+
+    const updated = [...exercises]
+    updated[index] = changed
+    setExercises(updated)
+  }
+
+  const removeExercise = (index: number) => {
+    if (index === rests.length) {
+      setRests([...rests.slice(0, rests.length - 2)])
+    } else {
+      setRests([...rests.slice(0, index), ...rests.slice(index, rests.length - 1)])
+    }
+    setExercises([...exercises.slice(0, index), ...exercises.slice(index, exercises.length - 1)])
   }
 
   const onSubmit = () => {
@@ -79,7 +105,18 @@ const WorkoutForm = ({ previews, workout, save, close }: WorkoutFormProps) => {
           {loader && <Loader message={loader} />}
           <div className={styles.container}>
             {exercises.map((ex) => (
-              <ExerciseBlock key={ex.order} info={ex} />
+              <div key={ex.index} className={styles.exerciseTuple}>
+                <ExerciseBlock
+                  exercise={ex}
+                  onRemove={() => removeExercise(ex.index)}
+                  onChange={(type, value) => changeExercise(ex.index, type, value)}
+                />
+                {rests[ex.index] && (
+                  <div key={ex.index + 100} className={styles.restBlock}>
+                    rest time: {rests[ex.index]} secs
+                  </div>
+                )}
+              </div>
             ))}
             <DropBox text='drag exercise here' type='exerciseId' callback={addExercise} />
           </div>

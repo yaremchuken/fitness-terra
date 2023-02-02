@@ -1,0 +1,44 @@
+.imgButton {
+  position: absolute;
+  outline: none;
+  border: 1px solid black;
+  box-shadow: 1px 1px 1px black;
+  background-position: center;
+  background-size: contain;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.sizeDefault {
+  width: 48px;
+  height: 48px;
+}
+
+.sizeSmall {
+  width: 32px;
+  height: 32px;
+}
+
+.danger {
+  border: 1px solid red;
+}
+
+.leftTop {
+  top: 5px;
+  left: 5px;
+}
+
+.rightTop {
+  top: 5px;
+  right: 5px;
+}
+
+.rightBottom {
+  bottom: 5px;
+  right: 5px;
+}
+
+.leftBottom {
+  bottom: 5px;
+  left: 5px;
+}

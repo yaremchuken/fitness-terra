@@ -31,6 +31,18 @@
   gap: 10px;
 }
 
+.exerciseTuple {
+  display: flex;
+  flex-direction: column;
+}
+
+.restBlock {
+  padding: 5px;
+  margin-top: 5px;
+  display: flex;
+  border: 1px solid black;
+}
+
 .controls {
   display: flex;
   justify-content: space-evenly;

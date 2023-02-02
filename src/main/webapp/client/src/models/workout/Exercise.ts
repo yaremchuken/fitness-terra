@@ -7,14 +7,14 @@ export type ExercisePreview = {
   title: string
   type: ActivityType
   muscleGroups: MuscleGroup[]
-  preview?: File
-}
-
-type Exercise = ExercisePreview & {
   repeats: number
   duration: number
   calories: number
   equipment: Equipment[]
+  preview?: File
+}
+
+type Exercise = ExercisePreview & {
   media?: File
 }
 
