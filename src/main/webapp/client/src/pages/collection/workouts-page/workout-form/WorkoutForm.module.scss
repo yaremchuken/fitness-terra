@@ -41,6 +41,38 @@
   margin-top: 5px;
   display: flex;
   border: 1px solid black;
+  flex-wrap: wrap;
+}
+
+.restTitle {
+  max-width: 50px;
+}
+
+.restInput {
+  margin-right: 5px;
+  display: block;
+  width: 80px;
+  font-size: $font-size * 1.4;
+  border: none;
+  border-bottom: 5px solid black;
+  background: $input-bg;
+  padding: 0 5px;
+  outline: none;
+  color: black;
+
+  &:focus {
+    border-bottom: 5px solid $form-shadow;
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus {
+    border-bottom: 5px solid $form-primary-highlight;
+    -webkit-text-fill-color: $font-color;
+    -webkit-box-shadow: 0 0 0px 1000px $input-bg inset;
+    box-shadow: 0 0 0px 1000px $input-bg inset;
+    transition: background-color 5000s ease-in-out 0s;
+  }
 }
 
 .controls {

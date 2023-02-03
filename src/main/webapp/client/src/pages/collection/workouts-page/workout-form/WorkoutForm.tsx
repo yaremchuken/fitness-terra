@@ -9,7 +9,7 @@ import Button from '../../../../components/form/button/Button'
 import Loader from '../../../../components/loader/Loader'
 import { MessageTone } from '../../../../components/message-popup/MessagePopup'
 import { useDisplayMessage } from '../../../../hooks/UseDisplayMessage'
-import Exercise, { ExercisePreview } from '../../../../models/workout/Exercise'
+import { ExercisePreview } from '../../../../models/workout/Exercise'
 import Workout from '../../../../models/workout/Workout'
 import { StoreState } from '../../../../reducers/RootReducer'
 import { getDndBackend } from '../../../../utils/Utils'
@@ -76,11 +76,15 @@ const WorkoutForm = ({ previews, workout, save, close }: WorkoutFormProps) => {
 
   const removeExercise = (index: number) => {
     if (index === rests.length) {
-      setRests([...rests.slice(0, rests.length - 2)])
-    } else {
-      setRests([...rests.slice(0, index), ...rests.slice(index, rests.length - 1)])
-    }
+      setRests(rests.slice(0, rests.length - 1))
+    } else setRests(rests.filter((_, idx) => idx !== index))
     setExercises([...exercises.slice(0, index), ...exercises.slice(index, exercises.length - 1)])
+  }
+
+  const changeRestTime = (index: number, amount: number) => {
+    const updated = [...rests]
+    updated[index] = amount
+    setRests(updated)
   }
 
   const onSubmit = () => {
@@ -113,7 +117,13 @@ const WorkoutForm = ({ previews, workout, save, close }: WorkoutFormProps) => {
                 />
                 {rests[ex.index] && (
                   <div key={ex.index + 100} className={styles.restBlock}>
-                    rest time: {rests[ex.index]} secs
+                    <p className={styles.restTitle}>rest time</p>
+                    <input
+                      className={styles.restInput}
+                      type='number'
+                      value={rests[ex.index]}
+                      onChange={(e) => changeRestTime(ex.index, +e.currentTarget.value)}
+                    />
                   </div>
                 )}
               </div>
