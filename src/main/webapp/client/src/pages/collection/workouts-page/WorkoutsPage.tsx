@@ -1,48 +1,48 @@
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch } from 'redux'
-import { StoreState } from '../../../reducers/RootReducer'
-import styles from './WorkoutsPage.module.scss'
-import Loader from '../../../components/loader/Loader'
-import Workout, { WorkoutPreview } from '../../../models/workout/Workout'
-import WorkoutPreviewCard from './workout-preview-card/WorkoutPreviewCard'
-import WorkoutForm from './workout-form/WorkoutForm'
+import { getPreviews as getExercisePreviews } from '../../../actions/exercise/ExerciseAction'
 import {
-  createWorkout,
+  closeEditor,
+  editWorkout,
   getPreviews,
   getWorkout,
-  workoutClose,
 } from '../../../actions/workout/WorkoutAction'
-import { getPreviews as getExercisePreviews } from '../../../actions/exercise/ExerciseAction'
+import Loader from '../../../components/loader/Loader'
 import { ExercisePreview } from '../../../models/workout/Exercise'
+import { WorkoutPreview } from '../../../models/workout/Workout'
+import { StoreState } from '../../../reducers/RootReducer'
+import WorkoutForm from './workout-form/WorkoutForm'
+import WorkoutPreviewCard from './workout-preview-card/WorkoutPreviewCard'
+import styles from './WorkoutsPage.module.scss'
 
 type WorkoutsPageProps = {
   exercisePreviews: ExercisePreview[]
   previews: WorkoutPreview[]
-  workout?: Workout
+  edited?: WorkoutPreview
   getPreviews: () => Promise<any>
   getExercisePreviews: () => Promise<any>
   getWorkout: (id: number) => Promise<any>
-  createWorkout: () => void
-  workoutClose: () => void
+  editWorkout: () => void
+  closeEditor: () => void
 }
 
 const WorkoutsPage = ({
   exercisePreviews,
   previews,
-  workout,
+  edited,
   getPreviews,
   getExercisePreviews,
   getWorkout,
-  createWorkout,
-  workoutClose,
+  editWorkout,
+  closeEditor,
 }: WorkoutsPageProps) => {
   const [loader, setLoader] = useState<string | undefined>('Preloading')
 
   /* eslint react-hooks/exhaustive-deps: 0 */
   useEffect(() => {
-    if (workout) {
-      workoutClose()
+    if (edited) {
+      closeEditor()
     }
     if (previews.length === 0) {
       setLoader('Loading Workouts')
@@ -66,11 +66,11 @@ const WorkoutsPage = ({
 
   return (
     <div className={styles.page}>
-      {workout ? (
+      {edited ? (
         <>
-          <h1 className={styles.title}>{workout.id ? 'Edit Workout' : 'Add Workout'}</h1>
+          <h1 className={styles.title}>{edited.id ? 'Edit Workout' : 'Add Workout'}</h1>
           <div className={styles.formContainer}>
-            <WorkoutForm close={workoutClose} workout={workout} />
+            <WorkoutForm close={closeEditor} edited={edited} />
           </div>
         </>
       ) : (
@@ -82,7 +82,7 @@ const WorkoutsPage = ({
               .map((e) => (
                 <WorkoutPreviewCard key={e.id} preview={e} callback={() => fetchWorkout(e.id)} />
               ))}
-            <WorkoutPreviewCard key={-1} callback={createWorkout} />
+            <WorkoutPreviewCard key={-1} callback={editWorkout} />
           </ul>
         </>
       )}
@@ -93,15 +93,15 @@ const WorkoutsPage = ({
 const mapStateToProps = ({ exercise, workout }: StoreState) => ({
   exercisePreviews: exercise.previews,
   previews: workout.previews,
-  workout: workout.workout,
+  edited: workout.edited,
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     ...bindActionCreators(
       {
-        createWorkout,
-        workoutClose,
+        editWorkout,
+        closeEditor,
       },
       dispatch
     ),

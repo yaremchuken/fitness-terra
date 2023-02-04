@@ -2,12 +2,17 @@ package yaremchuken.fitnessterra.service.dao
 
 import org.springframework.stereotype.Service
 import yaremchuken.fitnessterra.api.dto.ExerciseDto
+import yaremchuken.fitnessterra.api.dto.ExercisePreviewDto
 import yaremchuken.fitnessterra.model.User
 import yaremchuken.fitnessterra.model.workout.ExerciseTemplate
 import yaremchuken.fitnessterra.repository.ExerciseTemplateRepository
+import yaremchuken.fitnessterra.service.AmazonS3Service
 
 @Service
-class ExerciseTemplateService(private val exerciseRepository: ExerciseTemplateRepository) {
+class ExerciseTemplateService(
+    private val exerciseRepository: ExerciseTemplateRepository,
+    private val amazonS3Service: AmazonS3Service
+) {
 
     fun save(exercise: ExerciseTemplate) = exerciseRepository.save(exercise)
 
@@ -19,18 +24,34 @@ class ExerciseTemplateService(private val exerciseRepository: ExerciseTemplateRe
 
     fun get(user: User, ids: Collection<Long>) = exerciseRepository.findByUserAndIdIsIn(user, ids)
 
-    fun toDto(entity: ExerciseTemplate) =
+    fun toExerciseDto(template: ExerciseTemplate, attachPreview: Boolean = false, attachMedia: Boolean = false) =
         ExerciseDto(
-            entity.id,
-            entity.title,
-            entity.type,
-            entity.muscleGroups,
+            -1,
+            template.id!!,
+            template.title,
+            template.type,
+            template.muscleGroups,
+            template.repeats,
+            template.duration,
+            template.calories,
+            template.equipment,
+            if (attachPreview) amazonS3Service.download(template.previewUrl!!) else null,
+            -1,
+            if (attachMedia) amazonS3Service.download(template.mediaUrl!!) else null)
+
+    fun toPreviewDto(template: ExerciseTemplate, attachPreview: Boolean = false, preview: ByteArray? = null) =
+        ExercisePreviewDto(
             null,
-            entity.repeats,
-            entity.duration,
-            entity.calories,
-            entity.equipment,
-            null)
+            template.id!!,
+            template.title,
+            template.type,
+            template.muscleGroups,
+            template.repeats,
+            template.duration,
+            template.calories,
+            template.equipment,
+            if (attachPreview) amazonS3Service.download(template.previewUrl!!) else preview
+        )
 
     fun fromDto(user: User, dto: ExerciseDto): ExerciseTemplate {
         val exercise =

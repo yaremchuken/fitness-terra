@@ -11,6 +11,6 @@ export const getWorkoutApi = async (id: number): Promise<Workout> => {
   return api.get(`${baseUrl}/${id}`).then((res) => res.data)
 }
 
-export const saveWorkoutApi = async (workout: Workout): Promise<WorkoutPreview> => {
+export const saveWorkoutApi = async (workout: WorkoutPreview): Promise<WorkoutPreview> => {
   return api.post(`${baseUrl}`, workout).then((res) => res.data)
 }

@@ -17,6 +17,11 @@ class Exercise(
     val template: ExerciseTemplate,
 
     /**
+     * Exercise order index in workout.
+     */
+    val index: Int,
+
+    /**
      * Type of equipment using during the exercise.
      */
     @Convert(converter = EquipmentConverter::class)

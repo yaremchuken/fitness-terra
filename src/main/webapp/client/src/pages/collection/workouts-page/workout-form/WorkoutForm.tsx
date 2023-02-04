@@ -6,11 +6,12 @@ import { saveWorkout } from '../../../../actions/workout/WorkoutAction'
 import DragBox from '../../../../components/drag-box/DragBox'
 import DropBox from '../../../../components/drop-box/DropBox'
 import Button from '../../../../components/form/button/Button'
+import Input from '../../../../components/form/input/Input'
 import Loader from '../../../../components/loader/Loader'
 import { MessageTone } from '../../../../components/message-popup/MessagePopup'
 import { useDisplayMessage } from '../../../../hooks/UseDisplayMessage'
 import { ExercisePreview } from '../../../../models/workout/Exercise'
-import Workout from '../../../../models/workout/Workout'
+import Workout, { WorkoutPreview } from '../../../../models/workout/Workout'
 import { StoreState } from '../../../../reducers/RootReducer'
 import { getDndBackend } from '../../../../utils/Utils'
 import ExercisePreviewCard from '../../exercises-page/exercise-preview-card/ExercisePreviewCard'
@@ -21,36 +22,22 @@ const maxDuration = 3600
 
 type WorkoutFormProps = {
   previews: ExercisePreview[]
-  workout: Workout
-  save: (workout: Workout) => Promise<any>
+  edited: WorkoutPreview
+  save: (workout: WorkoutPreview) => Promise<any>
   close: () => void
 }
 
-const WorkoutForm = ({ previews, workout, save, close }: WorkoutFormProps) => {
+const WorkoutForm = ({ previews, edited, save, close }: WorkoutFormProps) => {
   const displayMessage = useDisplayMessage()
 
   const [loader, setLoader] = useState<string | undefined>()
-  const [workoutData, setWorkoutData] = useState<Workout>(workout)
+  const [workoutData, setWorkoutData] = useState<WorkoutPreview>(edited)
   const [inProcess, setInProcess] = useState(false)
   const [exercises, setExercises] = useState<IndexedExercise[]>([])
   const [rests, setRests] = useState<number[]>([])
 
-  const formatTime = (seconds: number) => {
-    if (seconds > maxDuration) seconds = maxDuration
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds - mins * 60
-    return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`
-  }
-
-  const toSecs = (time: string, onEmpty: number = 0) => {
-    if (/^\d+$/.test(time)) return +time
-    if (time.includes(':')) {
-      const tm = time.split(':')
-      if (Number.isNaN(+tm[0]) || Number.isNaN(+tm[1])) return onEmpty
-      return Math.min(maxDuration, +tm[1] + +tm[0] * 60)
-    }
-
-    return onEmpty
+  const changeTitle = (title: string) => {
+    setWorkoutData({ ...workoutData, title })
   }
 
   const addExercise = (id: number) => {
@@ -90,6 +77,14 @@ const WorkoutForm = ({ previews, workout, save, close }: WorkoutFormProps) => {
   const onSubmit = () => {
     setInProcess(true)
     setLoader('Uploading Workout Data')
+
+    const previews: ExercisePreview[] = []
+    exercises.forEach((ex) => {
+      previews[ex.index] = ex
+    })
+
+    setWorkoutData({ ...workoutData, rests, previews })
+
     save(workoutData)
       .then(() => {
         displayMessage('Workout successfuly saved')
@@ -107,6 +102,11 @@ const WorkoutForm = ({ previews, workout, save, close }: WorkoutFormProps) => {
       <div className={styles.wrapper}>
         <form className={styles.form} onSubmit={onSubmit}>
           {loader && <Loader message={loader} />}
+          <Input
+            title='Title'
+            value={workoutData.title}
+            onChange={(e) => changeTitle(e.currentTarget.value)}
+          />
           <div className={styles.container}>
             {exercises.map((ex) => (
               <div key={ex.index} className={styles.exerciseTuple}>
@@ -156,7 +156,7 @@ const mapStateToProps = ({ exercise }: StoreState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    save: (workout: Workout) => saveWorkout(workout)(dispatch),
+    save: (workout: WorkoutPreview) => saveWorkout(workout)(dispatch),
   }
 }
 

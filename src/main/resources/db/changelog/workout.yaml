@@ -32,7 +32,7 @@ databaseChangeLog:
                   name: title
                   type: character varying(255)
               - column:
-                  name: breaks
+                  name: rests
                   type: integer[]
         - createTable:
             tableName: workout_exercises

@@ -20,9 +20,9 @@ const previewsLoaded = (previews: WorkoutPreview[]) => {
   }
 }
 
-export const createWorkout = () => {
+export const editWorkout = () => {
   return {
-    type: WorkoutActionType.CREATE_WORKOUT,
+    type: WorkoutActionType.EDIT_WORKOUT,
   }
 }
 
@@ -40,9 +40,9 @@ const workoutSaved = (preview: WorkoutPreview) => {
   }
 }
 
-export const workoutClose = () => {
+export const closeEditor = () => {
   return {
-    type: WorkoutActionType.WORKOUT_CLOSE,
+    type: WorkoutActionType.CLOSE_EDITOR,
   }
 }
 
@@ -54,5 +54,5 @@ export const getPreviews = () => (dispatch: Dispatch) => {
 export const getWorkout = (id: number) => (dispatch: Dispatch) =>
   getWorkoutApi(id).then((data) => dispatch(workoutLoaded(data)))
 
-export const saveWorkout = (workout: Workout) => (dispatch: Dispatch) =>
+export const saveWorkout = (workout: WorkoutPreview) => (dispatch: Dispatch) =>
   saveWorkoutApi(workout).then((data) => dispatch(workoutSaved(data)))

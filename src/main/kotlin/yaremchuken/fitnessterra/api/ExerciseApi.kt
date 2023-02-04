@@ -40,8 +40,7 @@ class ExerciseApi(
         val previews =
             if (CollectionUtils.isNotEmpty(id)) exerciseService.get(user, id!!)
             else exerciseService.getAll(user)
-        val dtos = previews.map { it -> ExercisePreviewDto.toDto(it, amazonS3Service.download(it.previewUrl)) }
-        return dtos
+        return previews.map { exerciseService.toPreviewDto(it, true) }
     }
 
     // TODO: if media was removed from template - remove it from S3
@@ -68,7 +67,7 @@ class ExerciseApi(
             exerciseService.save(exercise)
         }
 
-        return ExercisePreviewDto.toDto(exercise, preview?.bytes)
+        return exerciseService.toPreviewDto(exercise, preview = preview?.bytes)
     }
 
     @GetMapping("template/{id}")
@@ -77,13 +76,7 @@ class ExerciseApi(
         val user = getUser()
         val exercise = exerciseService.get(id).orElseThrow { EntityNotExistsException() }
         if (user.id != exercise.user.id) throw EntityNotExistsException()
-        val dto = exerciseService.toDto(exercise)
-        if (StringUtils.isNotBlank(exercise.previewUrl)) {
-            dto.preview = amazonS3Service.download(exercise.previewUrl!!)
-        }
-        if (StringUtils.isNotBlank(exercise.mediaUrl)) {
-            dto.media = amazonS3Service.download(exercise.mediaUrl!!)
-        }
-        return dto
+
+        return exerciseService.toExerciseDto(exercise)
     }
 }

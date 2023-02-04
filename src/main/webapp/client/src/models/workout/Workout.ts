@@ -1,11 +1,17 @@
-export type WorkoutPreview = {
+import Exercise, { ExercisePreview } from './Exercise'
+
+export type IWorkout = {
   id?: number
   title: string
-  previews: number[]
+  rests: number[]
 }
 
-type Workout = WorkoutPreview & {
-  breaks: number[]
+export type WorkoutPreview = IWorkout & {
+  previews: ExercisePreview[]
+}
+
+type Workout = IWorkout & {
+  exercises: Exercise[]
 }
 
 export default Workout

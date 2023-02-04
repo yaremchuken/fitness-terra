@@ -31,5 +31,5 @@ class Workout(
     /**
      * Pauses between exercises, seconds.
      */
-    val breaks: Array<Int>
+    val rests: Array<Int>
 ): BaseEntity<Long>()
