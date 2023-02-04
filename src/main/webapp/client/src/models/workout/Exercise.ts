@@ -4,6 +4,7 @@ import { MuscleGroup } from './MuscleGroup'
 
 export type ExercisePreview = {
   id?: number
+  templateId?: number
   title: string
   type: ActivityType
   muscleGroups: MuscleGroup[]

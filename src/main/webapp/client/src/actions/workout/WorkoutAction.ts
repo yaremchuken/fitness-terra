@@ -20,9 +20,10 @@ const previewsLoaded = (previews: WorkoutPreview[]) => {
   }
 }
 
-export const editWorkout = () => {
+export const editWorkout = (id?: number) => {
   return {
     type: WorkoutActionType.EDIT_WORKOUT,
+    payload: id,
   }
 }
 

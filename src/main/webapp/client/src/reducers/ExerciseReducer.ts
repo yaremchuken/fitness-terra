@@ -54,7 +54,10 @@ const reducer = (state: State = initialState, action: ExerciseAction) => {
     case ExerciseActionType.TEMPLATE_SAVED:
       return {
         ...state,
-        previews: [...state.previews.filter((e) => e.id !== action.payload.id), action.payload],
+        previews: [
+          ...state.previews.filter((e) => e.templateId !== action.payload.templateId),
+          action.payload,
+        ],
         template: undefined,
       }
 

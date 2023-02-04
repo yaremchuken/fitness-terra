@@ -4,6 +4,7 @@ import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.JoinColumn
+import jakarta.persistence.JoinTable
 import jakarta.persistence.ManyToMany
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
@@ -26,6 +27,10 @@ class Workout(
      * Exercises included in this workout.
      */
     @ManyToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "workout_exercises",
+        joinColumns = [JoinColumn(name = "workout_id")],
+        inverseJoinColumns = [JoinColumn(name = "exercise_id")])
     val exercises: MutableList<Exercise> = ArrayList(),
 
     /**

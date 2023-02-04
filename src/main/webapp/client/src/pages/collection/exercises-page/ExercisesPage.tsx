@@ -68,12 +68,16 @@ const ExercisesPage = ({
         <>
           <h1 className={styles.title}>Exercises</h1>
           <ul className={styles.exercises}>
-            {previews
-              .sort((a, b) => a.id! - b.id!)
-              .map((e) => (
-                <ExercisePreviewCard key={e.id} preview={e} callback={() => fetchTemplate(e.id)} />
-              ))}
             <ExercisePreviewCard key={-1} callback={createExerciseTemplate} />
+            {previews
+              .sort((a, b) => a.templateId! - b.templateId!)
+              .map((e) => (
+                <ExercisePreviewCard
+                  key={e.templateId}
+                  preview={e}
+                  callback={() => fetchTemplate(e.templateId)}
+                />
+              ))}
           </ul>
         </>
       )}

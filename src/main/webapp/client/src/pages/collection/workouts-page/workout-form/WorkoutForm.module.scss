@@ -19,16 +19,20 @@
 }
 
 .container {
+  max-height: 30vh;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   padding-bottom: 20px;
+  overflow-y: auto;
 }
 
 .exercises {
+  max-height: 40vh;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  overflow-y: auto;
 }
 
 .exerciseTuple {

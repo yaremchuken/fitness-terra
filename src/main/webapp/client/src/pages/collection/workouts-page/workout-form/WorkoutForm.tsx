@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
@@ -36,12 +36,17 @@ const WorkoutForm = ({ previews, edited, save, close }: WorkoutFormProps) => {
   const [exercises, setExercises] = useState<IndexedExercise[]>([])
   const [rests, setRests] = useState<number[]>([])
 
+  useEffect(() => {
+    setExercises(edited.previews)
+    setRests(edited.rests)
+  }, [])
+
   const changeTitle = (title: string) => {
     setWorkoutData({ ...workoutData, title })
   }
 
-  const addExercise = (id: number) => {
-    const preview = previews.find((prv) => prv.id === id)!
+  const addExercise = (templateId: number) => {
+    const preview = previews.find((prv) => prv.templateId === templateId)!
     const copy = JSON.parse(JSON.stringify(preview))
     if (exercises.length > 0) {
       setRests([...rests, 10])
@@ -78,14 +83,15 @@ const WorkoutForm = ({ previews, edited, save, close }: WorkoutFormProps) => {
     setInProcess(true)
     setLoader('Uploading Workout Data')
 
-    const previews: ExercisePreview[] = []
+    const previews: IndexedExercise[] = []
     exercises.forEach((ex) => {
-      previews[ex.index] = ex
+      previews[ex.index] = {
+        ...ex,
+        preview: undefined,
+      }
     })
 
-    setWorkoutData({ ...workoutData, rests, previews })
-
-    save(workoutData)
+    save({ ...workoutData, rests, previews })
       .then(() => {
         displayMessage('Workout successfuly saved')
         close()
@@ -138,8 +144,8 @@ const WorkoutForm = ({ previews, edited, save, close }: WorkoutFormProps) => {
         <ul className={styles.exercises}>
           {previews.map((ex) => (
             <DragBox
-              key={ex.id}
-              item={{ id: ex.id }}
+              key={ex.templateId}
+              item={{ id: ex.templateId }}
               children={<ExercisePreviewCard preview={ex} />}
               type='exerciseId'
             />

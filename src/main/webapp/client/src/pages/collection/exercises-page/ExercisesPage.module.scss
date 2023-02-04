@@ -23,6 +23,7 @@
 .exercises {
   padding: 0 20px;
   display: flex;
+  flex-wrap: wrap;
   gap: 12px;
   list-style-type: none;
 }

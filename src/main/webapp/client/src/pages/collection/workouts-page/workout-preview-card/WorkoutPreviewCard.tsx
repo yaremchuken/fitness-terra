@@ -1,4 +1,5 @@
 import { WorkoutPreview } from '../../../../models/workout/Workout'
+import ExerciseBlock, { IndexedExercise } from '../exercise-block/ExerciseBlock'
 import styles from './WorkoutPreviewCard.module.scss'
 
 type WorkoutPreviewCardProps = {
@@ -12,6 +13,11 @@ const WorkoutPreviewCard = ({ preview, callback }: WorkoutPreviewCardProps) => {
       {preview ? (
         <div className={styles.inner}>
           <p className={styles.title}>{preview.title}</p>
+          <ul className={styles.exercises}>
+            {preview.previews.map((ex) => (
+              <ExerciseBlock key={ex.index} exercise={ex} />
+            ))}
+          </ul>
         </div>
       ) : (
         <div className={styles.add}></div>

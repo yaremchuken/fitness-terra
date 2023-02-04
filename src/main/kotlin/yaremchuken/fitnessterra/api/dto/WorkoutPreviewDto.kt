@@ -1,10 +1,8 @@
 package yaremchuken.fitnessterra.api.dto
 
-import yaremchuken.fitnessterra.model.workout.Workout
-
 class WorkoutPreviewDto(
     val id: Long?,
     val title: String,
-    val previews: Array<ExercisePreviewDto>,
+    val previews: Array<IndexedExercisePreviewDto>,
     val rests: Array<Int>
 )

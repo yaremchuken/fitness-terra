@@ -2,12 +2,7 @@ import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch } from 'redux'
 import { getPreviews as getExercisePreviews } from '../../../actions/exercise/ExerciseAction'
-import {
-  closeEditor,
-  editWorkout,
-  getPreviews,
-  getWorkout,
-} from '../../../actions/workout/WorkoutAction'
+import { closeEditor, editWorkout, getPreviews } from '../../../actions/workout/WorkoutAction'
 import Loader from '../../../components/loader/Loader'
 import { ExercisePreview } from '../../../models/workout/Exercise'
 import { WorkoutPreview } from '../../../models/workout/Workout'
@@ -22,8 +17,7 @@ type WorkoutsPageProps = {
   edited?: WorkoutPreview
   getPreviews: () => Promise<any>
   getExercisePreviews: () => Promise<any>
-  getWorkout: (id: number) => Promise<any>
-  editWorkout: () => void
+  editWorkout: (id?: number) => void
   closeEditor: () => void
 }
 
@@ -33,7 +27,6 @@ const WorkoutsPage = ({
   edited,
   getPreviews,
   getExercisePreviews,
-  getWorkout,
   editWorkout,
   closeEditor,
 }: WorkoutsPageProps) => {
@@ -53,19 +46,12 @@ const WorkoutsPage = ({
     } else setLoader(undefined)
   }, [])
 
-  const fetchWorkout = (id?: number) => {
-    if (id) {
-      setLoader('Loading Workout')
-      getWorkout(id).then(() => setLoader(undefined))
-    }
-  }
-
   if (loader) {
     return <Loader message={loader} />
   }
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} ${edited === undefined ? styles.withOverflow : ''}`}>
       {edited ? (
         <>
           <h1 className={styles.title}>{edited.id ? 'Edit Workout' : 'Add Workout'}</h1>
@@ -77,12 +63,12 @@ const WorkoutsPage = ({
         <>
           <h1 className={styles.title}>Workouts</h1>
           <ul className={styles.workouts}>
+            <WorkoutPreviewCard key={-1} callback={() => editWorkout()} />
             {previews
               .sort((a, b) => a.id! - b.id!)
-              .map((e) => (
-                <WorkoutPreviewCard key={e.id} preview={e} callback={() => fetchWorkout(e.id)} />
+              .map((w) => (
+                <WorkoutPreviewCard key={w.id} preview={w} callback={() => editWorkout(w.id)} />
               ))}
-            <WorkoutPreviewCard key={-1} callback={editWorkout} />
           </ul>
         </>
       )}
@@ -107,7 +93,6 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
     ),
     getPreviews: () => getPreviews()(dispatch),
     getExercisePreviews: () => getExercisePreviews()(dispatch),
-    getWorkout: (id: number) => getWorkout(id)(dispatch),
   }
 }
 

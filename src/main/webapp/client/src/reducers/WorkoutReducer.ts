@@ -42,9 +42,10 @@ const reducer = (state: State = initialState, action: WorkoutAction) => {
       }
 
     case WorkoutActionType.EDIT_WORKOUT:
+      const workoutId: number | undefined = action.payload
       return {
         ...state,
-        edited: { ...prefab },
+        edited: workoutId ? state.previews.find((w) => w.id === workoutId) : { ...prefab },
       }
 
     case WorkoutActionType.WORKOUT_SAVED:

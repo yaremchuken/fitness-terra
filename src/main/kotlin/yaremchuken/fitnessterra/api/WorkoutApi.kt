@@ -54,19 +54,20 @@ class WorkoutApi(
     @PostMapping
     fun save(@RequestBody @NonNull dto: WorkoutPreviewDto): WorkoutDto {
         val user = getUser()
-        val exercises: MutableList<Exercise> = ArrayList()
-        val templates = exerciseTemplateService.get(user, dto.previews.map { it -> it.templateId })
+        var exercises: MutableList<Exercise> = ArrayList()
+        val templates = exerciseTemplateService.get(user, dto.previews.map { it.templateId })
 
-        for (i in 0..dto.previews.size) {
+        for (i in 0 until dto.previews.size) {
             val preview = dto.previews[i]
             val template = templates.find { it -> it.id == preview.templateId }!!
             exercises.add(Exercise(template, i, preview.equipment, preview.repeats, preview.duration, preview.calories))
         }
 
-        val persistedExercises = exerciseService.save(exercises)
+        exercises = exerciseService.save(exercises)
+        val workout = workoutService.save(Workout(user, dto.title, exercises, dto.rests))
 
         return workoutService.toDto(
-            workoutService.save(Workout(user, dto.title, persistedExercises, dto.rests)),
-            persistedExercises.map { exerciseService.toDto(it) }.toTypedArray())
+            workout,
+            exercises.map { exerciseService.toDto(it) }.toTypedArray())
     }
 }

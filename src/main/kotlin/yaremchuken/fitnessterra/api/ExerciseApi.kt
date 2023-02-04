@@ -27,7 +27,7 @@ import java.util.Collections
 @RequestMapping("api/exercise")
 class ExerciseApi(
     userService: UserService,
-    private val exerciseService: ExerciseTemplateService,
+    private val exerciseTemplateService: ExerciseTemplateService,
     private val amazonS3Service: AmazonS3Service
 ): BaseApi(userService) {
 
@@ -38,9 +38,9 @@ class ExerciseApi(
     fun getPreviews(@RequestParam @Nullable id: Collection<Long>?): List<ExercisePreviewDto> {
         val user = getUser()
         val previews =
-            if (CollectionUtils.isNotEmpty(id)) exerciseService.get(user, id!!)
-            else exerciseService.getAll(user)
-        return previews.map { exerciseService.toPreviewDto(it, true) }
+            if (CollectionUtils.isNotEmpty(id)) exerciseTemplateService.get(user, id!!)
+            else exerciseTemplateService.getAll(user)
+        return previews.map { exerciseTemplateService.toPreviewDto(it, true) }
     }
 
     // TODO: if media was removed from template - remove it from S3
@@ -52,7 +52,7 @@ class ExerciseApi(
         @RequestPart("media") media: MultipartFile?
     ): ExercisePreviewDto {
         val user = getUser()
-        val exercise = exerciseService.save(user, dto)
+        val exercise = exerciseTemplateService.save(user, dto)
         if (preview != null || media != null) {
             if (preview != null && preview.size > 0) {
                 val url = Utils.createS3Url(MediaEntityType.EXERCISE_PREVIEW, user, exercise.id!!)
@@ -64,19 +64,19 @@ class ExerciseApi(
                 amazonS3Service.upload(url, media.bytes)
                 exercise.mediaUrl = url
             }
-            exerciseService.save(exercise)
+            exerciseTemplateService.save(exercise)
         }
 
-        return exerciseService.toPreviewDto(exercise, preview = preview?.bytes)
+        return exerciseTemplateService.toPreviewDto(exercise, preview = preview?.bytes)
     }
 
     @GetMapping("template/{id}")
     @ResponseBody
     fun get(@PathVariable @NonNull id: Long): ExerciseDto {
         val user = getUser()
-        val exercise = exerciseService.get(id).orElseThrow { EntityNotExistsException() }
+        val exercise = exerciseTemplateService.get(id).orElseThrow { EntityNotExistsException() }
         if (user.id != exercise.user.id) throw EntityNotExistsException()
 
-        return exerciseService.toExerciseDto(exercise)
+        return exerciseTemplateService.toExerciseDto(exercise)
     }
 }
