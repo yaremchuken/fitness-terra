@@ -57,7 +57,7 @@ class ExerciseTemplateService(
         )
 
     fun fromDto(user: User, dto: ExerciseDto): ExerciseTemplate {
-        val exercise =
+        val template =
             ExerciseTemplate(
                 user,
                 dto.title,
@@ -69,7 +69,7 @@ class ExerciseTemplateService(
                 dto.repeats,
                 dto.duration,
                 dto.calories)
-        exercise.id = dto.id
-        return exercise
+        template.id = dto.templateId
+        return template
     }
 }

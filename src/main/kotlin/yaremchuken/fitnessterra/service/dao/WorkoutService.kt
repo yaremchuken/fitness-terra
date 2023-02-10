@@ -30,6 +30,6 @@ class WorkoutService(
         WorkoutPreviewDto(
             workout.id!!,
             workout.title,
-            workout.exercises.map { exerciseService.toIndexedPreviewDto(it, false) }.toTypedArray(),
+            workout.exercises.map { exerciseService.toIndexedPreviewDto(it, true) }.toTypedArray(),
             workout.rests)
 }

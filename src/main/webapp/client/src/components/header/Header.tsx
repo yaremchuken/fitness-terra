@@ -33,6 +33,10 @@ const Header = ({ isAuthenticated, logout }: HeaderProps) => {
     navigate('/workouts')
   }
 
+  const gotoSchedule = () => {
+    navigate('/schedule')
+  }
+
   const onLogout = () => {
     displayMessage(`See you later!`)
     logout(store)
@@ -47,6 +51,9 @@ const Header = ({ isAuthenticated, logout }: HeaderProps) => {
         </div>
         {isAuthenticated && (
           <nav className={styles.navbar}>
+            <button className={`${styles.btn} ${styles.btnLogout}`} onClick={gotoSchedule}>
+              schedule
+            </button>
             <div className={styles.collectionBar}>
               <button
                 className={`${styles.btn} ${styles.btnLogout}`}

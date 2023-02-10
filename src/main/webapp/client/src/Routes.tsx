@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom'
 import ExercisesPage from './pages/collection/exercises-page/ExercisesPage'
 import WorkoutsPage from './pages/collection/workouts-page/WorkoutsPage'
+import SchedulePage from './pages/schedule-page/SchedulePage'
 import WelcomePage from './pages/welcome-page/WelcomePage'
 
 export const getRoutes = (isAuthenticated: boolean) => {
@@ -17,6 +18,7 @@ export const getRoutes = (isAuthenticated: boolean) => {
       <Route path='/welcome' element={<WelcomePage />} />
       <Route path='/exercises' element={<ExercisesPage />} />
       <Route path='/workouts' element={<WorkoutsPage />} />
+      <Route path='/schedule' element={<SchedulePage />} />
       <Route path='*' element={<WelcomePage />} />
     </Routes>
   )

@@ -1,0 +1,20 @@
+.block {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.date {
+  padding-top: 10px;
+}
+
+.today {
+  border: 1px solid blue;
+}
+
+.before {
+  opacity: 0.4;
+}

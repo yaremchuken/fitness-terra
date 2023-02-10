@@ -77,6 +77,6 @@ class ExerciseApi(
         val exercise = exerciseTemplateService.get(id).orElseThrow { EntityNotExistsException() }
         if (user.id != exercise.user.id) throw EntityNotExistsException()
 
-        return exerciseTemplateService.toExerciseDto(exercise)
+        return exerciseTemplateService.toExerciseDto(exercise, true, true)
     }
 }
