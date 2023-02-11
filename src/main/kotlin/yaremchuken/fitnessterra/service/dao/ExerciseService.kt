@@ -16,6 +16,11 @@ class ExerciseService(
 ) {
     fun save(exercises:  List<Exercise>) = exerciseRepository.saveAll(exercises)
 
+    fun delete(exercises: List<Exercise>) {
+        // exerciseRepository.deleteLinks(workoutId)
+        exerciseRepository.deleteAll(exercises)
+    }
+
     fun toDto(exercise: Exercise, attachPreview: Boolean = false, attachMedia: Boolean = false) =
         ExerciseDto(
             exercise.id!!,
@@ -61,4 +66,10 @@ class ExerciseService(
             exercise.equipment,
             if (attachPreview && exercise.template.previewUrl != null)
                 amazonS3Service.download(exercise.template.previewUrl) else null)
+
+    fun fromIndexedPreviewDto(dto: IndexedExercisePreviewDto, template: ExerciseTemplate): Exercise {
+        val exercise = Exercise(template, dto.index, dto.equipment, dto.repeats, dto.duration, dto.calories)
+        exercise.id = dto.id
+        return exercise
+    }
 }

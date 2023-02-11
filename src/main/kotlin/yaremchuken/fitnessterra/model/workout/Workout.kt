@@ -37,4 +37,8 @@ class Workout(
      * Pauses between exercises, seconds.
      */
     val rests: Array<Int>
-): BaseEntity<Long>()
+): BaseEntity<Long>() {
+    fun delete(toDrop: List<Exercise>) {
+        exercises.removeAll(toDrop)
+    }
+}

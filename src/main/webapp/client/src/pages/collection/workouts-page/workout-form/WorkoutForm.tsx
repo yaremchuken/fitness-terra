@@ -96,7 +96,7 @@ const WorkoutForm = ({ previews, edited, save, close }: WorkoutFormProps) => {
         displayMessage('Workout successfuly saved')
         close()
       })
-      .catch(() => displayMessage('Unable to save workout!', MessageTone.ERROR))
+      .catch((err) => displayMessage('Unable to save workout!', MessageTone.ERROR))
       .finally(() => {
         setInProcess(false)
         setLoader(undefined)
