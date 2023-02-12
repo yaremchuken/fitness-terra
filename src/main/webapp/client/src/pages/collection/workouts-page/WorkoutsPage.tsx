@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch } from 'redux'
 import { getPreviews as getExercisePreviews } from '../../../actions/exercise/ExerciseAction'
-import { closeEditor, editWorkout, getPreviews } from '../../../actions/workout/WorkoutAction'
+import { closeEditor, editTemplate, getPreviews } from '../../../actions/workout/WorkoutAction'
 import Loader from '../../../components/loader/Loader'
 import { ExercisePreview } from '../../../models/workout/Exercise'
 import { WorkoutPreview } from '../../../models/workout/Workout'
@@ -17,7 +17,7 @@ type WorkoutsPageProps = {
   edited?: WorkoutPreview
   getPreviews: () => Promise<any>
   getExercisePreviews: () => Promise<any>
-  editWorkout: (id?: number) => void
+  editTemplate: (id?: number) => void
   closeEditor: () => void
 }
 
@@ -27,7 +27,7 @@ const WorkoutsPage = ({
   edited,
   getPreviews,
   getExercisePreviews,
-  editWorkout,
+  editTemplate,
   closeEditor,
 }: WorkoutsPageProps) => {
   const [loader, setLoader] = useState<string | undefined>('Preloading')
@@ -63,11 +63,11 @@ const WorkoutsPage = ({
         <>
           <h1 className={styles.title}>Workouts</h1>
           <ul className={styles.workouts}>
-            <WorkoutPreviewCard key={-1} callback={() => editWorkout()} />
+            <WorkoutPreviewCard key={-1} callback={() => editTemplate()} />
             {previews
               .sort((a, b) => a.id! - b.id!)
               .map((w) => (
-                <WorkoutPreviewCard key={w.id} preview={w} callback={() => editWorkout(w.id)} />
+                <WorkoutPreviewCard key={w.id} preview={w} callback={() => editTemplate(w.id)} />
               ))}
           </ul>
         </>
@@ -79,14 +79,14 @@ const WorkoutsPage = ({
 const mapStateToProps = ({ exercise, workout }: StoreState) => ({
   exercisePreviews: exercise.previews,
   previews: workout.previews,
-  edited: workout.edited,
+  edited: workout.editedTemplate,
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     ...bindActionCreators(
       {
-        editWorkout,
+        editTemplate,
         closeEditor,
       },
       dispatch

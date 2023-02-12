@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
-import { saveWorkout } from '../../../../actions/workout/WorkoutAction'
+import { saveTemplate } from '../../../../actions/workout/WorkoutAction'
 import DragBox from '../../../../components/drag-box/DragBox'
 import DropBox from '../../../../components/drop-box/DropBox'
 import Button from '../../../../components/form/button/Button'
@@ -11,14 +11,12 @@ import Loader from '../../../../components/loader/Loader'
 import { MessageTone } from '../../../../components/message-popup/MessagePopup'
 import { useDisplayMessage } from '../../../../hooks/UseDisplayMessage'
 import { ExercisePreview } from '../../../../models/workout/Exercise'
-import Workout, { WorkoutPreview } from '../../../../models/workout/Workout'
+import { WorkoutPreview } from '../../../../models/workout/Workout'
 import { StoreState } from '../../../../reducers/RootReducer'
 import { getDndBackend } from '../../../../utils/Utils'
 import ExercisePreviewCard from '../../exercises-page/exercise-preview-card/ExercisePreviewCard'
 import ExerciseBlock, { IndexedExercise } from '../exercise-block/ExerciseBlock'
 import styles from './WorkoutForm.module.scss'
-
-const maxDuration = 3600
 
 type WorkoutFormProps = {
   previews: ExercisePreview[]
@@ -36,6 +34,7 @@ const WorkoutForm = ({ previews, edited, save, close }: WorkoutFormProps) => {
   const [exercises, setExercises] = useState<IndexedExercise[]>([])
   const [rests, setRests] = useState<number[]>([])
 
+  /* eslint react-hooks/exhaustive-deps: 0 */
   useEffect(() => {
     setExercises(edited.previews)
     setRests(edited.rests)
@@ -162,7 +161,7 @@ const mapStateToProps = ({ exercise }: StoreState) => ({
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    save: (workout: WorkoutPreview) => saveWorkout(workout)(dispatch),
+    save: (workout: WorkoutPreview) => saveTemplate(workout)(dispatch),
   }
 }
 

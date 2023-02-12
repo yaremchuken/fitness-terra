@@ -5,7 +5,6 @@ import yaremchuken.fitnessterra.api.dto.ExerciseDto
 import yaremchuken.fitnessterra.api.dto.ExercisePreviewDto
 import yaremchuken.fitnessterra.api.dto.IndexedExercisePreviewDto
 import yaremchuken.fitnessterra.model.workout.Exercise
-import yaremchuken.fitnessterra.model.workout.ExerciseTemplate
 import yaremchuken.fitnessterra.repository.ExerciseRepository
 import yaremchuken.fitnessterra.service.AmazonS3Service
 
@@ -15,11 +14,6 @@ class ExerciseService(
     private val amazonS3Service: AmazonS3Service
 ) {
     fun save(exercises:  List<Exercise>) = exerciseRepository.saveAll(exercises)
-
-    fun delete(exercises: List<Exercise>) {
-        // exerciseRepository.deleteLinks(workoutId)
-        exerciseRepository.deleteAll(exercises)
-    }
 
     fun toDto(exercise: Exercise, attachPreview: Boolean = false, attachMedia: Boolean = false) =
         ExerciseDto(
@@ -66,10 +60,4 @@ class ExerciseService(
             exercise.equipment,
             if (attachPreview && exercise.template.previewUrl != null)
                 amazonS3Service.download(exercise.template.previewUrl) else null)
-
-    fun fromIndexedPreviewDto(dto: IndexedExercisePreviewDto, template: ExerciseTemplate): Exercise {
-        val exercise = Exercise(template, dto.index, dto.equipment, dto.repeats, dto.duration, dto.calories)
-        exercise.id = dto.id
-        return exercise
-    }
 }

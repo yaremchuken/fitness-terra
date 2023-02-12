@@ -1,6 +1,6 @@
 import { WorkoutAction } from '../actions/workout/WorkoutAction'
 import { WorkoutActionType } from '../actions/workout/WorkoutActionType'
-import Workout, { WorkoutPreview } from '../models/workout/Workout'
+import { WorkoutPreview } from '../models/workout/Workout'
 
 export const prefab: WorkoutPreview = {
   title: '',
@@ -10,8 +10,7 @@ export const prefab: WorkoutPreview = {
 
 export type State = {
   previews: WorkoutPreview[]
-  edited?: WorkoutPreview
-  workout?: Workout
+  editedTemplate?: WorkoutPreview
 }
 
 const initialState = {
@@ -35,30 +34,24 @@ const reducer = (state: State = initialState, action: WorkoutAction) => {
         previews: action.payload,
       }
 
-    case WorkoutActionType.WORKOUT_LOADED:
-      return {
-        ...state,
-        workout: action.payload,
-      }
-
-    case WorkoutActionType.EDIT_WORKOUT:
+    case WorkoutActionType.EDIT_TEMPLATE:
       const workoutId: number | undefined = action.payload
       return {
         ...state,
-        edited: workoutId ? state.previews.find((w) => w.id === workoutId) : { ...prefab },
+        editedTemplate: workoutId ? state.previews.find((w) => w.id === workoutId) : { ...prefab },
       }
 
-    case WorkoutActionType.WORKOUT_SAVED:
+    case WorkoutActionType.TEMPLATE_SAVED:
       return {
         ...state,
         previews: [...state.previews.filter((e) => e.id !== action.payload.id), action.payload],
-        edited: undefined,
+        editedTemplate: undefined,
       }
 
     case WorkoutActionType.CLOSE_EDITOR:
       return {
         ...state,
-        edited: undefined,
+        editedTemplate: undefined,
       }
 
     default:

@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: workout_0
+      id: workout_template_0
       author: admin
       changes:
         - createTable:
-            tableName: workout
+            tableName: workout_template
             columns:
               - column:
                   name: id
@@ -13,7 +13,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
-                    primaryKeyName: workout_pkey
+                    primaryKeyName: workout_template_pkey
               - column:
                   name: created_at
                   type: timestamp with time zone
@@ -25,7 +25,7 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
-                    foreignKeyName: user_workout_fk
+                    foreignKeyName: user_workout_template_fk
                     referencedColumnNames: id
                     referencedTableName: user
               - column:
@@ -35,16 +35,16 @@ databaseChangeLog:
                   name: rests
                   type: integer[]
         - createTable:
-            tableName: workout_exercises
+            tableName: workout_template_exercises
             columns:
               - column:
-                  name: workout_id
+                  name: workout_template_id
                   type: bigint
                   constraints:
                     nullable: false
-                    foreignKeyName: workout_exercise_fk
+                    foreignKeyName: workout_template_exercise_fk
                     referencedColumnNames: id
-                    referencedTableName: workout
+                    referencedTableName: workout_template
               - column:
                   name: exercise_id
                   type: bigint

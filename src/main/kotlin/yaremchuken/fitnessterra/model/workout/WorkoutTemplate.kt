@@ -12,11 +12,11 @@ import yaremchuken.fitnessterra.model.BaseEntity
 import yaremchuken.fitnessterra.model.User
 
 /**
- * List of exercises.
+ * Workout template contains list of exercises and breaks between them.
  */
 @Entity
-@Table(name = "workout")
-class Workout(
+@Table(name = "workout_template")
+class WorkoutTemplate(
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     val user: User,
@@ -28,8 +28,8 @@ class Workout(
      */
     @ManyToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
     @JoinTable(
-        name = "workout_exercises",
-        joinColumns = [JoinColumn(name = "workout_id")],
+        name = "workout_template_exercises",
+        joinColumns = [JoinColumn(name = "workout_template_id")],
         inverseJoinColumns = [JoinColumn(name = "exercise_id")])
     val exercises: MutableList<Exercise> = ArrayList(),
 
@@ -37,8 +37,4 @@ class Workout(
      * Pauses between exercises, seconds.
      */
     val rests: Array<Int>
-): BaseEntity<Long>() {
-    fun delete(toDrop: List<Exercise>) {
-        exercises.removeAll(toDrop)
-    }
-}
+): BaseEntity<Long>()

@@ -4,8 +4,7 @@ export enum WorkoutActionType {
   PREVIEWS_REQUESTED = 'workout_previews_requested',
   PREVIEWS_LOADED = 'workout_previews_loaded',
 
-  EDIT_WORKOUT = 'workout_edit',
+  EDIT_TEMPLATE = 'workout_edit_template',
   CLOSE_EDITOR = 'workout_close_editor',
-  WORKOUT_LOADED = 'workout_loaded',
-  WORKOUT_SAVED = 'workout_saved',
+  TEMPLATE_SAVED = 'workout_template_saved',
 }

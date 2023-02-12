@@ -1,6 +1,6 @@
 import { Action, Dispatch } from 'redux'
-import Workout, { WorkoutPreview } from '../../models/workout/Workout'
-import { getPreviewsApi, getWorkoutApi, saveWorkoutApi } from '../../services/WorkoutService'
+import { WorkoutPreview } from '../../models/workout/Workout'
+import { getPreviewsApi, saveTemplateApi } from '../../services/WorkoutService'
 import { WorkoutActionType } from './WorkoutActionType'
 
 export interface WorkoutAction extends Action<WorkoutActionType> {
@@ -20,23 +20,16 @@ const previewsLoaded = (previews: WorkoutPreview[]) => {
   }
 }
 
-export const editWorkout = (id?: number) => {
+export const editTemplate = (id?: number) => {
   return {
-    type: WorkoutActionType.EDIT_WORKOUT,
+    type: WorkoutActionType.EDIT_TEMPLATE,
     payload: id,
   }
 }
 
-const workoutLoaded = (workout: Workout) => {
+const templateSaved = (preview: WorkoutPreview) => {
   return {
-    type: WorkoutActionType.WORKOUT_LOADED,
-    payload: workout,
-  }
-}
-
-const workoutSaved = (preview: WorkoutPreview) => {
-  return {
-    type: WorkoutActionType.WORKOUT_SAVED,
+    type: WorkoutActionType.TEMPLATE_SAVED,
     payload: preview,
   }
 }
@@ -52,8 +45,5 @@ export const getPreviews = () => (dispatch: Dispatch) => {
   return getPreviewsApi().then((data) => dispatch(previewsLoaded(data)))
 }
 
-export const getWorkout = (id: number) => (dispatch: Dispatch) =>
-  getWorkoutApi(id).then((data) => dispatch(workoutLoaded(data)))
-
-export const saveWorkout = (workout: WorkoutPreview) => (dispatch: Dispatch) =>
-  saveWorkoutApi(workout).then((data) => dispatch(workoutSaved(data)))
+export const saveTemplate = (workout: WorkoutPreview) => (dispatch: Dispatch) =>
+  saveTemplateApi(workout).then((data) => dispatch(templateSaved(data)))

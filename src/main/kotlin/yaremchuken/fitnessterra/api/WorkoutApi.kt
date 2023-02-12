@@ -13,17 +13,17 @@ import yaremchuken.fitnessterra.api.dto.WorkoutDto
 import yaremchuken.fitnessterra.api.dto.WorkoutPreviewDto
 import yaremchuken.fitnessterra.api.error.EntityNotExistsException
 import yaremchuken.fitnessterra.model.workout.Exercise
-import yaremchuken.fitnessterra.model.workout.Workout
+import yaremchuken.fitnessterra.model.workout.WorkoutTemplate
 import yaremchuken.fitnessterra.service.dao.ExerciseService
 import yaremchuken.fitnessterra.service.dao.ExerciseTemplateService
 import yaremchuken.fitnessterra.service.dao.UserService
-import yaremchuken.fitnessterra.service.dao.WorkoutService
+import yaremchuken.fitnessterra.service.dao.WorkoutTemplateService
 
 @RestController
 @RequestMapping("api/workout")
 class WorkoutApi(
     userService: UserService,
-    private val workoutService: WorkoutService,
+    private val workoutTemplateService: WorkoutTemplateService,
     private val exerciseTemplateService: ExerciseTemplateService,
     private val exerciseService: ExerciseService
 ): BaseApi(userService) {
@@ -32,31 +32,31 @@ class WorkoutApi(
     @ResponseBody
     fun getPreviews(): List<WorkoutPreviewDto> {
         val user = getUser()
-        val previews = workoutService.getAll(user)
-        return previews.map { workoutService.toPreviewDto(it) }
+        val previews = workoutTemplateService.getAll(user)
+        return previews.map { workoutTemplateService.toPreviewDto(it) }
     }
 
-    @GetMapping("{id}")
+    @GetMapping("template/{id}")
     @ResponseBody
-    fun get(@PathVariable @NonNull id: Long): WorkoutDto {
+    fun getTemplate(@PathVariable @NonNull id: Long): WorkoutDto {
         val user = getUser()
-        val workout = workoutService.get(id).orElseThrow { EntityNotExistsException() }
+        val workout = workoutTemplateService.get(id).orElseThrow { EntityNotExistsException() }
 
         if (user.id != workout.user.id) throw EntityNotExistsException()
 
         val exercises: List<ExerciseDto> = workout.exercises.map { exerciseService.toDto(it, true, true)}
 
-        return workoutService.toDto(workout, exercises.toTypedArray())
+        return workoutTemplateService.toDto(workout, exercises.toTypedArray())
     }
 
-    @PostMapping
-    fun save(@RequestBody @NonNull dto: WorkoutPreviewDto): WorkoutPreviewDto {
+    @PostMapping("template")
+    fun saveTemplate(@RequestBody @NonNull dto: WorkoutPreviewDto): WorkoutPreviewDto {
         val user = getUser()
 
         if (dto.id != null) {
-            val cleared = workoutService.get(dto.id).orElseThrow { EntityNotExistsException() }
+            val cleared = workoutTemplateService.get(dto.id).orElseThrow { EntityNotExistsException() }
             cleared.exercises.removeAll(cleared.exercises)
-            workoutService.save(cleared)
+            workoutTemplateService.save(cleared)
         }
 
         var exercises: MutableList<Exercise> = ArrayList()
@@ -69,10 +69,10 @@ class WorkoutApi(
         }
 
         exercises = exerciseService.save(exercises)
-        val entity = Workout(user, dto.title, exercises, dto.rests)
+        val entity = WorkoutTemplate(user, dto.title, exercises, dto.rests)
         entity.id = dto.id
-        val workout = workoutService.save(entity)
+        val workout = workoutTemplateService.save(entity)
 
-        return workoutService.toPreviewDto(workout)
+        return workoutTemplateService.toPreviewDto(workout)
     }
 }

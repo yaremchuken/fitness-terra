@@ -12,16 +12,16 @@ export const getPreviewsApi = async (): Promise<WorkoutPreview[]> => {
     .then(decodePreviews)
 }
 
-export const getWorkoutApi = async (id: number): Promise<Workout> => {
+export const getTemplateApi = async (id: number): Promise<Workout> => {
   return api
-    .get(`${baseUrl}/${id}`)
+    .get(`${baseUrl}/template/${id}`)
     .then((res) => res.data)
     .then(decodeWorkout)
 }
 
-export const saveWorkoutApi = async (workout: WorkoutPreview): Promise<WorkoutPreview> => {
+export const saveTemplateApi = async (workout: WorkoutPreview): Promise<WorkoutPreview> => {
   return api
-    .post(`${baseUrl}`, workout)
+    .post(`${baseUrl}/template`, workout)
     .then((res) => res.data)
     .then((w) => decodePreviews([w])[0])
 }
