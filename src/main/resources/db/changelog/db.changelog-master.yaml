@@ -14,3 +14,9 @@ databaseChangeLog:
   - include:
       file: workout_template.yaml
       relativeToChangelogFile: true
+  - include:
+      file: workout.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: schedule.yaml
+      relativeToChangelogFile: true

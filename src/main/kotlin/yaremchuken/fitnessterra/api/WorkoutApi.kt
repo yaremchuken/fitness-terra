@@ -41,20 +41,17 @@ class WorkoutApi(
     fun getTemplate(@PathVariable @NonNull id: Long): WorkoutDto {
         val user = getUser()
         val workout = workoutTemplateService.get(id).orElseThrow { EntityNotExistsException() }
-
         if (user.id != workout.user.id) throw EntityNotExistsException()
 
-        val exercises: List<ExerciseDto> = workout.exercises.map { exerciseService.toDto(it, true, true)}
-
-        return workoutTemplateService.toDto(workout, exercises.toTypedArray())
+        return workoutTemplateService.toDto(workout)
     }
 
     @PostMapping("template")
     fun saveTemplate(@RequestBody @NonNull dto: WorkoutPreviewDto): WorkoutPreviewDto {
         val user = getUser()
 
-        if (dto.id != null) {
-            val cleared = workoutTemplateService.get(dto.id).orElseThrow { EntityNotExistsException() }
+        if (dto.templateId != null) {
+            val cleared = workoutTemplateService.get(dto.templateId).orElseThrow { EntityNotExistsException() }
             cleared.exercises.removeAll(cleared.exercises)
             workoutTemplateService.save(cleared)
         }
@@ -70,9 +67,9 @@ class WorkoutApi(
 
         exercises = exerciseService.save(exercises)
         val entity = WorkoutTemplate(user, dto.title, exercises, dto.rests)
-        entity.id = dto.id
-        val workout = workoutTemplateService.save(entity)
+        entity.id = dto.templateId
+        val template = workoutTemplateService.save(entity)
 
-        return workoutTemplateService.toPreviewDto(workout)
+        return workoutTemplateService.toPreviewDto(template)
     }
 }

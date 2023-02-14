@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: workout_template_0
+      id: workout_0
       author: admin
       changes:
         - createTable:
-            tableName: workout_template
+            tableName: workout
             columns:
               - column:
                   name: id
@@ -13,7 +13,12 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
-                    primaryKeyName: workout_template_pkey
+                    primaryKeyName: workout_pkey
+              - column:
+                  name: index
+                  type: integer
+                  constraints:
+                    nullable: false
               - column:
                   name: created_at
                   type: timestamp with time zone
@@ -21,35 +26,29 @@ databaseChangeLog:
                   name: updated_at
                   type: timestamp with time zone
               - column:
-                  name: user_id
+                  name: template_id
                   type: bigint
                   constraints:
                     nullable: false
-                    foreignKeyName: user_workout_template_fk
-                    referencedColumnNames: id
-                    referencedTableName: user
-              - column:
-                  name: title
-                  type: character varying(255)
-              - column:
-                  name: rests
-                  type: integer[]
-        - createTable:
-            tableName: workout_template_exercises
-            columns:
-              - column:
-                  name: workout_template_id
-                  type: bigint
-                  constraints:
-                    nullable: false
-                    foreignKeyName: workout_template_exercise_fk
+                    foreignKeyName: workout_template_workout_fk
                     referencedColumnNames: id
                     referencedTableName: workout_template
+        - createTable:
+            tableName: workout_exercises
+            columns:
+              - column:
+                  name: workout_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: workout_exercise_fk
+                    referencedColumnNames: id
+                    referencedTableName: workout
               - column:
                   name: exercise_id
                   type: bigint
                   constraints:
                     nullable: false
-                    foreignKeyName: exercise_workout_template_fk
+                    foreignKeyName: exercise_workout_fk
                     referencedColumnNames: id
                     referencedTableName: exercise

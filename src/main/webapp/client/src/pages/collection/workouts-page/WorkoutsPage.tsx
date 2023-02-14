@@ -37,13 +37,18 @@ const WorkoutsPage = ({
     if (edited) {
       closeEditor()
     }
-    if (previews.length === 0) {
+    if (previews.length === 0 || exercisePreviews.length === 0) {
       setLoader('Loading Workouts')
       getPreviews().then(() => {
-        if (exercisePreviews.length === 0) getExercisePreviews().then(() => setLoader(undefined))
-        else setLoader(undefined)
+        if (exercisePreviews.length > 0) setLoader(undefined)
+      })
+      getExercisePreviews().then(() => {
+        if (previews.length > 0) setLoader(undefined)
       })
     } else setLoader(undefined)
+
+    if (exercisePreviews.length === 0) {
+    }
   }, [])
 
   if (loader) {
@@ -67,7 +72,11 @@ const WorkoutsPage = ({
             {previews
               .sort((a, b) => a.id! - b.id!)
               .map((w) => (
-                <WorkoutPreviewCard key={w.id} preview={w} callback={() => editTemplate(w.id)} />
+                <WorkoutPreviewCard
+                  key={w.templateId}
+                  preview={w}
+                  callback={() => editTemplate(w.templateId)}
+                />
               ))}
           </ul>
         </>

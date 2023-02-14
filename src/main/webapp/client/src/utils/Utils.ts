@@ -20,3 +20,11 @@ const base64ToArrayBuffer = (base64: string) => {
 export const getDndBackend = () => {
   return 'ontouchstart' in window || navigator.maxTouchPoints ? TouchBackend : HTML5Backend
 }
+
+export const formatDate = (date: Date) => {
+  return date.toLocaleDateString('en-US', {
+    day: 'numeric',
+    month: 'short',
+    weekday: 'short',
+  })
+}

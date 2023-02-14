@@ -35,16 +35,21 @@ const reducer = (state: State = initialState, action: WorkoutAction) => {
       }
 
     case WorkoutActionType.EDIT_TEMPLATE:
-      const workoutId: number | undefined = action.payload
+      const templateId: number | undefined = action.payload
       return {
         ...state,
-        editedTemplate: workoutId ? state.previews.find((w) => w.id === workoutId) : { ...prefab },
+        editedTemplate: templateId
+          ? state.previews.find((w) => w.templateId === templateId)
+          : { ...prefab },
       }
 
     case WorkoutActionType.TEMPLATE_SAVED:
       return {
         ...state,
-        previews: [...state.previews.filter((e) => e.id !== action.payload.id), action.payload],
+        previews: [
+          ...state.previews.filter((e) => e.templateId !== action.payload.templateId),
+          action.payload,
+        ],
         editedTemplate: undefined,
       }
 

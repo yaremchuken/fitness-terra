@@ -11,11 +11,14 @@
   background-repeat: no-repeat;
   border: 2px solid black;
   box-shadow: 5px 5px 1px $form-shadow, 5px 5px 1px 2px black;
-  cursor: pointer;
 
   &:hover {
     box-shadow: 5px 5px 1px darkcyan, 5px 5px 1px 2px black;
   }
+}
+
+.pointer {
+  cursor: pointer;
 }
 
 .inner {

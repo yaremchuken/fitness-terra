@@ -4,12 +4,15 @@ import styles from './WorkoutPreviewCard.module.scss'
 
 type WorkoutPreviewCardProps = {
   preview?: WorkoutPreview
-  callback: (preview?: WorkoutPreview) => void
+  callback?: (preview?: WorkoutPreview) => void
 }
 
 const WorkoutPreviewCard = ({ preview, callback }: WorkoutPreviewCardProps) => {
   return (
-    <li className={styles.card} onClick={() => callback(preview)}>
+    <li
+      className={`${styles.card} ${callback ? styles.pointer : ''}`}
+      onClick={() => (callback ? callback(preview) : {})}
+    >
       {preview ? (
         <div className={styles.inner}>
           <p className={styles.title}>{preview.title}</p>

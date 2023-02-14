@@ -1,7 +1,6 @@
 package yaremchuken.fitnessterra.service.dao
 
 import org.springframework.stereotype.Service
-import yaremchuken.fitnessterra.api.dto.ExerciseDto
 import yaremchuken.fitnessterra.api.dto.WorkoutDto
 import yaremchuken.fitnessterra.api.dto.WorkoutPreviewDto
 import yaremchuken.fitnessterra.model.User
@@ -19,17 +18,23 @@ class WorkoutTemplateService(
 
     fun get(id: Long) = workoutTemplateRepository.findById(id)
 
-    fun toDto(workoutTemplate: WorkoutTemplate, exercises: Array<ExerciseDto>) =
-        WorkoutDto(
-            workoutTemplate.id!!,
-            workoutTemplate.title,
-            exercises,
-            workoutTemplate.rests)
+    fun get(user: User, ids: Collection<Long>) = workoutTemplateRepository.findByUserAndIdIsIn(user, ids)
 
-    fun toPreviewDto(workoutTemplate: WorkoutTemplate) =
+    fun toDto(template: WorkoutTemplate) =
+        WorkoutDto(
+            null,
+            null,
+            template.id!!,
+            template.title,
+            template.exercises.map { exerciseService.toDto(it, true, true)}.toTypedArray(),
+            template.rests)
+
+    fun toPreviewDto(template: WorkoutTemplate) =
         WorkoutPreviewDto(
-            workoutTemplate.id!!,
-            workoutTemplate.title,
-            workoutTemplate.exercises.map { exerciseService.toIndexedPreviewDto(it, true) }.toTypedArray(),
-            workoutTemplate.rests)
+            null,
+            null,
+            template.id!!,
+            template.title,
+            template.exercises.map { exerciseService.toIndexedPreviewDto(it, true) }.toTypedArray(),
+            template.rests)
 }

@@ -21,6 +21,9 @@ class AmazonS3Service(
     @Value("\${cloud.aws.bucket}") private val bucketName: String,
     private val amazonS3: AmazonS3
 ) {
+
+    // FIXME: Add retries
+
     fun upload(fileName: String, bytes: ByteArray) {
         val temp = File("${System.getProperty("java.io.tmpdir")}/${fileName.replace("/", "-")}")
         temp.writeBytes(bytes)

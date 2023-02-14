@@ -6,4 +6,6 @@ import yaremchuken.fitnessterra.model.workout.WorkoutTemplate
 
 interface WorkoutTemplateRepository: JpaRepository<WorkoutTemplate, Long> {
     fun findAllByUser(user: User): List<WorkoutTemplate>
+
+    fun findByUserAndIdIsIn(user: User, id: Collection<Long>): List<WorkoutTemplate>
 }

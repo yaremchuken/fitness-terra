@@ -2,9 +2,10 @@ import { ScheduleAction } from '../actions/schedule/ScheduleAction'
 import { ScheduleActionType } from '../actions/schedule/ScheduleActionType'
 import Schedule from '../models/Schedule'
 
-const prefab = () => {
+const prefab = (scheduledAt: Date): Schedule => {
   return {
-    day: new Date(Date.now()),
+    scheduledAt,
+    completed: false,
     workouts: [],
   }
 }
@@ -36,10 +37,10 @@ const reducer = (state: State = initialState, action: ScheduleAction) => {
       }
 
     case ScheduleActionType.EDIT_SCHEDULE:
-      const scheduleId: number | undefined = action.payload
+      const { scheduledAt, id } = action.payload
       return {
         ...state,
-        edited: scheduleId ? state.schedules.find((s) => s.id === scheduleId) : { ...prefab() },
+        edited: id ? state.schedules.find((s) => s.id === id) : { ...prefab(scheduledAt) },
       }
 
     case ScheduleActionType.CLOSE_EDITOR:

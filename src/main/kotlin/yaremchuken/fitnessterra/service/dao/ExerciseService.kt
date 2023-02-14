@@ -15,6 +15,8 @@ class ExerciseService(
 ) {
     fun save(exercises:  List<Exercise>) = exerciseRepository.saveAll(exercises)
 
+    fun getMany(ids: Collection<Long>) = exerciseRepository.findAllById(ids)
+
     fun toDto(exercise: Exercise, attachPreview: Boolean = false, attachMedia: Boolean = false) =
         ExerciseDto(
             exercise.id!!,

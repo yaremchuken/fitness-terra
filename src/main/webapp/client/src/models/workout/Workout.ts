@@ -3,6 +3,8 @@ import Exercise, { ExercisePreview } from './Exercise'
 
 export type IWorkout = {
   id?: number
+  templateId?: number
+  index?: number
   title: string
   rests: number[]
 }

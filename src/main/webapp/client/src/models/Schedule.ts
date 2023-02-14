@@ -2,7 +2,8 @@ import { WorkoutPreview } from './workout/Workout'
 
 type Schedule = {
   id?: number
-  day: Date
+  scheduledAt: Date
+  completed: boolean
   workouts: WorkoutPreview[]
 }
 

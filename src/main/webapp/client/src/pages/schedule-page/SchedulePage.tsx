@@ -4,6 +4,7 @@ import { bindActionCreators, Dispatch } from 'redux'
 import { closeEditor, editSchedule } from '../../actions/schedule/ScheduleAction'
 import Schedule from '../../models/Schedule'
 import { StoreState } from '../../reducers/RootReducer'
+import { formatDate } from '../../utils/Utils'
 import ScheduleBlock from './schedule-block/ScheduleBlock'
 import ScheduleForm from './schedule-form/ScheduleForm'
 import styles from './SchedulePage.module.scss'
@@ -11,7 +12,7 @@ import styles from './SchedulePage.module.scss'
 type SchedulePageProps = {
   schedules: Schedule[]
   edited?: Schedule
-  editSchedule: (scheduleId?: number) => void
+  editSchedule: (scheduledAt: Date, scheduleId?: number) => void
   closeEditor: () => void
 }
 
@@ -30,11 +31,13 @@ const SchedulePage = ({ schedules, edited, editSchedule, closeEditor }: Schedule
 
       const cal: Schedule[] = []
       for (let i = toMonday; i < toMonday + 31; i++) {
-        let day = new Date(Date.now())
-        day.setDate(day.getDate() + i)
-        const existed = schedules.find((s) => s.day.toDateString() === day.toDateString())
+        let scheduledAt = new Date(Date.now())
+        scheduledAt.setDate(scheduledAt.getDate() + i)
+        const existed = schedules.find(
+          (s) => s.scheduledAt.toDateString() === scheduledAt.toDateString()
+        )
         if (existed) cal.push(existed)
-        else cal.push({ day, workouts: [] })
+        else cal.push({ scheduledAt, completed: false, workouts: [] })
       }
       setCalendar(cal)
     }
@@ -42,16 +45,18 @@ const SchedulePage = ({ schedules, edited, editSchedule, closeEditor }: Schedule
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>Schedule</h1>
+      <h1 className={styles.title}>
+        {edited ? `Schedule on ${formatDate(edited.scheduledAt)}` : `Schedule`}
+      </h1>
       <ul className={styles.calendar}>
         {edited ? (
-          <ScheduleForm schedule={edited} />
+          <ScheduleForm edited={edited} close={closeEditor} />
         ) : (
           calendar.map((schedule) => (
             <ScheduleBlock
-              key={schedule.day.getTime()}
+              key={schedule.scheduledAt.getTime()}
               schedule={schedule}
-              callback={() => editSchedule(schedule.id)}
+              callback={() => editSchedule(schedule.scheduledAt, schedule.id)}
             />
           ))
         )}
@@ -60,9 +65,9 @@ const SchedulePage = ({ schedules, edited, editSchedule, closeEditor }: Schedule
   )
 }
 
-const mapStateToProps = ({ scheduler }: StoreState) => ({
-  schedules: scheduler.schedules,
-  edited: scheduler.edited,
+const mapStateToProps = ({ schedule }: StoreState) => ({
+  schedules: schedule.schedules,
+  edited: schedule.edited,
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
