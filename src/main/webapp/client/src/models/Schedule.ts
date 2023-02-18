@@ -4,7 +4,7 @@ type Schedule = {
   id?: number
   scheduledAt: Date
   completed: boolean
-  workouts: WorkoutPreview[]
+  previews: WorkoutPreview[]
 }
 
 export default Schedule

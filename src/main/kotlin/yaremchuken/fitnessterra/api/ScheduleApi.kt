@@ -13,6 +13,7 @@ import yaremchuken.fitnessterra.api.dto.ScheduleDto
 import yaremchuken.fitnessterra.api.dto.SchedulePreviewDto
 import yaremchuken.fitnessterra.api.error.EntityNotExistsException
 import yaremchuken.fitnessterra.model.Schedule
+import yaremchuken.fitnessterra.model.workout.Exercise
 import yaremchuken.fitnessterra.model.workout.Workout
 import yaremchuken.fitnessterra.service.dao.ExerciseService
 import yaremchuken.fitnessterra.service.dao.ScheduleService
@@ -54,7 +55,7 @@ class ScheduleApi(
     }
 
     @PostMapping
-    fun save(@RequestBody @NonNull dto: SchedulePreviewDto): SchedulePreviewDto {
+    fun save(@RequestBody @NonNull dto: SchedulePreviewDto): SchedulePreviewDto? {
         val user = getUser()
 
         if (dto.id != null) {
@@ -70,7 +71,14 @@ class ScheduleApi(
             val preview = dto.previews[i]
             val template = templates.find { it.id == preview.templateId }!!
 
-            val exercises = exerciseService.getMany(preview.previews.map { it.id!! })
+            val persistedEx = exerciseService.getMany(preview.previews.map { it.id!! })
+
+            val exercises = ArrayList<Exercise>()
+
+            persistedEx.forEach {
+                val exDto = preview.previews.find { e -> e.id == it.id }!!
+                exercises.add(Exercise(it.template, it.index, exDto.equipment, exDto.repeats, exDto.duration, exDto.calories))
+            }
 
             val workout = Workout(template, i, exercises)
             workouts.add(workout)

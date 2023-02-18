@@ -1,16 +1,23 @@
 import { WorkoutPreview } from '../../../../models/workout/Workout'
-import ExerciseBlock, { IndexedExercise } from '../exercise-block/ExerciseBlock'
+import ExerciseBlock from '../exercise-block/ExerciseBlock'
 import styles from './WorkoutPreviewCard.module.scss'
 
 type WorkoutPreviewCardProps = {
   preview?: WorkoutPreview
   callback?: (preview?: WorkoutPreview) => void
+  onExerciseChange?: (index: number, type: string, value: number) => void
+  large?: boolean
 }
 
-const WorkoutPreviewCard = ({ preview, callback }: WorkoutPreviewCardProps) => {
+const WorkoutPreviewCard = ({
+  preview,
+  callback,
+  onExerciseChange,
+  large,
+}: WorkoutPreviewCardProps) => {
   return (
     <li
-      className={`${styles.card} ${callback ? styles.pointer : ''}`}
+      className={`${styles.card} ${callback ? styles.pointer : ''} ${large ? styles.large : ''}`}
       onClick={() => (callback ? callback(preview) : {})}
     >
       {preview ? (
@@ -18,7 +25,15 @@ const WorkoutPreviewCard = ({ preview, callback }: WorkoutPreviewCardProps) => {
           <p className={styles.title}>{preview.title}</p>
           <ul className={styles.exercises}>
             {preview.previews.map((ex) => (
-              <ExerciseBlock key={ex.index} exercise={ex} />
+              <ExerciseBlock
+                key={ex.index}
+                exercise={ex}
+                onChange={
+                  onExerciseChange
+                    ? (type, value) => onExerciseChange(ex.index, type, value)
+                    : undefined
+                }
+              />
             ))}
           </ul>
         </div>

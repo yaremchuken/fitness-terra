@@ -37,14 +37,14 @@ const SchedulePage = ({ schedules, edited, editSchedule, closeEditor }: Schedule
           (s) => s.scheduledAt.toDateString() === scheduledAt.toDateString()
         )
         if (existed) cal.push(existed)
-        else cal.push({ scheduledAt, completed: false, workouts: [] })
+        else cal.push({ scheduledAt, completed: false, previews: [] })
       }
       setCalendar(cal)
     }
-  }, [calendar.length])
+  }, [calendar.length, schedules])
 
   return (
-    <div className={styles.page}>
+    <div className={`${styles.page} ${edited ? '' : styles.overflowed}`}>
       <h1 className={styles.title}>
         {edited ? `Schedule on ${formatDate(edited.scheduledAt)}` : `Schedule`}
       </h1>

@@ -5,9 +5,10 @@ type DropBoxProps = {
   text: string
   type: string
   callback: (id: number) => void
+  large?: boolean
 }
 
-const DropBox = ({ text, type, callback }: DropBoxProps) => {
+const DropBox = ({ text, type, callback, large }: DropBoxProps) => {
   const [{ isOver }, dropRef] = useDrop({
     accept: type,
     drop(entity: any) {
@@ -19,7 +20,10 @@ const DropBox = ({ text, type, callback }: DropBoxProps) => {
   })
 
   return (
-    <div className={`${styles.dropBox} ${isOver ? styles.hovered : ''}`} ref={dropRef}>
+    <div
+      className={`${styles.dropBox} ${isOver ? styles.hovered : ''} ${large ? styles.large : ''}`}
+      ref={dropRef}
+    >
       {text}
     </div>
   )

@@ -8,6 +8,7 @@ import DragBox from '../../../components/drag-box/DragBox'
 import DropBox from '../../../components/drop-box/DropBox'
 import Button from '../../../components/form/button/Button'
 import Loader from '../../../components/loader/Loader'
+import { MessageTone } from '../../../components/message-popup/MessagePopup'
 import { useDisplayMessage } from '../../../hooks/UseDisplayMessage'
 import Schedule from '../../../models/Schedule'
 import { WorkoutPreview } from '../../../models/workout/Workout'
@@ -29,56 +30,33 @@ const ScheduleForm = ({ previews, getPreviews, edited, save, close }: ScheduleFo
   const displayMessage = useDisplayMessage()
 
   const [loader, setLoader] = useState<string | undefined>('Preloading')
-  const [scheduleData, setScheduleData] = useState<Schedule>(edited)
   const [inProcess, setInProcess] = useState(false)
   const [workouts, setWorkouts] = useState<WorkoutPreview[]>([])
 
+  /* eslint react-hooks/exhaustive-deps: 0 */
   useEffect(() => {
     if (previews.length === 0) {
       setLoader('Loading Workouts')
       getPreviews().then(() => setLoader(undefined))
     } else setLoader(undefined)
+    if (edited.previews.length > 0) {
+      setWorkouts(structuredClone(edited.previews))
+    }
   }, [])
 
   const addWorkout = (templateId: number) => {
-    console.log('ADD WORKOUT')
-
-    // const preview = previews.find((prv) => prv.templateId === templateId)!
-    // const copy = JSON.parse(JSON.stringify(preview))
-    // setWorkouts([...workouts, { ...copy, preview: preview.preview, index: exercises.length }])
-  }
-
-  // const changeExercise = (index: number, type: string, value: number) => {
-  //   let changed = exercises[index]
-
-  //   if (type === 'equipment') {
-  //     changed.equipment[0].weight = value
-  //   } else (changed as any)[type] = value
-
-  //   const updated = [...exercises]
-  //   updated[index] = changed
-  //   setExercises(updated)
-  // }
-
-  // const removeExercise = (index: number) => {
-  //   if (index === rests.length) {
-  //     setRests(rests.slice(0, rests.length - 1))
-  //   } else setRests(rests.filter((_, idx) => idx !== index))
-  //   setExercises([...exercises.slice(0, index), ...exercises.slice(index, exercises.length - 1)])
-  // }
-
-  // const changeRestTime = (index: number, amount: number) => {
-  //   const updated = [...rests]
-  //   updated[index] = amount
-  //   setRests(updated)
-  // }
-
-  const onSubmit = () => {
-    console.log('SUBMIT')
+    const copy = structuredClone(
+      previews.find((prv) => prv.templateId === templateId)!
+    ) as WorkoutPreview
+    setWorkouts([...workouts, { ...copy, index: workouts.length }])
   }
 
   const removeWorkout = (index: number) => {
-    console.log('REMOVE')
+    const wrks = workouts.filter((wrk) => wrk.index !== index)
+    wrks.forEach((w) => {
+      if (w.index! > index) w.index!--
+    })
+    setWorkouts(wrks)
   }
 
   const changeExercise = (
@@ -87,32 +65,44 @@ const ScheduleForm = ({ previews, getPreviews, edited, save, close }: ScheduleFo
     type: string,
     value: number
   ) => {
-    console.log('CHANGE EXERCISE')
+    const wrk = structuredClone(
+      workouts.find((wrk) => wrk.index === workout.index)!
+    ) as WorkoutPreview
+    const wrks = workouts.filter((wrk) => wrk.index !== workout.index)
+    wrk.previews.forEach((exr) => {
+      if (exr.index === exerciseIndex) {
+        if (type === 'equipment') {
+          exr.equipment[0].weight = value
+        } else (exr as any)[type] = value
+      }
+    })
+    setWorkouts([...wrks, wrk])
   }
 
-  // const onSubmit = () => {
-  //   setInProcess(true)
-  //   setLoader('Uploading Workout Data')
+  const onSubmit = () => {
+    setInProcess(true)
+    setLoader('Uploading Scheduled Workout')
+    const schedule = structuredClone(edited) as Schedule
+    schedule.previews = workouts.map((wrk) => {
+      return {
+        ...wrk,
+        previews: wrk.previews.map((pr) => {
+          return { ...pr, preview: undefined }
+        }),
+      }
+    })
 
-  //   const previews: IndexedExercise[] = []
-  //   exercises.forEach((ex) => {
-  //     previews[ex.index] = {
-  //       ...ex,
-  //       preview: undefined,
-  //     }
-  //   })
-
-  //   save({ ...workoutData, rests, previews })
-  //     .then(() => {
-  //       displayMessage('Workout successfuly saved')
-  //       close()
-  //     })
-  //     .catch((err) => displayMessage('Unable to save workout!', MessageTone.ERROR))
-  //     .finally(() => {
-  //       setInProcess(false)
-  //       setLoader(undefined)
-  //     })
-  // }
+    save(schedule)
+      .then(() => {
+        displayMessage('Workout successfully saved')
+        close()
+      })
+      .catch((err) => displayMessage('Unable to save schedule!', MessageTone.ERROR))
+      .finally(() => {
+        setInProcess(false)
+        setLoader(undefined)
+      })
+  }
 
   if (loader) {
     return <Loader message={loader} />
@@ -124,16 +114,19 @@ const ScheduleForm = ({ previews, getPreviews, edited, save, close }: ScheduleFo
         <form className={styles.form} onSubmit={onSubmit}>
           {loader && <Loader message={loader} />}
           <div className={styles.container}>
-            {workouts.map((workout) => (
-              <WorkoutBlock
-                workout={workout}
-                onRemove={() => removeWorkout(workout.index!!)}
-                onChangeExercise={(index, type, value) =>
-                  changeExercise(workout, index, type, value)
-                }
-              />
-            ))}
-            <DropBox text='drag workout here' type='workoutId' callback={addWorkout} />
+            {workouts
+              .sort((a, b) => a.index! - b.index!)
+              .map((workout) => (
+                <WorkoutBlock
+                  workout={workout}
+                  key={workout.index}
+                  onRemove={() => removeWorkout(workout.index!!)}
+                  onChangeExercise={(index, type, value) =>
+                    changeExercise(workout, index, type, value)
+                  }
+                />
+              ))}
+            <DropBox text='drag workout here' type='workoutId' callback={addWorkout} large />
           </div>
           <div className={styles.controls}>
             <Button text='SAVE' disabled={inProcess} callback={onSubmit} />
