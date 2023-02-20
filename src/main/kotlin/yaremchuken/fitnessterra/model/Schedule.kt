@@ -23,8 +23,6 @@ class Schedule(
      */
     val scheduledAt: LocalDate,
 
-    val completed: Boolean,
-
     /**
      * Workouts included in this schedule.
      */

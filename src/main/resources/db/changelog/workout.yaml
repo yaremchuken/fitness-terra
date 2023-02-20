@@ -26,6 +26,9 @@ databaseChangeLog:
                   name: updated_at
                   type: timestamp with time zone
               - column:
+                  name: completed
+                  type: boolean
+              - column:
                   name: template_id
                   type: bigint
                   constraints:

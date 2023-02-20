@@ -26,6 +26,11 @@ class Workout(
     val index: Int,
 
     /**
+     * Is this workout completed.
+     */
+    val completed: Boolean,
+
+    /**
      * Exercises included in this workout.
      */
     @ManyToMany(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)

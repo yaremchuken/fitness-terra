@@ -40,9 +40,9 @@ export const closeEditor = () => {
   }
 }
 
-export const getPreviews = () => (dispatch: Dispatch) => {
+export const getPreviews = (begin: Date, end: Date) => (dispatch: Dispatch) => {
   dispatch(requestPreviews())
-  return getPreviewsApi().then((data) => dispatch(previewsLoaded(data)))
+  return getPreviewsApi(begin, end).then((data) => dispatch(previewsLoaded(data)))
 }
 
 export const saveSchedule = (schedule: Schedule) => (dispatch: Dispatch) =>

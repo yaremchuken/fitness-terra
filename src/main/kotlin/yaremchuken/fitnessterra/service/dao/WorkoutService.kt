@@ -20,7 +20,8 @@ class WorkoutService(
             workout.template.id!!,
             workout.template.title,
             workout.exercises.map { exerciseService.toDto(it, true, true)}.toTypedArray(),
-            workout.template.rests)
+            workout.template.rests,
+            workout.completed)
 
     fun toPreviewDto(workout: Workout) =
         WorkoutPreviewDto(
@@ -29,5 +30,6 @@ class WorkoutService(
             workout.template.id!!,
             workout.template.title,
             workout.exercises.map { exerciseService.toIndexedPreviewDto(it, true) }.toTypedArray(),
-            workout.template.rests)
+            workout.template.rests,
+            workout.completed)
 }

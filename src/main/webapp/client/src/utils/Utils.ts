@@ -25,6 +25,16 @@ export const formatDate = (date: Date) => {
   return date.toLocaleDateString('en-US', {
     day: 'numeric',
     month: 'short',
-    weekday: 'short',
   })
+}
+
+export const toLocalDate = (date: Date) => {
+  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date
+    .getDate()
+    .toString()
+    .padStart(2, '0')}`
+}
+
+export const fromLocalDate = (date: string) => {
+  return new Date(`${date}T00:00:00.000Z`)
 }

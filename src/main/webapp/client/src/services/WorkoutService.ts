@@ -9,7 +9,7 @@ export const getPreviewsApi = async (): Promise<WorkoutPreview[]> => {
   return api
     .get(`${baseUrl}/previews`)
     .then((res) => res.data)
-    .then(decodePreviews)
+    .then(decodeWorkoutPreviews)
 }
 
 export const getTemplateApi = async (id: number): Promise<Workout> => {
@@ -23,10 +23,10 @@ export const saveTemplateApi = async (workout: WorkoutPreview): Promise<WorkoutP
   return api
     .post(`${baseUrl}/template`, workout)
     .then((res) => res.data)
-    .then((w) => decodePreviews([w])[0])
+    .then((w) => decodeWorkoutPreviews([w])[0])
 }
 
-const decodePreviews = (workouts: WorkoutPreview[]) =>
+export const decodeWorkoutPreviews = (workouts: WorkoutPreview[]) =>
   workouts.map((workout: WorkoutPreview) => {
     return {
       ...workout,
@@ -41,7 +41,7 @@ const decodePreviews = (workouts: WorkoutPreview[]) =>
     }
   })
 
-const decodeWorkout = (workout: Workout) => {
+export const decodeWorkout = (workout: Workout) => {
   return {
     ...workout,
     exercises: workout.exercises.map((exercise) => {

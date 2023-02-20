@@ -24,13 +24,11 @@ class ScheduleService(
         ScheduleDto(
             schedule.id,
             schedule.scheduledAt,
-            schedule.completed,
             schedule.workouts.map { workoutService.toDto(it) }.toTypedArray())
 
     fun toPreviewDto(schedule: Schedule) =
         SchedulePreviewDto(
             schedule.id,
             schedule.scheduledAt,
-            schedule.completed,
             schedule.workouts.map { workoutService.toPreviewDto(it) }.toTypedArray())
 }

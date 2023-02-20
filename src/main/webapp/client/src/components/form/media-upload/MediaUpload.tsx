@@ -1,4 +1,5 @@
 import { useDisplayMessage } from '../../../hooks/UseDisplayMessage'
+import ImgButton from '../../img-button/ImgButton'
 import styles from './MediaUpload.module.scss'
 
 type MediaUploadProps = {
@@ -26,13 +27,12 @@ const MediaUpload = ({ title, maxSize, media, disabled, onUpload, onClear }: Med
       {media ? (
         <div className={styles.preview}>
           <img className={styles.uploaded} src={URL.createObjectURL(media)} alt={title}></img>
-          <button
-            className={styles.clearBtn}
-            onClick={() => {
+          <ImgButton
+            callback={() => {
               if (!disabled) onClear()
             }}
             disabled={disabled}
-          ></button>
+          />
         </div>
       ) : (
         <div className={styles.mediaInput}>

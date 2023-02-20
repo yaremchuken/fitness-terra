@@ -6,5 +6,6 @@ class WorkoutDto(
     val templateId: Long,
     val title: String,
     val exercises: Array<ExerciseDto>,
-    val rests: Array<Int>
+    val rests: Array<Int>,
+    val completed: Boolean
 )

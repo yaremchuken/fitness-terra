@@ -39,6 +39,7 @@ const ScheduleForm = ({ previews, getPreviews, edited, save, close }: ScheduleFo
       setLoader('Loading Workouts')
       getPreviews().then(() => setLoader(undefined))
     } else setLoader(undefined)
+
     if (edited.previews.length > 0) {
       setWorkouts(structuredClone(edited.previews))
     }

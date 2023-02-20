@@ -31,9 +31,6 @@ databaseChangeLog:
               - column:
                   name: scheduled_at
                   type: date
-              - column:
-                  name: completed
-                  type: boolean
         - createTable:
             tableName: schedule_workouts
             columns:

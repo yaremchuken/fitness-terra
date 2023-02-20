@@ -80,12 +80,12 @@ class ScheduleApi(
                 exercises.add(Exercise(it.template, it.index, exDto.equipment, exDto.repeats, exDto.duration, exDto.calories))
             }
 
-            val workout = Workout(template, i, exercises)
+            val workout = Workout(template, i, false, exercises)
             workouts.add(workout)
         }
 
         workouts = workoutService.save(workouts)
-        val entity = Schedule(user, dto.scheduledAt, dto.completed, workouts)
+        val entity = Schedule(user, dto.scheduledAt, workouts)
         entity.id = dto.id
         val schedule = scheduleService.save(entity)
 

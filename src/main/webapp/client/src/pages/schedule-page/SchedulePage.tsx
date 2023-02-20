@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators, Dispatch } from 'redux'
-import { closeEditor, editSchedule } from '../../actions/schedule/ScheduleAction'
+import { closeEditor, editSchedule, getPreviews } from '../../actions/schedule/ScheduleAction'
+import Loader from '../../components/loader/Loader'
 import Schedule from '../../models/Schedule'
+import Workout from '../../models/workout/Workout'
 import { StoreState } from '../../reducers/RootReducer'
 import { formatDate } from '../../utils/Utils'
 import ScheduleBlock from './schedule-block/ScheduleBlock'
@@ -12,36 +14,89 @@ import styles from './SchedulePage.module.scss'
 type SchedulePageProps = {
   schedules: Schedule[]
   edited?: Schedule
+  getPreviews: (begin: Date, end: Date) => Promise<any>
   editSchedule: (scheduledAt: Date, scheduleId?: number) => void
   closeEditor: () => void
 }
 
-const SchedulePage = ({ schedules, edited, editSchedule, closeEditor }: SchedulePageProps) => {
+const CALENDAR_DAYS_AMOUNT = 30
+
+const SchedulePage = ({
+  schedules,
+  edited,
+  editSchedule,
+  closeEditor,
+  getPreviews,
+}: SchedulePageProps) => {
   const [calendar, setCalendar] = useState<Schedule[]>([])
+  const [loader, setLoader] = useState<string | undefined>()
 
+  /* eslint react-hooks/exhaustive-deps: 0 */
   useEffect(() => {
-    if (calendar.length === 0) {
-      let toMonday = -7
-      while (true) {
-        let checked = new Date(Date.now())
-        checked.setDate(checked.getDate() + toMonday)
-        if (checked.getDay() === 1) break
-        else toMonday--
-      }
+    if (schedules.length === 0) loadSchedules()
+    else fillCalendar(schedules)
+  }, [])
 
-      const cal: Schedule[] = []
-      for (let i = toMonday; i < toMonday + 31; i++) {
-        let scheduledAt = new Date(Date.now())
-        scheduledAt.setDate(scheduledAt.getDate() + i)
-        const existed = schedules.find(
-          (s) => s.scheduledAt.toDateString() === scheduledAt.toDateString()
-        )
-        if (existed) cal.push(existed)
-        else cal.push({ scheduledAt, completed: false, previews: [] })
-      }
-      setCalendar(cal)
+  const loadSchedules = () => {
+    setLoader('Loading Schedules')
+
+    const { begin, end } = getCalendarPeriod()
+
+    getPreviews(begin, end)
+      .then((data) => {
+        fillCalendar(data.payload)
+      })
+      .finally(() => {
+        setLoader(undefined)
+      })
+  }
+
+  const getCalendarPeriod = () => {
+    let dayToStart = -7
+    while (true) {
+      let checked = new Date(Date.now())
+      checked.setDate(checked.getDate() + dayToStart)
+      if (checked.getDay() === 1) break
+      else dayToStart--
     }
-  }, [calendar.length, schedules])
+    let dayToEnd = dayToStart + CALENDAR_DAYS_AMOUNT
+
+    const begin = new Date(Date.now())
+    begin.setDate(begin.getDate() + dayToStart)
+
+    const end = new Date(Date.now())
+    end.setDate(end.getDate() + dayToEnd)
+
+    return { dayToStart, dayToEnd, begin, end }
+  }
+
+  const fillCalendar = (schedules: Schedule[]) => {
+    const { dayToStart, dayToEnd } = getCalendarPeriod()
+    const cal: Schedule[] = []
+    for (let i = dayToStart; i <= dayToEnd; i++) {
+      let scheduledAt = new Date(Date.now())
+      scheduledAt.setDate(scheduledAt.getDate() + i)
+      const existed = schedules.find(
+        (sch) => sch.scheduledAt.toDateString() === scheduledAt.toDateString()
+      )
+      if (existed) cal.push(existed)
+      else cal.push({ scheduledAt, completed: false, previews: [] })
+    }
+    setCalendar(cal)
+  }
+
+  const executeWorkout = (workout: Workout) => {
+    console.log(workout)
+  }
+
+  const onEditorClose = () => {
+    loadSchedules()
+    closeEditor()
+  }
+
+  if (loader) {
+    return <Loader message={loader} />
+  }
 
   return (
     <div className={`${styles.page} ${edited ? '' : styles.overflowed}`}>
@@ -50,13 +105,14 @@ const SchedulePage = ({ schedules, edited, editSchedule, closeEditor }: Schedule
       </h1>
       <ul className={styles.calendar}>
         {edited ? (
-          <ScheduleForm edited={edited} close={closeEditor} />
+          <ScheduleForm edited={edited} close={onEditorClose} />
         ) : (
           calendar.map((schedule) => (
             <ScheduleBlock
               key={schedule.scheduledAt.getTime()}
               schedule={schedule}
-              callback={() => editSchedule(schedule.scheduledAt, schedule.id)}
+              onExecute={executeWorkout}
+              onEditSchedule={() => editSchedule(schedule.scheduledAt, schedule.id)}
             />
           ))
         )}
@@ -66,7 +122,7 @@ const SchedulePage = ({ schedules, edited, editSchedule, closeEditor }: Schedule
 }
 
 const mapStateToProps = ({ schedule }: StoreState) => ({
-  schedules: schedule.schedules,
+  schedules: schedule.previews,
   edited: schedule.edited,
 })
 
@@ -79,6 +135,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       },
       dispatch
     ),
+    getPreviews: (begin: Date, end: Date) => getPreviews(begin, end)(dispatch),
   }
 }
 

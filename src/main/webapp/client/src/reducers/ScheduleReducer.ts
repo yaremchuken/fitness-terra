@@ -11,12 +11,12 @@ const prefab = (scheduledAt: Date): Schedule => {
 }
 
 export type State = {
-  schedules: Schedule[]
+  previews: Schedule[]
   edited?: Schedule
 }
 
 const initialState = {
-  schedules: [],
+  previews: [],
 }
 
 const reducer = (state: State = initialState, action: ScheduleAction) => {
@@ -40,13 +40,20 @@ const reducer = (state: State = initialState, action: ScheduleAction) => {
       const { scheduledAt, id } = action.payload
       return {
         ...state,
-        edited: id ? state.schedules.find((s) => s.id === id) : { ...prefab(scheduledAt) },
+        edited: id ? state.previews.find((s) => s.id === id) : { ...prefab(scheduledAt) },
       }
 
     case ScheduleActionType.CLOSE_EDITOR:
       return {
         ...state,
         edited: undefined,
+      }
+
+    case ScheduleActionType.SCHEDULE_SAVED:
+      const schedule = action.payload
+      return {
+        ...state,
+        previews: [...state.previews.filter((sch) => sch.id !== schedule.id), schedule],
       }
 
     default:
