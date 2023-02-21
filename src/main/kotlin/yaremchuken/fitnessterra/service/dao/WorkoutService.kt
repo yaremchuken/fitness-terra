@@ -3,6 +3,7 @@ package yaremchuken.fitnessterra.service.dao
 import org.springframework.stereotype.Service
 import yaremchuken.fitnessterra.api.dto.WorkoutDto
 import yaremchuken.fitnessterra.api.dto.WorkoutPreviewDto
+import yaremchuken.fitnessterra.model.User
 import yaremchuken.fitnessterra.model.workout.Workout
 import yaremchuken.fitnessterra.repository.WorkoutRepository
 
@@ -12,6 +13,8 @@ class WorkoutService(
     private val exerciseService: ExerciseService
 ) {
     fun save(workouts: List<Workout>) = workoutRepository.saveAll(workouts)
+
+    fun get(id: Long) = workoutRepository.findById(id)
 
     fun toDto(workout: Workout) =
         WorkoutDto(

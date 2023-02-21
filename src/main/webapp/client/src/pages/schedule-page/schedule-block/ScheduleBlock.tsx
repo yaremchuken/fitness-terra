@@ -1,18 +1,18 @@
 import ImgButton, { Position, Size } from '../../../components/img-button/ImgButton'
 import Schedule from '../../../models/Schedule'
-import Workout from '../../../models/workout/Workout'
+import { WorkoutPreview } from '../../../models/workout/Workout'
 import { formatDate } from '../../../utils/Utils'
 import styles from './ScheduleBlock.module.scss'
 
 type ScheduleBlockProps = {
   schedule: Schedule
-  onExecute?: (workout: Workout) => void
+  onPerform: (workout: WorkoutPreview) => void
   onEditSchedule: () => void
 }
 
-const ScheduleBlock = ({ schedule, onExecute, onEditSchedule }: ScheduleBlockProps) => {
+const ScheduleBlock = ({ schedule, onPerform, onEditSchedule }: ScheduleBlockProps) => {
   const isToday = new Date(Date.now()).toDateString() === schedule.scheduledAt.toDateString()
-  const isBefore = Date.now() > schedule.scheduledAt.getTime()
+  const isBefore = !isToday && Date.now() > schedule.scheduledAt.getTime()
   const isEmpty = !schedule.id
 
   const clickHandler = () => {
@@ -23,6 +23,10 @@ const ScheduleBlock = ({ schedule, onExecute, onEditSchedule }: ScheduleBlockPro
 
   const clickable = () => {
     return !(isBefore && isEmpty)
+  }
+
+  const workoutClickHandler = (workout: WorkoutPreview) => {
+    if (isToday && !workout.completed) onPerform(workout)
   }
 
   return (
@@ -50,7 +54,8 @@ const ScheduleBlock = ({ schedule, onExecute, onEditSchedule }: ScheduleBlockPro
             .map((wrk) => (
               <div
                 key={wrk.index}
-                className={`${styles.workout} ${isToday ? styles.executable : ''}`}
+                className={`${styles.workout} ${isToday ? styles.performable : ''}`}
+                onClick={() => workoutClickHandler(wrk)}
               >
                 {wrk.title}
               </div>

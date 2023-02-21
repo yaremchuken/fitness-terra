@@ -1,0 +1,15 @@
+@import '../../utils/css/index.scss';
+
+.page {
+  margin: auto;
+  padding-top: 20px;
+
+  height: 100%;
+  width: 100%;
+  max-width: $screen-width;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-y: hidden;
+}

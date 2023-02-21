@@ -17,6 +17,7 @@ import yaremchuken.fitnessterra.model.workout.WorkoutTemplate
 import yaremchuken.fitnessterra.service.dao.ExerciseService
 import yaremchuken.fitnessterra.service.dao.ExerciseTemplateService
 import yaremchuken.fitnessterra.service.dao.UserService
+import yaremchuken.fitnessterra.service.dao.WorkoutService
 import yaremchuken.fitnessterra.service.dao.WorkoutTemplateService
 
 @RestController
@@ -24,6 +25,7 @@ import yaremchuken.fitnessterra.service.dao.WorkoutTemplateService
 class WorkoutApi(
     userService: UserService,
     private val workoutTemplateService: WorkoutTemplateService,
+    private val workoutService: WorkoutService,
     private val exerciseTemplateService: ExerciseTemplateService,
     private val exerciseService: ExerciseService
 ): BaseApi(userService) {
@@ -34,16 +36,6 @@ class WorkoutApi(
         val user = getUser()
         val previews = workoutTemplateService.getAll(user)
         return previews.map { workoutTemplateService.toPreviewDto(it) }
-    }
-
-    @GetMapping("template/{id}")
-    @ResponseBody
-    fun getTemplate(@PathVariable @NonNull id: Long): WorkoutDto {
-        val user = getUser()
-        val workout = workoutTemplateService.get(id).orElseThrow { EntityNotExistsException() }
-        if (user.id != workout.user.id) throw EntityNotExistsException()
-
-        return workoutTemplateService.toDto(workout)
     }
 
     @PostMapping("template")
@@ -71,5 +63,15 @@ class WorkoutApi(
         val template = workoutTemplateService.save(entity)
 
         return workoutTemplateService.toPreviewDto(template)
+    }
+
+    @GetMapping("{id}")
+    @ResponseBody
+    fun getTemplate(@PathVariable @NonNull id: Long): WorkoutDto {
+        val user = getUser()
+        val workout = workoutService.get(id).orElseThrow { EntityNotExistsException() }
+        if (user.id != workout.template.user.id) throw EntityNotExistsException()
+
+        return workoutService.toDto(workout)
     }
 }

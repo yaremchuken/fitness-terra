@@ -5,7 +5,6 @@ import Schedule from '../models/Schedule'
 const prefab = (scheduledAt: Date): Schedule => {
   return {
     scheduledAt,
-    completed: false,
     previews: [],
   }
 }

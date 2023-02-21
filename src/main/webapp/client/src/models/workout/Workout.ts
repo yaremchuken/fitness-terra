@@ -7,6 +7,7 @@ export type IWorkout = {
   index?: number
   title: string
   rests: number[]
+  completed: boolean
 }
 
 export type WorkoutPreview = IWorkout & {

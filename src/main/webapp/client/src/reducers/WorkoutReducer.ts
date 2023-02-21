@@ -1,16 +1,18 @@
 import { WorkoutAction } from '../actions/workout/WorkoutAction'
 import { WorkoutActionType } from '../actions/workout/WorkoutActionType'
-import { WorkoutPreview } from '../models/workout/Workout'
+import Workout, { WorkoutPreview } from '../models/workout/Workout'
 
 export const prefab: WorkoutPreview = {
   title: '',
   previews: [],
   rests: [],
+  completed: false,
 }
 
 export type State = {
   previews: WorkoutPreview[]
   editedTemplate?: WorkoutPreview
+  performed?: Workout
 }
 
 const initialState = {
@@ -57,6 +59,18 @@ const reducer = (state: State = initialState, action: WorkoutAction) => {
       return {
         ...state,
         editedTemplate: undefined,
+      }
+
+    case WorkoutActionType.WORKOUT_REQUESTED:
+      return {
+        ...state,
+        performed: undefined,
+      }
+
+    case WorkoutActionType.WORKOUT_LOADED:
+      return {
+        ...state,
+        performed: action.payload,
       }
 
     default:

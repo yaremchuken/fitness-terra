@@ -40,15 +40,11 @@ const WorkoutsPage = ({
     if (previews.length === 0 || exercisePreviews.length === 0) {
       setLoader('Loading Workouts')
       getPreviews().then(() => {
-        if (exercisePreviews.length > 0) setLoader(undefined)
-      })
-      getExercisePreviews().then(() => {
-        if (previews.length > 0) setLoader(undefined)
+        if (exercisePreviews.length === 0) {
+          getExercisePreviews().then(() => setLoader(undefined))
+        }
       })
     } else setLoader(undefined)
-
-    if (exercisePreviews.length === 0) {
-    }
   }, [])
 
   if (loader) {

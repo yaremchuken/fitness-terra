@@ -1,7 +1,6 @@
 import Schedule from '../models/Schedule'
-import { fromLocalDate, toLocalDate } from '../utils/Utils'
+import { decodeWorkoutPreviewsFiles, fromLocalDate, toLocalDate } from '../utils/Utils'
 import api from './Api'
-import { decodeWorkoutPreviews } from './WorkoutService'
 
 const baseUrl = 'schedule'
 
@@ -24,7 +23,7 @@ export const saveScheduleApi = async (schedule: Schedule): Promise<Schedule> => 
 const format = (schedule: any): Schedule => {
   return {
     ...schedule,
-    previews: decodeWorkoutPreviews(schedule.previews),
+    previews: decodeWorkoutPreviewsFiles(schedule.previews),
     scheduledAt: fromLocalDate(schedule.scheduledAt),
   }
 }

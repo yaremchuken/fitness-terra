@@ -1,6 +1,7 @@
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { TouchBackend } from 'react-dnd-touch-backend'
 import { MediaType } from '../models/MediaType'
+import Workout, { WorkoutPreview } from '../models/workout/Workout'
 
 export const base64toFile = (base64: string, type: MediaType, id: number) => {
   return new File([base64ToArrayBuffer(base64)], `${type}_${id}`)
@@ -37,4 +38,36 @@ export const toLocalDate = (date: Date) => {
 
 export const fromLocalDate = (date: string) => {
   return new Date(`${date}T00:00:00.000Z`)
+}
+
+export const decodeWorkoutPreviewsFiles = (workouts: WorkoutPreview[]) =>
+  workouts.map((workout: WorkoutPreview) => {
+    return {
+      ...workout,
+      previews: workout.previews.map((exercise) => {
+        return {
+          ...exercise,
+          preview:
+            exercise.preview &&
+            base64toFile(exercise.preview as any, MediaType.EXERCISE_PREVIEW, exercise.id!!),
+        }
+      }),
+    }
+  })
+
+export const decodeWorkoutFiles = (workout: Workout) => {
+  return {
+    ...workout,
+    exercises: workout.exercises.map((exercise) => {
+      return {
+        ...exercise,
+        preview:
+          exercise.preview &&
+          base64toFile(exercise.preview as any, MediaType.EXERCISE_PREVIEW, exercise.id!!),
+        media:
+          exercise.media &&
+          base64toFile(exercise.media as any, MediaType.EXERCISE_MEDIA, exercise.id!!),
+      }
+    }),
+  }
 }

@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { bindActionCreators, Dispatch } from 'redux'
 import { closeEditor, editSchedule, getPreviews } from '../../actions/schedule/ScheduleAction'
+import { getWorkout } from '../../actions/workout/WorkoutAction'
 import Loader from '../../components/loader/Loader'
 import Schedule from '../../models/Schedule'
-import Workout from '../../models/workout/Workout'
+import { WorkoutPreview } from '../../models/workout/Workout'
 import { StoreState } from '../../reducers/RootReducer'
 import { formatDate } from '../../utils/Utils'
 import ScheduleBlock from './schedule-block/ScheduleBlock'
@@ -17,6 +19,7 @@ type SchedulePageProps = {
   getPreviews: (begin: Date, end: Date) => Promise<any>
   editSchedule: (scheduledAt: Date, scheduleId?: number) => void
   closeEditor: () => void
+  getWorkout: (id: number) => Promise<any>
 }
 
 const CALENDAR_DAYS_AMOUNT = 30
@@ -27,7 +30,10 @@ const SchedulePage = ({
   editSchedule,
   closeEditor,
   getPreviews,
+  getWorkout,
 }: SchedulePageProps) => {
+  const navigate = useNavigate()
+
   const [calendar, setCalendar] = useState<Schedule[]>([])
   const [loader, setLoader] = useState<string | undefined>()
 
@@ -80,13 +86,17 @@ const SchedulePage = ({
         (sch) => sch.scheduledAt.toDateString() === scheduledAt.toDateString()
       )
       if (existed) cal.push(existed)
-      else cal.push({ scheduledAt, completed: false, previews: [] })
+      else cal.push({ scheduledAt, previews: [] })
     }
     setCalendar(cal)
   }
 
-  const executeWorkout = (workout: Workout) => {
-    console.log(workout)
+  const performWorkout = (workout: WorkoutPreview) => {
+    setLoader('Loading Workout')
+    getWorkout(workout.id!!).then(() => {
+      setLoader(undefined)
+      navigate('/perform')
+    })
   }
 
   const onEditorClose = () => {
@@ -111,7 +121,7 @@ const SchedulePage = ({
             <ScheduleBlock
               key={schedule.scheduledAt.getTime()}
               schedule={schedule}
-              onExecute={executeWorkout}
+              onPerform={performWorkout}
               onEditSchedule={() => editSchedule(schedule.scheduledAt, schedule.id)}
             />
           ))
@@ -135,6 +145,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => {
       },
       dispatch
     ),
+    getWorkout: (id: number) => getWorkout(id)(dispatch),
     getPreviews: (begin: Date, end: Date) => getPreviews(begin, end)(dispatch),
   }
 }
