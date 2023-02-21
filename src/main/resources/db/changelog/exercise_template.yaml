@@ -65,5 +65,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
+                  name: description
+                  type: character varying(2048)
+              - column:
                   name: equipment
                   type: character varying(1024)

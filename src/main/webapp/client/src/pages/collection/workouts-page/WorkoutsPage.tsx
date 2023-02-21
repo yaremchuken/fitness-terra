@@ -42,7 +42,7 @@ const WorkoutsPage = ({
       getPreviews().then(() => {
         if (exercisePreviews.length === 0) {
           getExercisePreviews().then(() => setLoader(undefined))
-        }
+        } else setLoader(undefined)
       })
     } else setLoader(undefined)
   }, [])

@@ -46,3 +46,11 @@
 .disabled {
   background: none;
 }
+
+.textarea {
+  height: 130px;
+  resize: vertical;
+  font-size: $font-size * 1.2;
+  line-height: $font-size * 1.2;
+  overflow: hidden;
+}

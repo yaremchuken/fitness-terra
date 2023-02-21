@@ -11,9 +11,22 @@ class IndexedExercisePreviewDto(
     title: String,
     type: ActivityType,
     muscleGroups: Array<MuscleGroup>,
+    description: String?,
     repeats: Int,
     duration: Int,
     calories: Int,
     equipment: Array<Equipment>,
     preview: ByteArray?
-): ExercisePreviewDto(id, templateId, title, type, muscleGroups, repeats, duration, calories, equipment, preview)
+): ExercisePreviewDto(
+    id,
+    templateId,
+    title,
+    type,
+    muscleGroups,
+    description,
+    repeats,
+    duration,
+    calories,
+    equipment,
+    preview
+)

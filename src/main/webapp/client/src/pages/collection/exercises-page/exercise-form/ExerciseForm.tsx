@@ -53,7 +53,7 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
     return onEmpty
   }
 
-  const changeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+  const changeHandler = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     let value: string | number = event.target.value
     if (event.target.name === 'duration') {
       value = toSecs(value, templateData.duration)
@@ -256,6 +256,14 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
         type='number'
         value={templateData.calories === 0 ? '' : templateData.calories}
         onChange={changeHandler}
+        disabled={inProcess}
+      />
+      <Input
+        title='Description'
+        name='description'
+        type='textarea'
+        value={templateData.description}
+        onTextareaChange={changeHandler}
         disabled={inProcess}
       />
 

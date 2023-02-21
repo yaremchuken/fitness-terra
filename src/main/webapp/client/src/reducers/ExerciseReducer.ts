@@ -7,6 +7,7 @@ export const prefab: Exercise = {
   title: '',
   type: ActivityType.WARMUP,
   muscleGroups: [],
+  description: '',
   repeats: 0,
   duration: 0,
   calories: 0,

@@ -4,30 +4,36 @@ import { useNavigate } from 'react-router-dom'
 import Loader from '../../components/loader/Loader'
 import Workout from '../../models/workout/Workout'
 import { StoreState } from '../../reducers/RootReducer'
+import ExercisesList from './exercises-list/ExercisesList'
 import styles from './PerformPage.module.scss'
 
 type PerformPageProps = {
-  performed?: Workout
+  workout?: Workout
 }
 
-const PerformPage = ({ performed }: PerformPageProps) => {
+const PerformPage = ({ workout }: PerformPageProps) => {
   const navigate = useNavigate()
 
   const [loader, setLoader] = useState<string | undefined>()
+  const [performing, setPerforming] = useState(false)
 
   useEffect(() => {
-    if (!performed) navigate('/schedule')
-  }, [performed])
+    if (!workout) navigate('/schedule')
+  }, [workout])
 
   if (loader) {
     return <Loader message={loader} />
   }
 
-  return <div className={styles.page}>PERFORM {performed?.title}</div>
+  return (
+    <div className={styles.page}>
+      {workout && !performing && <ExercisesList workout={workout} />}
+    </div>
+  )
 }
 
 const mapStateToProps = ({ workout }: StoreState) => ({
-  performed: workout.performed,
+  workout: workout.performed,
 })
 
 export default connect(mapStateToProps)(PerformPage)

@@ -34,6 +34,11 @@ class ExerciseTemplate(
     val muscleGroups: Array<MuscleGroup>,
 
     /**
+     * Exercise description, notes, technique of execution etc.
+     */
+    val description: String?,
+
+    /**
      * Address of S3 storage for preview picture
      */
     var previewUrl: String?,
@@ -62,5 +67,5 @@ class ExerciseTemplate(
     /**
      * Amount of calories loss while exercising.
      */
-    val calories: Int,
+    val calories: Int
 ): BaseEntity<Long>()
