@@ -32,7 +32,7 @@ class WorkoutService(
             workout.index,
             workout.template.id!!,
             workout.template.title,
-            workout.exercises.map { exerciseService.toIndexedPreviewDto(it, true) }.toTypedArray(),
+            workout.exercises.map { exerciseService.toPreviewDto(it, true) }.toTypedArray(),
             workout.template.rests,
             workout.completed)
 }

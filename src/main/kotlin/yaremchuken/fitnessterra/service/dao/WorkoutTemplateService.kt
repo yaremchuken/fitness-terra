@@ -36,7 +36,7 @@ class WorkoutTemplateService(
             null,
             template.id!!,
             template.title,
-            template.exercises.map { exerciseService.toIndexedPreviewDto(it, true) }.toTypedArray(),
+            template.exercises.map { exerciseService.toPreviewDto(it, true) }.toTypedArray(),
             template.rests,
             false)
 }

@@ -11,12 +11,12 @@ class ExerciseDto(
     type: ActivityType,
     muscleGroups: Array<MuscleGroup>,
     description: String?,
+    index: Int?,
     repeats: Int,
     duration: Int,
     calories: Int,
     equipment: Array<Equipment>,
     preview: ByteArray?,
-    val index: Int,
     var media: ByteArray?
 ): ExercisePreviewDto(
     id,
@@ -25,6 +25,7 @@ class ExerciseDto(
     type,
     muscleGroups,
     description,
+    index,
     repeats,
     duration,
     calories,

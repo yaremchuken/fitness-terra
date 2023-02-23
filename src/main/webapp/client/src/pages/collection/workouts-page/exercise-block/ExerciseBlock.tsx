@@ -1,14 +1,10 @@
 import { ChangeEvent } from 'react'
 import ImgButton, { Position, Size } from '../../../../components/img-button/ImgButton'
-import { ExercisePreview } from '../../../../models/workout/Exercise'
+import Exercise, { ExercisePreview } from '../../../../models/workout/Exercise'
 import styles from './ExerciseBlock.module.scss'
 
-export type IndexedExercise = ExercisePreview & {
-  index: number
-}
-
 type ExerciseBlockProps = {
-  exercise: IndexedExercise
+  exercise: Exercise
   onChange?: (type: string, value: number) => void
   onRemove?: () => void
 }

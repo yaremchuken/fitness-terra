@@ -1,4 +1,3 @@
-import { IndexedExercise } from '../../pages/collection/workouts-page/exercise-block/ExerciseBlock'
 import Exercise, { ExercisePreview } from './Exercise'
 
 export type IWorkout = {
@@ -11,7 +10,7 @@ export type IWorkout = {
 }
 
 export type WorkoutPreview = IWorkout & {
-  previews: IndexedExercise[]
+  previews: ExercisePreview[]
 }
 
 type Workout = IWorkout & {

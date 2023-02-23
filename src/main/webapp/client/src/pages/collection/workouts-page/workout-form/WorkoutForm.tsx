@@ -15,7 +15,7 @@ import { WorkoutPreview } from '../../../../models/workout/Workout'
 import { StoreState } from '../../../../reducers/RootReducer'
 import { getDndBackend } from '../../../../utils/Utils'
 import ExercisePreviewCard from '../../exercises-page/exercise-preview-card/ExercisePreviewCard'
-import ExerciseBlock, { IndexedExercise } from '../exercise-block/ExerciseBlock'
+import ExerciseBlock from '../exercise-block/ExerciseBlock'
 import styles from './WorkoutForm.module.scss'
 
 type WorkoutFormProps = {
@@ -31,7 +31,7 @@ const WorkoutForm = ({ previews, edited, save, close }: WorkoutFormProps) => {
   const [loader, setLoader] = useState<string | undefined>()
   const [workoutData, setWorkoutData] = useState<WorkoutPreview>(edited)
   const [inProcess, setInProcess] = useState(false)
-  const [exercises, setExercises] = useState<IndexedExercise[]>(edited.previews)
+  const [exercises, setExercises] = useState<ExercisePreview[]>(edited.previews)
   const [rests, setRests] = useState<number[]>(edited.rests)
 
   const changeTitle = (title: string) => {
@@ -76,9 +76,9 @@ const WorkoutForm = ({ previews, edited, save, close }: WorkoutFormProps) => {
     setInProcess(true)
     setLoader('Uploading Workout Data')
 
-    const previews: IndexedExercise[] = []
+    const previews: ExercisePreview[] = []
     exercises.forEach((ex) => {
-      previews[ex.index] = {
+      previews[ex.index!!] = {
         ...ex,
         preview: undefined,
       }
@@ -111,17 +111,17 @@ const WorkoutForm = ({ previews, edited, save, close }: WorkoutFormProps) => {
               <div key={ex.index} className={styles.exerciseTuple}>
                 <ExerciseBlock
                   exercise={ex}
-                  onRemove={() => removeExercise(ex.index)}
-                  onChange={(type, value) => changeExercise(ex.index, type, value)}
+                  onRemove={() => removeExercise(ex.index!!)}
+                  onChange={(type, value) => changeExercise(ex.index!!, type, value)}
                 />
-                {rests[ex.index] && (
-                  <div key={ex.index + 100} className={styles.restBlock}>
+                {rests[ex.index!!] && (
+                  <div key={ex.index!! + 100} className={styles.restBlock}>
                     <p className={styles.restTitle}>rest time</p>
                     <input
                       className={styles.restInput}
                       type='number'
-                      value={rests[ex.index]}
-                      onChange={(e) => changeRestTime(ex.index, +e.currentTarget.value)}
+                      value={rests[ex.index!!]}
+                      onChange={(e) => changeRestTime(ex.index!!, +e.currentTarget.value)}
                     />
                   </div>
                 )}

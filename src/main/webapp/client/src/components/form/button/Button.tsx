@@ -8,6 +8,7 @@ type ButtonProps = {
   type?: 'button' | 'submit' | undefined
   disabled?: boolean
   form?: string
+  big?: boolean
 }
 
 const Button = ({
@@ -18,6 +19,7 @@ const Button = ({
   type = 'button',
   disabled = false,
   form,
+  big,
 }: ButtonProps) => {
   return (
     <button
@@ -27,6 +29,7 @@ const Button = ({
         ${styles.btn}
         ${disabled ? styles.disabled : ''}
         ${inactive ? styles.inactive : ''}
+        ${big ? styles.big : ''}
       `}
       type={type}
       onClick={(e) => {

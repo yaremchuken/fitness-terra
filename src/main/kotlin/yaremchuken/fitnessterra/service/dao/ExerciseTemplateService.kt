@@ -26,19 +26,19 @@ class ExerciseTemplateService(
 
     fun toExerciseDto(template: ExerciseTemplate, attachPreview: Boolean = false, attachMedia: Boolean = false) =
         ExerciseDto(
-            -1,
+            null,
             template.id!!,
             template.title,
             template.type,
             template.muscleGroups,
             template.description,
+            null,
             template.repeats,
             template.duration,
             template.calories,
             template.equipment,
             if (attachPreview && template.previewUrl !== null)
                 amazonS3Service.download(template.previewUrl) else null,
-            -1,
             if (attachMedia && template.mediaUrl !== null)
                 amazonS3Service.download(template.mediaUrl!!) else null)
 
@@ -50,6 +50,7 @@ class ExerciseTemplateService(
             template.type,
             template.muscleGroups,
             template.description,
+            null,
             template.repeats,
             template.duration,
             template.calories,

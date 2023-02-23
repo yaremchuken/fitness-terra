@@ -9,6 +9,7 @@ export type ExercisePreview = {
   type: ActivityType
   muscleGroups: MuscleGroup[]
   description: string
+  index?: number
   repeats: number
   duration: number
   calories: number

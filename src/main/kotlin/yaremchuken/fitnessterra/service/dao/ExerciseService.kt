@@ -3,7 +3,6 @@ package yaremchuken.fitnessterra.service.dao
 import org.springframework.stereotype.Service
 import yaremchuken.fitnessterra.api.dto.ExerciseDto
 import yaremchuken.fitnessterra.api.dto.ExercisePreviewDto
-import yaremchuken.fitnessterra.api.dto.IndexedExercisePreviewDto
 import yaremchuken.fitnessterra.model.workout.Exercise
 import yaremchuken.fitnessterra.repository.ExerciseRepository
 import yaremchuken.fitnessterra.service.AmazonS3Service
@@ -25,13 +24,13 @@ class ExerciseService(
             exercise.template.type,
             exercise.template.muscleGroups,
             exercise.template.description,
+            exercise.index,
             exercise.repeats,
             exercise.duration,
             exercise.calories,
             exercise.equipment,
             if (attachPreview && exercise.template.previewUrl != null)
                 amazonS3Service.download(exercise.template.previewUrl) else null,
-            exercise.index,
             if (attachMedia && exercise.template.mediaUrl != null)
                 amazonS3Service.download(exercise.template.mediaUrl) else null)
 
@@ -43,22 +42,7 @@ class ExerciseService(
             exercise.template.type,
             exercise.template.muscleGroups,
             exercise.template.description,
-            exercise.repeats,
-            exercise.duration,
-            exercise.calories,
-            exercise.equipment,
-            if (attachPreview && exercise.template.previewUrl != null)
-                amazonS3Service.download(exercise.template.previewUrl) else null)
-
-    fun toIndexedPreviewDto(exercise: Exercise, attachPreview: Boolean = false) =
-        IndexedExercisePreviewDto(
             exercise.index,
-            exercise.id!!,
-            exercise.template.id!!,
-            exercise.template.title,
-            exercise.template.type,
-            exercise.template.muscleGroups,
-            exercise.template.description,
             exercise.repeats,
             exercise.duration,
             exercise.calories,

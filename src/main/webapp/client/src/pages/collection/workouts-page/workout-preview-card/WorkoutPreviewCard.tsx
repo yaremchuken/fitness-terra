@@ -30,7 +30,7 @@ const WorkoutPreviewCard = ({
                 exercise={ex}
                 onChange={
                   onExerciseChange
-                    ? (type, value) => onExerciseChange(ex.index, type, value)
+                    ? (type, value) => onExerciseChange(ex.index!!, type, value)
                     : undefined
                 }
               />

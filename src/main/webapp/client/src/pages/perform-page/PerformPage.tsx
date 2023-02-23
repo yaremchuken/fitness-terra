@@ -3,8 +3,10 @@ import { connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { bindActionCreators, Dispatch } from 'redux'
 import { cancelWorkoutPerform } from '../../actions/workout/WorkoutAction'
+import Exercise from '../../models/workout/Exercise'
 import Workout from '../../models/workout/Workout'
 import { StoreState } from '../../reducers/RootReducer'
+import ExercisePerformProcess from './exercise-perform-process/ExercisePerformProcess'
 import ExercisesList from './exercises-list/ExercisesList'
 import styles from './PerformPage.module.scss'
 
@@ -16,26 +18,25 @@ type PerformPageProps = {
 const PerformPage = ({ workout, cancelWorkoutPerform }: PerformPageProps) => {
   const navigate = useNavigate()
 
-  const [performing, setPerforming] = useState(false)
+  const [current, setCurrent] = useState<Exercise | undefined>()
 
   useEffect(() => {
     if (!workout) navigate('/schedule')
   }, [workout])
 
-  const startPerforming = () => {}
-
   return (
     <div className={styles.page}>
-      {workout && !performing && (
+      {workout && !current && (
         <ExercisesList
           workout={workout}
-          onPerform={() => setPerforming(true)}
+          onPerform={() => setCurrent(workout.exercises.find((ex) => ex.index === 0)!!)}
           onCancel={() => {
-            setPerforming(false)
+            setCurrent(undefined)
             cancelWorkoutPerform()
           }}
         />
       )}
+      {current && <ExercisePerformProcess exercise={current} />}
     </div>
   )
 }

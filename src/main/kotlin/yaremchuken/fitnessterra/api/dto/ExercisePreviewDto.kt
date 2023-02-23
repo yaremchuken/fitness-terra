@@ -13,6 +13,7 @@ open class ExercisePreviewDto(
     val type: ActivityType,
     val muscleGroups: Array<MuscleGroup>,
     val description: String?,
+    val index: Int?,
     val repeats: Int,
     val duration: Int,
     val calories: Int,

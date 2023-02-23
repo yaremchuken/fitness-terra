@@ -5,7 +5,7 @@ class WorkoutPreviewDto(
     val index: Int?,
     val templateId: Long?,
     val title: String,
-    val previews: Array<IndexedExercisePreviewDto>,
+    val previews: Array<ExercisePreviewDto>,
     val rests: Array<Int>,
     val completed: Boolean,
 )
