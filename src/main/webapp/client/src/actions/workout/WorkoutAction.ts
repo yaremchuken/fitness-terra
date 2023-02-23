@@ -53,6 +53,12 @@ export const workoutLoaded = (workout: Workout) => {
   }
 }
 
+export const cancelWorkoutPerform = () => {
+  return {
+    type: WorkoutActionType.WORKOUT_PERFORM_CANCELED,
+  }
+}
+
 export const getPreviews = () => (dispatch: Dispatch) => {
   dispatch(requestPreviews())
   return getPreviewsApi().then((data) => dispatch(previewsLoaded(data)))

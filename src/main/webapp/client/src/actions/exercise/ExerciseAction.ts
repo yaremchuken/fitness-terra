@@ -20,29 +20,10 @@ const previewsLoaded = (exercises: ExercisePreview[]) => {
   }
 }
 
-export const createExerciseTemplate = () => {
-  return {
-    type: ExerciseActionType.CREATE_TEMPLATE,
-  }
-}
-
-const templateLoaded = (exercise: Exercise) => {
-  return {
-    type: ExerciseActionType.TEMPLATE_LOADED,
-    payload: exercise,
-  }
-}
-
 const templateSaved = (preview: ExercisePreview) => {
   return {
     type: ExerciseActionType.TEMPLATE_SAVED,
     payload: preview,
-  }
-}
-
-export const templateClose = () => {
-  return {
-    type: ExerciseActionType.TEMPLATE_CLOSE,
   }
 }
 
@@ -51,8 +32,7 @@ export const getPreviews = () => (dispatch: Dispatch) => {
   return getPreviewsApi().then((data) => dispatch(previewsLoaded(data)))
 }
 
-export const getTemplate = (id: number) => (dispatch: Dispatch) =>
-  getTemplateApi(id).then((data) => dispatch(templateLoaded(data)))
+export const getTemplate = (id: number) => getTemplateApi(id)
 
 export const saveTemplate = (exercise: Exercise) => (dispatch: Dispatch) =>
   saveTemplateApi(exercise).then((data) => dispatch(templateSaved(data)))

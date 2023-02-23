@@ -1,43 +1,38 @@
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators, Dispatch } from 'redux'
-import {
-  getPreviews,
-  templateClose,
-  createExerciseTemplate,
-  getTemplate,
-} from '../../../actions/exercise/ExerciseAction'
+import { Dispatch } from 'redux'
+import { getPreviews, getTemplate } from '../../../actions/exercise/ExerciseAction'
+import Loader from '../../../components/loader/Loader'
+import { ActivityType } from '../../../models/workout/ActivityType'
 import Exercise, { ExercisePreview } from '../../../models/workout/Exercise'
 import { StoreState } from '../../../reducers/RootReducer'
 import ExerciseForm from './exercise-form/ExerciseForm'
-import styles from './ExercisesPage.module.scss'
 import ExercisePreviewCard from './exercise-preview-card/ExercisePreviewCard'
-import Loader from '../../../components/loader/Loader'
+import styles from './ExercisesPage.module.scss'
+
+export const prefab: Exercise = {
+  title: '',
+  type: ActivityType.WARMUP,
+  muscleGroups: [],
+  description: '',
+  repeats: 0,
+  duration: 0,
+  calories: 0,
+  equipment: [],
+}
 
 type ExercisesPageProps = {
   previews: ExercisePreview[]
-  template?: Exercise
   getPreviews: () => Promise<any>
   getTemplate: (id: number) => Promise<any>
-  createExerciseTemplate: () => void
-  templateClose: () => void
 }
 
-const ExercisesPage = ({
-  previews,
-  template,
-  getPreviews,
-  getTemplate,
-  createExerciseTemplate,
-  templateClose,
-}: ExercisesPageProps) => {
+const ExercisesPage = ({ previews, getPreviews, getTemplate }: ExercisesPageProps) => {
   const [loader, setLoader] = useState<string | undefined>('Preloading')
+  const [template, setTemplate] = useState<Exercise | undefined>()
 
   /* eslint react-hooks/exhaustive-deps: 0 */
   useEffect(() => {
-    if (template) {
-      templateClose()
-    }
     if (previews.length === 0) {
       setLoader('Loading Exercises')
       getPreviews().then(() => setLoader(undefined))
@@ -47,7 +42,10 @@ const ExercisesPage = ({
   const fetchTemplate = (id?: number) => {
     if (id) {
       setLoader('Loading Exercise')
-      getTemplate(id).then(() => setLoader(undefined))
+      getTemplate(id).then((data) => {
+        setTemplate(data)
+        setLoader(undefined)
+      })
     }
   }
 
@@ -61,14 +59,14 @@ const ExercisesPage = ({
         <>
           <h1 className={styles.title}>{template.id ? 'Edit Exercise' : 'Add Exercise'}</h1>
           <div className={styles.formContainer}>
-            <ExerciseForm close={templateClose} template={template} />
+            <ExerciseForm close={() => setTemplate(undefined)} template={template} />
           </div>
         </>
       ) : (
         <>
           <h1 className={styles.title}>Exercises</h1>
           <ul className={styles.exercises}>
-            <ExercisePreviewCard key={-1} callback={createExerciseTemplate} />
+            <ExercisePreviewCard key={-1} callback={() => setTemplate(structuredClone(prefab))} />
             {previews
               .sort((a, b) => a.templateId! - b.templateId!)
               .map((e) => (
@@ -87,20 +85,12 @@ const ExercisesPage = ({
 
 const mapStateToProps = ({ exercise }: StoreState) => ({
   previews: exercise.previews,
-  template: exercise.template,
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    ...bindActionCreators(
-      {
-        createExerciseTemplate,
-        templateClose,
-      },
-      dispatch
-    ),
     getPreviews: () => getPreviews()(dispatch),
-    getTemplate: (id: number) => getTemplate(id)(dispatch),
+    getTemplate: (id: number) => getTemplate(id),
   }
 }
 

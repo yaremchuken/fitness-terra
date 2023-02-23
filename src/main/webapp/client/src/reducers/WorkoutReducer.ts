@@ -73,6 +73,12 @@ const reducer = (state: State = initialState, action: WorkoutAction) => {
         performed: action.payload,
       }
 
+    case WorkoutActionType.WORKOUT_PERFORM_CANCELED:
+      return {
+        ...state,
+        performed: undefined,
+      }
+
     default:
       return state
   }

@@ -1,22 +1,9 @@
 import { ExerciseAction } from '../actions/exercise/ExerciseAction'
 import { ExerciseActionType } from '../actions/exercise/ExerciseActionType'
-import { ActivityType } from '../models/workout/ActivityType'
-import Exercise, { ExercisePreview } from '../models/workout/Exercise'
-
-export const prefab: Exercise = {
-  title: '',
-  type: ActivityType.WARMUP,
-  muscleGroups: [],
-  description: '',
-  repeats: 0,
-  duration: 0,
-  calories: 0,
-  equipment: [],
-}
+import { ExercisePreview } from '../models/workout/Exercise'
 
 export type State = {
   previews: ExercisePreview[]
-  template?: Exercise
 }
 
 const initialState = {
@@ -40,18 +27,6 @@ const reducer = (state: State = initialState, action: ExerciseAction) => {
         previews: action.payload,
       }
 
-    case ExerciseActionType.CREATE_TEMPLATE:
-      return {
-        ...state,
-        template: { ...prefab },
-      }
-
-    case ExerciseActionType.TEMPLATE_LOADED:
-      return {
-        ...state,
-        template: action.payload,
-      }
-
     case ExerciseActionType.TEMPLATE_SAVED:
       return {
         ...state,
@@ -59,13 +34,6 @@ const reducer = (state: State = initialState, action: ExerciseAction) => {
           ...state.previews.filter((e) => e.templateId !== action.payload.templateId),
           action.payload,
         ],
-        template: undefined,
-      }
-
-    case ExerciseActionType.TEMPLATE_CLOSE:
-      return {
-        ...state,
-        template: undefined,
       }
 
     default:

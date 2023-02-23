@@ -37,6 +37,7 @@
 .workouts {
   padding: 5px;
   display: grid;
+  gap: 3px;
   height: 100%;
 }
 
@@ -50,5 +51,5 @@
 .performable {
   background-image: url(../../../img/icon_perform.png);
   background-position: center;
-  background-size: contain;
+  background-size: cover;
 }

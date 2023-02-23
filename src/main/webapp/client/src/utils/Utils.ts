@@ -71,3 +71,9 @@ export const decodeWorkoutFiles = (workout: Workout) => {
     }),
   }
 }
+
+export const secondsToString = (seconds: number) => {
+  const mins = Math.floor(seconds / 60)
+  const secs = seconds - mins * 60
+  return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`
+}

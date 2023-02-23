@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import { saveTemplate } from '../../../../actions/exercise/ExerciseAction'
@@ -15,6 +15,7 @@ import { EquipmentType } from '../../../../models/workout/EquipmentType'
 import KeyAmountBlock from '../../../../components/form/key-amount-block/KeyAmountBlock'
 import MediaUpload from '../../../../components/form/media-upload/MediaUpload'
 import Loader from '../../../../components/loader/Loader'
+import { secondsToString } from '../../../../utils/Utils'
 
 const maxDuration = 3600
 
@@ -27,20 +28,19 @@ type ExerciseFormProps = {
 const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
   const displayMessage = useDisplayMessage()
 
-  const [loader, setLoader] = useState<string | undefined>()
+  const [loader, setLoader] = useState<string | undefined>('Preparing Template')
   const [templateData, setTemplateData] = useState<Exercise>(template)
   const [inProcess, setInProcess] = useState(false)
   const [showEquipmentMenu, setShowEquipmentMenu] = useState(false)
 
-  const formatTime = (seconds: number) => {
-    if (seconds > maxDuration) seconds = maxDuration
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds - mins * 60
-    return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`
-  }
-
   // TODO: Drop down menu for repeats and duration
   // TODO: Possibility to remove exercise template
+
+  /* eslint react-hooks/exhaustive-deps: 0 */
+  useEffect(() => {
+    setTemplateData(template)
+    setLoader(undefined)
+  }, [])
 
   const toSecs = (time: string, onEmpty: number = 0) => {
     if (/^\d+$/.test(time)) return +time
@@ -130,9 +130,12 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
     setTemplateData({ ...templateData, media })
   }
 
+  if (loader) {
+    return <Loader message={loader} />
+  }
+
   return (
     <form className={styles.form} onSubmit={onSubmit}>
-      {loader && <Loader message={loader} />}
       <Input
         title='Title'
         name='title'
@@ -202,7 +205,7 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
         <Input
           title='Duration'
           name='duration'
-          value={templateData.repeats > 0 ? '--:--' : formatTime(templateData.duration)}
+          value={templateData.repeats > 0 ? '--:--' : secondsToString(templateData.duration)}
           onChange={changeHandler}
           disabled={templateData.repeats > 0 || inProcess}
         />
