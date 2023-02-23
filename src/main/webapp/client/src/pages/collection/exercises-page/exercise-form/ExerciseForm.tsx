@@ -28,19 +28,13 @@ type ExerciseFormProps = {
 const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
   const displayMessage = useDisplayMessage()
 
-  const [loader, setLoader] = useState<string | undefined>('Preparing Template')
+  const [loader, setLoader] = useState<string | undefined>()
   const [templateData, setTemplateData] = useState<Exercise>(template)
   const [inProcess, setInProcess] = useState(false)
   const [showEquipmentMenu, setShowEquipmentMenu] = useState(false)
 
   // TODO: Drop down menu for repeats and duration
   // TODO: Possibility to remove exercise template
-
-  /* eslint react-hooks/exhaustive-deps: 0 */
-  useEffect(() => {
-    setTemplateData(template)
-    setLoader(undefined)
-  }, [])
 
   const toSecs = (time: string, onEmpty: number = 0) => {
     if (/^\d+$/.test(time)) return +time

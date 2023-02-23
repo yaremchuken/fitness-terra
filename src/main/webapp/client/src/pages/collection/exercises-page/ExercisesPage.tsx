@@ -10,7 +10,7 @@ import ExerciseForm from './exercise-form/ExerciseForm'
 import ExercisePreviewCard from './exercise-preview-card/ExercisePreviewCard'
 import styles from './ExercisesPage.module.scss'
 
-export const prefab: Exercise = {
+const prefab: Exercise = {
   title: '',
   type: ActivityType.WARMUP,
   muscleGroups: [],
@@ -24,7 +24,7 @@ export const prefab: Exercise = {
 type ExercisesPageProps = {
   previews: ExercisePreview[]
   getPreviews: () => Promise<any>
-  getTemplate: (id: number) => Promise<any>
+  getTemplate: (id: number) => Promise<Exercise>
 }
 
 const ExercisesPage = ({ previews, getPreviews, getTemplate }: ExercisesPageProps) => {

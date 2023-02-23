@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { bindActionCreators, Dispatch } from 'redux'
+import { Dispatch } from 'redux'
 import { getPreviews as getExercisePreviews } from '../../../actions/exercise/ExerciseAction'
-import { closeEditor, editTemplate, getPreviews } from '../../../actions/workout/WorkoutAction'
+import { getPreviews } from '../../../actions/workout/WorkoutAction'
 import Loader from '../../../components/loader/Loader'
 import { ExercisePreview } from '../../../models/workout/Exercise'
 import { WorkoutPreview } from '../../../models/workout/Workout'
@@ -11,32 +11,31 @@ import WorkoutForm from './workout-form/WorkoutForm'
 import WorkoutPreviewCard from './workout-preview-card/WorkoutPreviewCard'
 import styles from './WorkoutsPage.module.scss'
 
+const prefab: WorkoutPreview = {
+  title: '',
+  previews: [],
+  rests: [],
+  completed: false,
+}
+
 type WorkoutsPageProps = {
   exercisePreviews: ExercisePreview[]
   previews: WorkoutPreview[]
-  edited?: WorkoutPreview
   getPreviews: () => Promise<any>
   getExercisePreviews: () => Promise<any>
-  editTemplate: (id?: number) => void
-  closeEditor: () => void
 }
 
 const WorkoutsPage = ({
   exercisePreviews,
   previews,
-  edited,
   getPreviews,
   getExercisePreviews,
-  editTemplate,
-  closeEditor,
 }: WorkoutsPageProps) => {
   const [loader, setLoader] = useState<string | undefined>('Preloading')
+  const [template, setTemplate] = useState<WorkoutPreview | undefined>()
 
   /* eslint react-hooks/exhaustive-deps: 0 */
   useEffect(() => {
-    if (edited) {
-      closeEditor()
-    }
     if (previews.length === 0 || exercisePreviews.length === 0) {
       setLoader('Loading Workouts')
       getPreviews().then(() => {
@@ -47,31 +46,35 @@ const WorkoutsPage = ({
     } else setLoader(undefined)
   }, [])
 
+  const editTemplate = (templateId: number) => {
+    setTemplate(previews.find((wrk) => wrk.templateId === templateId))
+  }
+
   if (loader) {
     return <Loader message={loader} />
   }
 
   return (
-    <div className={`${styles.page} ${edited === undefined ? styles.withOverflow : ''}`}>
-      {edited ? (
+    <div className={`${styles.page} ${template === undefined ? styles.withOverflow : ''}`}>
+      {template ? (
         <>
-          <h1 className={styles.title}>{edited.id ? 'Edit Workout' : 'Add Workout'}</h1>
+          <h1 className={styles.title}>{template?.templateId ? 'Edit Workout' : 'Add Workout'}</h1>
           <div className={styles.formContainer}>
-            <WorkoutForm close={closeEditor} edited={edited} />
+            <WorkoutForm close={() => setTemplate(undefined)} edited={template} />
           </div>
         </>
       ) : (
         <>
           <h1 className={styles.title}>Workouts</h1>
           <ul className={styles.workouts}>
-            <WorkoutPreviewCard key={-1} callback={() => editTemplate()} />
+            <WorkoutPreviewCard key={-1} callback={() => setTemplate(prefab)} />
             {previews
               .sort((a, b) => a.id! - b.id!)
               .map((w) => (
                 <WorkoutPreviewCard
                   key={w.templateId}
                   preview={w}
-                  callback={() => editTemplate(w.templateId)}
+                  callback={() => editTemplate(w.templateId!!)}
                 />
               ))}
           </ul>
@@ -84,18 +87,10 @@ const WorkoutsPage = ({
 const mapStateToProps = ({ exercise, workout }: StoreState) => ({
   exercisePreviews: exercise.previews,
   previews: workout.previews,
-  edited: workout.editedTemplate,
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
-    ...bindActionCreators(
-      {
-        editTemplate,
-        closeEditor,
-      },
-      dispatch
-    ),
     getPreviews: () => getPreviews()(dispatch),
     getExercisePreviews: () => getExercisePreviews()(dispatch),
   }

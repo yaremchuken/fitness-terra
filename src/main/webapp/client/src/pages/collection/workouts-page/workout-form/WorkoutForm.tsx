@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { DndProvider } from 'react-dnd'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
@@ -31,14 +31,8 @@ const WorkoutForm = ({ previews, edited, save, close }: WorkoutFormProps) => {
   const [loader, setLoader] = useState<string | undefined>()
   const [workoutData, setWorkoutData] = useState<WorkoutPreview>(edited)
   const [inProcess, setInProcess] = useState(false)
-  const [exercises, setExercises] = useState<IndexedExercise[]>([])
-  const [rests, setRests] = useState<number[]>([])
-
-  /* eslint react-hooks/exhaustive-deps: 0 */
-  useEffect(() => {
-    setExercises(edited.previews)
-    setRests(edited.rests)
-  }, [])
+  const [exercises, setExercises] = useState<IndexedExercise[]>(edited.previews)
+  const [rests, setRests] = useState<number[]>(edited.rests)
 
   const changeTitle = (title: string) => {
     setWorkoutData({ ...workoutData, title })

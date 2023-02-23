@@ -22,7 +22,9 @@ const ScheduleBlock = ({ schedule, onPerform, onEditSchedule }: ScheduleBlockPro
   }
 
   const clickable = () => {
-    return !(isBefore && isEmpty)
+    if (isBefore && isEmpty) return false
+    if (isToday && !isEmpty) return false
+    return true
   }
 
   const workoutClickHandler = (workout: WorkoutPreview) => {
