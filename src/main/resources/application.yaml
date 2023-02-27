@@ -22,9 +22,10 @@ spring:
 
 cloud:
   aws:
+    endpoint: storage.yandexcloud.net
     bucket: fitness-terra
     region:
-      static: eu-north-1
+      static: ru-central1
       auto: false
     credentials:
       access-key:
