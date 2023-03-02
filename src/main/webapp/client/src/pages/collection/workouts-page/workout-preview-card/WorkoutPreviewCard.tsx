@@ -24,17 +24,19 @@ const WorkoutPreviewCard = ({
         <div className={styles.inner}>
           <p className={styles.title}>{preview.title}</p>
           <ul className={styles.exercises}>
-            {preview.previews.map((ex) => (
-              <ExerciseBlock
-                key={ex.index}
-                exercise={ex}
-                onChange={
-                  onExerciseChange
-                    ? (type, value) => onExerciseChange(ex.index!!, type, value)
-                    : undefined
-                }
-              />
-            ))}
+            {preview.previews
+              .sort((a, b) => a.index!! - b.index!!)
+              .map((ex) => (
+                <ExerciseBlock
+                  key={ex.index}
+                  exercise={ex}
+                  onChange={
+                    onExerciseChange
+                      ? (type, value) => onExerciseChange(ex.index!!, type, value)
+                      : undefined
+                  }
+                />
+              ))}
           </ul>
         </div>
       ) : (

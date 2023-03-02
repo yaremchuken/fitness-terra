@@ -13,24 +13,10 @@ export const requestPreviews = () => {
   }
 }
 
-const previewsLoaded = (previews: Schedule[]) => {
-  return {
-    type: ScheduleActionType.PREVIEWS_LOADED,
-    payload: previews,
-  }
-}
-
 export const editSchedule = (scheduledAt: Date, id?: number) => {
   return {
     type: ScheduleActionType.EDIT_SCHEDULE,
     payload: { scheduledAt, id },
-  }
-}
-
-const scheduleSaved = (schedule: Schedule) => {
-  return {
-    type: ScheduleActionType.SCHEDULE_SAVED,
-    payload: schedule,
   }
 }
 
@@ -40,10 +26,27 @@ export const closeEditor = () => {
   }
 }
 
+export const markScheduledWorkoutCompleted = (workoutId: number) => {
+  return {
+    type: ScheduleActionType.MARK_SCHEDULED_WORKOUT_COMPLETED,
+    payload: workoutId,
+  }
+}
+
 export const getPreviews = (begin: Date, end: Date) => (dispatch: Dispatch) => {
   dispatch(requestPreviews())
-  return getPreviewsApi(begin, end).then((data) => dispatch(previewsLoaded(data)))
+  return getPreviewsApi(begin, end).then((data) =>
+    dispatch({
+      type: ScheduleActionType.PREVIEWS_LOADED,
+      payload: data,
+    })
+  )
 }
 
 export const saveSchedule = (schedule: Schedule) => (dispatch: Dispatch) =>
-  saveScheduleApi(schedule).then((data) => dispatch(scheduleSaved(data)))
+  saveScheduleApi(schedule).then((data) =>
+    dispatch({
+      type: ScheduleActionType.SCHEDULE_SAVED,
+      payload: data,
+    })
+  )

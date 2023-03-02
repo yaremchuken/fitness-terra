@@ -12,6 +12,8 @@ class WorkoutService(
     private val workoutRepository: WorkoutRepository,
     private val exerciseService: ExerciseService
 ) {
+    fun save(workout: Workout) = workoutRepository.save(workout)
+
     fun save(workouts: List<Workout>) = workoutRepository.saveAll(workouts)
 
     fun get(id: Long) = workoutRepository.findById(id)

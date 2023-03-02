@@ -19,6 +19,8 @@ const initialState = {
 }
 
 const reducer = (state: State = initialState, action: ScheduleAction) => {
+  let schedule: Schedule
+
   switch (action.type) {
     case ScheduleActionType.CLEAR_STORES:
       return { ...initialState }
@@ -49,10 +51,33 @@ const reducer = (state: State = initialState, action: ScheduleAction) => {
       }
 
     case ScheduleActionType.SCHEDULE_SAVED:
-      const schedule = action.payload
+      schedule = action.payload
       return {
         ...state,
         previews: [...state.previews.filter((sch) => sch.id !== schedule.id), schedule],
+      }
+
+    case ScheduleActionType.MARK_SCHEDULED_WORKOUT_COMPLETED:
+      const workoutId = action.payload
+
+      schedule = state.previews.find((sch) => {
+        return sch.previews.find((w) => w.id === workoutId) !== undefined
+      })!
+
+      const preview = schedule.previews.find((w) => w.id === workoutId)!
+      preview.completed = true
+
+      schedule = {
+        ...schedule,
+        previews: [...schedule.previews.filter((w) => w.id !== action.payload.workoutId), preview],
+      }
+
+      return {
+        ...state,
+        previews: [
+          ...state.previews.filter((sch) => sch.id !== action.payload.scheduleId),
+          schedule,
+        ],
       }
 
     default:

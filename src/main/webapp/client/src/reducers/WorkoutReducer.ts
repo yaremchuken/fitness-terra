@@ -32,7 +32,7 @@ const reducer = (state: State = initialState, action: WorkoutAction) => {
       return {
         ...state,
         previews: [
-          ...state.previews.filter((e) => e.templateId !== action.payload.templateId),
+          ...state.previews.filter((w) => w.templateId !== action.payload.templateId),
           action.payload,
         ],
       }
@@ -49,10 +49,16 @@ const reducer = (state: State = initialState, action: WorkoutAction) => {
         performed: action.payload,
       }
 
-    case WorkoutActionType.WORKOUT_PERFORM_CANCELED:
+    case WorkoutActionType.WORKOUT_PERFORM_CLOSED:
       return {
         ...state,
         performed: undefined,
+      }
+
+    case WorkoutActionType.WORKOUT_COMPLETED:
+      return {
+        ...state,
+        previews: [...state.previews.filter((w) => w.id !== action.payload.id), action.payload],
       }
 
     default:

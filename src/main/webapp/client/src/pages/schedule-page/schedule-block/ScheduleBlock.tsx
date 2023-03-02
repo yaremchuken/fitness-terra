@@ -40,14 +40,12 @@ const ScheduleBlock = ({ schedule, onPerform, onEditSchedule }: ScheduleBlockPro
     >
       <p className={styles.heading}>{formatDate(schedule.scheduledAt)}</p>
       {isToday && !isEmpty && (
-        <>
-          <ImgButton
-            callback={onEditSchedule}
-            type='edit'
-            size={Size.X_SMALL}
-            position={Position.LEFT_TOP_NP}
-          />
-        </>
+        <ImgButton
+          callback={onEditSchedule}
+          type='edit'
+          size={Size.X_SMALL}
+          position={Position.LEFT_TOP_NP}
+        />
       )}
       {!isEmpty && (
         <div className={styles.workouts}>
@@ -56,7 +54,11 @@ const ScheduleBlock = ({ schedule, onPerform, onEditSchedule }: ScheduleBlockPro
             .map((wrk) => (
               <div
                 key={wrk.index}
-                className={`${styles.workout} ${isToday ? styles.performable : ''}`}
+                className={`
+                  ${styles.workout}
+                  ${isToday ? styles.performable : ''}
+                  ${wrk.completed ? styles.completed : ''}
+                  ${!wrk.completed && isBefore ? styles.skipped : ''}`.trim()}
                 onClick={() => workoutClickHandler(wrk)}
               >
                 {wrk.title}

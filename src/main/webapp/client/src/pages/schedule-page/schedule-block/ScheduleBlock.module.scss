@@ -45,12 +45,21 @@
   padding: 5px;
   position: relative;
   display: flex;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
   border: 1px solid gray;
   cursor: pointer;
 }
 
 .performable {
   background-image: url(../../../img/icon_perform.png);
-  background-position: center;
-  background-size: cover;
+}
+
+.completed {
+  background-image: url(../../../img/icon_completed.png);
+}
+
+.skipped {
+  background-image: url(../../../img/icon_skipped.png);
 }

@@ -8,5 +8,6 @@ export enum WorkoutActionType {
 
   WORKOUT_REQUESTED = 'workout_workout_requested',
   WORKOUT_LOADED = 'workout_workout_loaded',
-  WORKOUT_PERFORM_CANCELED = 'workout_workout_perform_canceled',
+  WORKOUT_PERFORM_CLOSED = 'workout_workout_perform_closed',
+  WORKOUT_COMPLETED = 'workout_workout_completed',
 }

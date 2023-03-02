@@ -18,17 +18,16 @@ class AWSConfig(
     @Value("\${cloud.aws.region.static}") private val region: String
 ) {
     @Bean
-    fun amazonS3(): AmazonS3 =
-        if (StringUtils.isBlank(endpoint))
+    fun amazonS3(): AmazonS3 {
+        val builder =
             AmazonS3ClientBuilder
                 .standard()
                 .withCredentials(AWSStaticCredentialsProvider(BasicAWSCredentials(accessKey, secretKey)))
-                .withRegion(region)
-                .build()
-        else
-            AmazonS3ClientBuilder
-                .standard()
-                .withCredentials(AWSStaticCredentialsProvider(BasicAWSCredentials(accessKey, secretKey)))
-                .withEndpointConfiguration(AwsClientBuilder.EndpointConfiguration(endpoint, region))
-                .build()
+
+        if (StringUtils.isNotBlank(endpoint))
+            builder.withEndpointConfiguration(AwsClientBuilder.EndpointConfiguration(endpoint, region))
+        else builder.withRegion(region)
+
+        return builder.build()
+    }
 }

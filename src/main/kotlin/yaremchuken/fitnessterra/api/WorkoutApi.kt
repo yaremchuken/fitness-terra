@@ -74,4 +74,16 @@ class WorkoutApi(
 
         return workoutService.toDto(workout)
     }
+
+    @PostMapping("complete/{id}")
+    fun complete(@PathVariable @NonNull id: Long): WorkoutPreviewDto {
+        val user = getUser()
+        var workout = workoutService.get(id).orElseThrow { EntityNotExistsException() }
+        if (user.id != workout.template.user.id) throw EntityNotExistsException()
+
+        workout.completed = true
+        workout = workoutService.save(workout)
+
+        return workoutService.toPreviewDto(workout)
+    }
 }

@@ -25,6 +25,12 @@
 
 .disabled {
   opacity: 0.5;
+  cursor: default;
+
+  &:hover {
+    background: $form-shadow;
+    color: gray;
+  }
 }
 
 .big {

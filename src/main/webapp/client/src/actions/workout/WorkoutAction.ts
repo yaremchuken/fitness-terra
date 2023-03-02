@@ -1,6 +1,6 @@
 import { Action, Dispatch } from 'redux'
 import Workout, { WorkoutPreview } from '../../models/workout/Workout'
-import { getApi, getPreviewsApi, saveTemplateApi } from '../../services/WorkoutService'
+import { completeApi, getApi, getPreviewsApi, saveTemplateApi } from '../../services/WorkoutService'
 import { WorkoutActionType } from './WorkoutActionType'
 
 export interface WorkoutAction extends Action<WorkoutActionType> {
@@ -13,47 +13,50 @@ export const requestPreviews = () => {
   }
 }
 
-const previewsLoaded = (previews: WorkoutPreview[]) => {
-  return {
-    type: WorkoutActionType.PREVIEWS_LOADED,
-    payload: previews,
-  }
-}
-
-const templateSaved = (preview: WorkoutPreview) => {
-  return {
-    type: WorkoutActionType.TEMPLATE_SAVED,
-    payload: preview,
-  }
-}
-
 export const requestWorkout = () => {
   return {
     type: WorkoutActionType.WORKOUT_REQUESTED,
   }
 }
 
-export const workoutLoaded = (workout: Workout) => {
+export const closeWorkoutPerform = () => {
   return {
-    type: WorkoutActionType.WORKOUT_LOADED,
-    payload: workout,
-  }
-}
-
-export const cancelWorkoutPerform = () => {
-  return {
-    type: WorkoutActionType.WORKOUT_PERFORM_CANCELED,
+    type: WorkoutActionType.WORKOUT_PERFORM_CLOSED,
   }
 }
 
 export const getPreviews = () => (dispatch: Dispatch) => {
   dispatch(requestPreviews())
-  return getPreviewsApi().then((data) => dispatch(previewsLoaded(data)))
+  return getPreviewsApi().then((data) =>
+    dispatch({
+      type: WorkoutActionType.PREVIEWS_LOADED,
+      payload: data,
+    })
+  )
 }
 
 export const saveTemplate = (workout: WorkoutPreview) => (dispatch: Dispatch) =>
-  saveTemplateApi(workout).then((data) => dispatch(templateSaved(data)))
+  saveTemplateApi(workout).then((data) =>
+    dispatch({
+      type: WorkoutActionType.TEMPLATE_SAVED,
+      payload: data,
+    })
+  )
 
 export const getWorkout = (id: number) => (dispatch: Dispatch) => {
-  return getApi(id).then((data) => dispatch(workoutLoaded(data)))
+  return getApi(id).then((data) =>
+    dispatch({
+      type: WorkoutActionType.WORKOUT_LOADED,
+      payload: data,
+    })
+  )
+}
+
+export const completeWorkout = (id: number) => (dispatch: Dispatch) => {
+  return completeApi(id).then((data) =>
+    dispatch({
+      type: WorkoutActionType.WORKOUT_COMPLETED,
+      payload: data,
+    })
+  )
 }

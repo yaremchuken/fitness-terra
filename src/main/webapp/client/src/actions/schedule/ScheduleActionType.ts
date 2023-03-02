@@ -7,4 +7,5 @@ export enum ScheduleActionType {
   EDIT_SCHEDULE = 'schedule_edit',
   CLOSE_EDITOR = 'schedule_close_editor',
   SCHEDULE_SAVED = 'schedule_saved',
+  MARK_SCHEDULED_WORKOUT_COMPLETED = 'mark_scheduled_workout_completed',
 }

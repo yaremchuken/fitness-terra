@@ -1,5 +1,5 @@
 import { Action, Dispatch } from 'redux'
-import Exercise, { ExercisePreview } from '../../models/workout/Exercise'
+import Exercise from '../../models/workout/Exercise'
 import { getPreviewsApi, getTemplateApi, saveTemplateApi } from '../../services/ExerciseService'
 import { ExerciseActionType } from './ExerciseActionType'
 
@@ -13,26 +13,22 @@ export const requestPreviews = () => {
   }
 }
 
-const previewsLoaded = (exercises: ExercisePreview[]) => {
-  return {
-    type: ExerciseActionType.PREVIEWS_LOADED,
-    payload: exercises,
-  }
-}
-
-const templateSaved = (preview: ExercisePreview) => {
-  return {
-    type: ExerciseActionType.TEMPLATE_SAVED,
-    payload: preview,
-  }
-}
-
 export const getPreviews = () => (dispatch: Dispatch) => {
   dispatch(requestPreviews())
-  return getPreviewsApi().then((data) => dispatch(previewsLoaded(data)))
+  return getPreviewsApi().then((data) =>
+    dispatch({
+      type: ExerciseActionType.PREVIEWS_LOADED,
+      payload: data,
+    })
+  )
 }
 
 export const getTemplate = (id: number) => getTemplateApi(id)
 
 export const saveTemplate = (exercise: Exercise) => (dispatch: Dispatch) =>
-  saveTemplateApi(exercise).then((data) => dispatch(templateSaved(data)))
+  saveTemplateApi(exercise).then((data) =>
+    dispatch({
+      type: ExerciseActionType.TEMPLATE_SAVED,
+      payload: data,
+    })
+  )

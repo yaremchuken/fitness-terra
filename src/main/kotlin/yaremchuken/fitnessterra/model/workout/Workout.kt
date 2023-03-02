@@ -28,7 +28,7 @@ class Workout(
     /**
      * Is this workout completed.
      */
-    val completed: Boolean,
+    var completed: Boolean,
 
     /**
      * Exercises included in this workout.

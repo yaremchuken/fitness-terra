@@ -81,6 +81,8 @@ class ScheduleApi(
             }
 
             val workout = Workout(template, i, false, exercises)
+            workout.completed = preview.completed
+
             workouts.add(workout)
         }
 

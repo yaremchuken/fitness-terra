@@ -24,3 +24,10 @@ export const getApi = async (id: number): Promise<Workout> => {
     .then((res) => res.data)
     .then(decodeWorkoutFiles)
 }
+
+export const completeApi = async (id: number): Promise<WorkoutPreview> => {
+  return api
+    .post(`${baseUrl}/complete/${id}`)
+    .then((res) => res.data)
+    .then((w) => decodeWorkoutPreviewsFiles([w])[0])
+}

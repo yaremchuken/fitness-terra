@@ -113,20 +113,22 @@ const SchedulePage = ({
       <h1 className={styles.title}>
         {edited ? `Schedule on ${formatDate(edited.scheduledAt)}` : `Schedule`}
       </h1>
-      <ul className={styles.calendar}>
-        {edited ? (
-          <ScheduleForm edited={edited} close={onEditorClose} />
-        ) : (
-          calendar.map((schedule) => (
-            <ScheduleBlock
-              key={schedule.scheduledAt.getTime()}
-              schedule={schedule}
-              onPerform={performWorkout}
-              onEditSchedule={() => editSchedule(schedule.scheduledAt, schedule.id)}
-            />
-          ))
-        )}
-      </ul>
+      {edited ? (
+        <ScheduleForm edited={edited} close={onEditorClose} />
+      ) : (
+        <div className={styles.calendarHolder}>
+          <ul className={styles.calendar}>
+            {calendar.map((schedule) => (
+              <ScheduleBlock
+                key={schedule.scheduledAt.getTime()}
+                schedule={schedule}
+                onPerform={performWorkout}
+                onEditSchedule={() => editSchedule(schedule.scheduledAt, schedule.id)}
+              />
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   )
 }

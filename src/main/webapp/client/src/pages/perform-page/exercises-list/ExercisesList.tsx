@@ -14,9 +14,11 @@ const ExercisesList = ({ workout, onPerform, onCancel }: ExercisesListProps) => 
     <div className={styles.block}>
       <p className={styles.title}>{workout.title}</p>
       <ul className={styles.exercises}>
-        {workout.exercises.map((ex) => (
-          <ExerciseRow key={ex.id} exercise={ex} />
-        ))}
+        {workout.exercises
+          .sort((a, b) => a.index!! - b.index!!)
+          .map((ex) => (
+            <ExerciseRow key={ex.id} exercise={ex} />
+          ))}
       </ul>
       <div className={styles.controls}>
         <Button text='PERFORM' callback={onPerform} />
