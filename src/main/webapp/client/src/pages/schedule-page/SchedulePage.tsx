@@ -111,7 +111,7 @@ const SchedulePage = ({
   return (
     <div className={`${styles.page} ${edited ? '' : styles.overflowed}`}>
       <h1 className={styles.title}>
-        {edited ? `Schedule on ${formatDate(edited.scheduledAt)}` : `Schedule`}
+        {edited ? `Schedule on ${formatDate(edited.scheduledAt, false)}` : `Schedule`}
       </h1>
       {edited ? (
         <ScheduleForm edited={edited} close={onEditorClose} />

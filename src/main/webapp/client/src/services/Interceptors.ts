@@ -24,7 +24,10 @@ const interceptors = (
       const original = error.config
 
       if (error.response) {
-        if (error.response.data === 'User does not exists') {
+        if (
+          error.response.data === 'User does not exists' ||
+          error.response.data === 'Refresh token invalid'
+        ) {
           logout()
         } else if (
           error.response.status === 401 &&

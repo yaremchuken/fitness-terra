@@ -55,7 +55,7 @@ const WorkoutsPage = ({
   }
 
   return (
-    <div className={`${styles.page} ${template === undefined ? styles.withOverflow : ''}`}>
+    <div className={`${styles.page} ${template === undefined ? styles.overflowed : ''}`}>
       {template ? (
         <>
           <h1 className={styles.title}>{template?.templateId ? 'Edit Workout' : 'Add Workout'}</h1>

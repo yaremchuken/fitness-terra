@@ -9,6 +9,7 @@ import yaremchuken.fitnessterra.api.error.EntityNotExistsException
 import yaremchuken.fitnessterra.api.error.InvalidCredentialsException
 import yaremchuken.fitnessterra.api.error.UserAlreadyExistsException
 import yaremchuken.fitnessterra.api.error.UserNotExistsException
+import yaremchuken.fitnessterra.security.JwtAuthenticationException
 
 @ControllerAdvice
 class ApiAdvice {
@@ -16,6 +17,11 @@ class ApiAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     fun handleInvalidCredentials(ex: InvalidCredentialsException) = ex.message
+
+    @ExceptionHandler(JwtAuthenticationException::class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    fun handleJwtException(ex: JwtAuthenticationException) = ex.message
 
     @ExceptionHandler(UserNotExistsException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

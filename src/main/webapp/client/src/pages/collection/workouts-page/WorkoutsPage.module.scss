@@ -14,8 +14,8 @@
   overflow-y: hidden;
 }
 
-.withOverflow {
-  overflow-y: auto;
+.overflowed {
+  @include scrollable;
 }
 
 .title {

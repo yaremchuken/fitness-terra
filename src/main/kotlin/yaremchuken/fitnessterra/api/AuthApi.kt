@@ -99,7 +99,7 @@ class AuthApi(
 
         if (user.refreshToken != tokenDTO.refreshToken) throw JwtAuthenticationException("Refresh token invalid")
 
-        // TODO: In the best scenario user should login if refresh token expire, but for now just reset token
+        // TODO: In the best-case scenario, when refresh token is expired user should relogin, but for simplicity just reset token
         if (jwtTokenProvider.refreshTokenExpired(user.tokenIssuedAt)) {
             val refreshToken = jwtTokenProvider.createRefreshToken()
             user.refreshToken = refreshToken.token

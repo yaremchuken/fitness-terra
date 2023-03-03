@@ -114,7 +114,7 @@ const ScheduleForm = ({ previews, getPreviews, edited, save, close }: ScheduleFo
       <div className={styles.wrapper}>
         <form className={styles.form} onSubmit={onSubmit}>
           {loader && <Loader message={loader} />}
-          <div className={styles.container}>
+          <div className={styles.scheduleList}>
             {workouts
               .sort((a, b) => a.index! - b.index!)
               .map((workout) => (
