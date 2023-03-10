@@ -43,7 +43,6 @@ class ExerciseApi(
         return previews.map { exerciseTemplateService.toPreviewDto(it, true) }
     }
 
-    // TODO: if media was removed from template - remove it from S3
     @PostMapping("template", headers = ["content-type=multipart/*"])
     @ResponseBody
     fun save(

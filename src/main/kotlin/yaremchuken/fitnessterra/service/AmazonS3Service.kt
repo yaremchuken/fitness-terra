@@ -6,6 +6,9 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream
 import com.amazonaws.util.IOUtils
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.CachePut
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import yaremchuken.fitnessterra.model.MediaEntityType
 import yaremchuken.fitnessterra.model.User
@@ -22,32 +25,33 @@ class AmazonS3Service(
     private val amazonS3: AmazonS3
 ) {
 
-    // FIXME: Add retries
-
-    fun upload(fileName: String, bytes: ByteArray) {
-        val temp = File("${System.getProperty("java.io.tmpdir")}/${fileName.replace("/", "-")}")
+    @CachePut(value = ["media"], key = "#key")
+    fun upload(key: String, bytes: ByteArray) {
+        val temp = File("${System.getProperty("java.io.tmpdir")}/${key.replace("/", "-")}")
         temp.writeBytes(bytes)
-        amazonS3.putObject(bucketName, fileName, temp)
+        amazonS3.putObject(bucketName, key, temp)
         temp.deleteOnExit()
     }
 
-    fun download(fileName: String?): ByteArray? {
-        if (StringUtils.isBlank(fileName)) return null
-        val data: S3Object = amazonS3.getObject(bucketName, fileName)
+    @Cacheable(value = ["media"], key = "#key")
+    fun download(key: String?): ByteArray? {
+        if (StringUtils.isBlank(key)) return null
+        val data: S3Object = amazonS3.getObject(bucketName, key)
         val objectContent: S3ObjectInputStream = data.objectContent
         val bytes = IOUtils.toByteArray(objectContent)
         objectContent.close()
         return bytes
     }
 
-    fun delete(fileName: String) {
-        amazonS3.deleteObject(bucketName, fileName)
+    @CacheEvict(value = ["media"], key = "#key")
+    fun delete(key: String) {
+        amazonS3.deleteObject(bucketName, key)
     }
 
-    fun temporalLink(fileName: String) =
+    fun temporalLink(key: String) =
         amazonS3.generatePresignedUrl(
             bucketName,
-            fileName,
+            key,
             Date.from(LocalDateTime.now().plusDays(1).toInstant(ZoneOffset.UTC)))
 
     fun getKeys(type: MediaEntityType, user: User): List<String> =

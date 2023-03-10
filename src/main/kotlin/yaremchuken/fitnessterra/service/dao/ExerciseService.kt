@@ -29,9 +29,9 @@ class ExerciseService(
             exercise.duration,
             exercise.calories,
             exercise.equipment,
-            if (attachPreview && exercise.template.previewUrl != null)
+            if (attachPreview)
                 amazonS3Service.download(exercise.template.previewUrl) else null,
-            if (attachMedia && exercise.template.mediaUrl != null)
+            if (attachMedia)
                 amazonS3Service.download(exercise.template.mediaUrl) else null)
 
     fun toPreviewDto(exercise: Exercise, attachPreview: Boolean = false) =
@@ -47,6 +47,6 @@ class ExerciseService(
             exercise.duration,
             exercise.calories,
             exercise.equipment,
-            if (attachPreview && exercise.template.previewUrl != null)
+            if (attachPreview)
                 amazonS3Service.download(exercise.template.previewUrl) else null)
 }
