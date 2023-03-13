@@ -31,8 +31,6 @@ class ExerciseApi(
     private val amazonS3Service: AmazonS3Service
 ): BaseApi(userService) {
 
-    // TODO: Cache binary files (exercise previews, etc...) in Redis
-
     @GetMapping("previews")
     @ResponseBody
     fun getPreviews(@RequestParam @Nullable id: Collection<Long>?): List<ExercisePreviewDto> {

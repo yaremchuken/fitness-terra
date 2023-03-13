@@ -1,0 +1,41 @@
+@import 'src/utils/css/index';
+
+.page {
+  margin: auto;
+  padding: 20px 0;
+
+  height: 100%;
+  width: 100%;
+  max-width: $screen-width;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-y: hidden;
+}
+
+.overflowed {
+  @include scrollable;
+}
+
+.title {
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.workouts {
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style-type: none;
+}
+
+.formContainer {
+  width: 95%;
+  margin: 0 auto;
+  margin-bottom: 30px;
+  height: fit-content;
+  display: flex;
+}

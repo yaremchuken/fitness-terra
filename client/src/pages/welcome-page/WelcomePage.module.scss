@@ -1,0 +1,15 @@
+@import 'src/utils/css/index';
+
+.welcome {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.holder {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

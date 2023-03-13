@@ -1,0 +1,53 @@
+@import 'src/utils/css/index';
+
+.row {
+  padding: 10px;
+  height: fit-content;
+  width: 95%;
+  display: flex;
+  gap: 10px;
+  font-size: larger;
+  background: $form-bg;
+  border: 2px solid black;
+  box-shadow: 5px 5px 1px $form-shadow, 5px 5px 1px 2px black;
+  overflow: hidden;
+}
+
+.preview {
+  width: 100px;
+  min-width: 100px;
+  height: 100px;
+  min-height: 100px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  padding-bottom: 5px;
+  display: flex;
+}
+
+.amounts {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.amount {
+  font-size: larger;
+}
+
+.equipment {
+  width: 24px;
+  height: 24px;
+}
+
+.description {
+  font-size: smaller;
+}
