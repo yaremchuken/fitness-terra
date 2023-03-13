@@ -13,7 +13,7 @@ CREATE ROLE fitness_terra WITH
     CREATEDB
     CREATEROLE
     NOREPLICATION
-    PASSWORD 'fitness_terra';
+    PASSWORD 'XXX';
 ```
 
 #### Create table
@@ -35,7 +35,7 @@ For Amazon S3 you will need <a href="http://aws.amazon.com" target="_blank">Amaz
 and S3 bucket (you can use <a href="https://s3.console.aws.amazon.com/s3/buckets" target="_blank">S3 Management console</a>).
 Don`t forget to create IAM User with S3 permissions in *Security Credentials* of your account.<br>
 Or you can use <a href="http://cloud.yandex.ru/services/storage" target="_blank">Yandex Object Storage</a><br>
-Fill <b>application.yaml</b> with Amazon AWS properties:
+Change <b>application.yaml</b> with yours Amazon AWS properties:
 ``` yaml
 cloud:
   aws:
@@ -47,26 +47,24 @@ cloud:
       static: ru-central1
       auto: false
 ```
-also you need add credentials for Amazon AWS in <b>application.yaml</b>
+
+### <span style="color:yellow">Secrets</span>
+You need to add credentials for Postgres database, Amazon AWS, JWT token.<br>
+create <b>secrets.yaml</b> in same directory as <b>application.yaml</b> and fill it accordingly
 ``` yaml
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fitness_terra
+    username: fitness_terra
+    password: ***
+
 cloud:
   aws:
     credentials:
-      access-key: XXX
-      secret-key: XXXX
-```
-or VM properties
-```
--Dcloud.aws.credentials.access-key=XXX
--Dcloud.aws.credentials.secret-key=XXXX
-```
+      access-key: ***
+      secret-key: ***
 
-### <span style="color:yellow">JWT</span>
-Secret key word must be minimum <b>256</b> bits long<br>
-add property to <b>application.yaml</b>
-```yaml
 jwt:
-  secret-key: XXX
+  secret-key: ***
 ```
-or VM properties
-```-Djwt.secret-key=XXX```
+Keep in mind - secret key for JWT token must be minimum <b>256</b> bits long<br>

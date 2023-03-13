@@ -1,8 +1,6 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/fitness_terra
-    username: fitness_terra
-    password: fitness_terra
+  config:
+    import: secrets.yaml
   jpa:
     properties:
       hibernate:
@@ -33,9 +31,3 @@ cloud:
     region:
       static: ru-central1
       auto: false
-    credentials:
-      access-key:
-      secret-key:
-
-jwt:
-  secret-key:
