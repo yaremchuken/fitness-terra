@@ -1,7 +1,6 @@
 package yaremchuken.fitnessterra.security
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.jsonwebtoken.ExpiredJwtException
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest
 import jakarta.servlet.ServletResponse

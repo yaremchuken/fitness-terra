@@ -2,8 +2,6 @@ package yaremchuken.fitnessterra.api.dto
 
 import yaremchuken.fitnessterra.model.workout.ActivityType
 import yaremchuken.fitnessterra.model.workout.Equipment
-import yaremchuken.fitnessterra.model.workout.Exercise
-import yaremchuken.fitnessterra.model.workout.ExerciseTemplate
 import yaremchuken.fitnessterra.model.workout.MuscleGroup
 
 open class ExercisePreviewDto(

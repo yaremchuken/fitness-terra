@@ -1,7 +1,6 @@
 package yaremchuken.fitnessterra.api
 
 import org.apache.commons.collections4.CollectionUtils
-import org.apache.commons.lang3.StringUtils
 import org.springframework.lang.NonNull
 import org.springframework.lang.Nullable
 import org.springframework.web.bind.annotation.GetMapping
@@ -21,7 +20,6 @@ import yaremchuken.fitnessterra.service.AmazonS3Service
 import yaremchuken.fitnessterra.service.dao.ExerciseTemplateService
 import yaremchuken.fitnessterra.service.dao.UserService
 import yaremchuken.fitnessterra.utils.Utils
-import java.util.Collections
 
 @RestController
 @RequestMapping("api/exercise")

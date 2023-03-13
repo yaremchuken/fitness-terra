@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
-import yaremchuken.fitnessterra.api.dto.ExerciseDto
 import yaremchuken.fitnessterra.api.dto.WorkoutDto
 import yaremchuken.fitnessterra.api.dto.WorkoutPreviewDto
 import yaremchuken.fitnessterra.api.error.EntityNotExistsException
