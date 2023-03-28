@@ -2,7 +2,7 @@
 
 ### <span style="color:yellow">Initialize Database</span>
 #### Connect to Postgres
-```sudo -u postgres psql```
+```sudo -u postgres psql```<br/><br/>Or just use PgAdmin :)
 
 #### Create user
 ```sql
@@ -22,8 +22,6 @@ CREATE DATABASE fitness_terra
     WITH 
     OWNER = fitness_terra
     ENCODING = 'UTF8'
-    LC_COLLATE = 'en_US.UTF-8'
-    LC_CTYPE = 'en_US.UTF-8'
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
 ```
