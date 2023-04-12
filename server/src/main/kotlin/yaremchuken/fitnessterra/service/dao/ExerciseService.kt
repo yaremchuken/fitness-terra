@@ -30,7 +30,7 @@ class ExerciseService(
             exercise.calories,
             exercise.equipment,
             if (attachPreview)
-                amazonS3Service.download(exercise.template.previewUrl) else null,
+                amazonS3Service.download(exercise.template.mediaPreviewUrl) else null,
             if (attachMedia)
                 amazonS3Service.download(exercise.template.mediaUrl) else null)
 
@@ -48,5 +48,5 @@ class ExerciseService(
             exercise.calories,
             exercise.equipment,
             if (attachPreview)
-                amazonS3Service.download(exercise.template.previewUrl) else null)
+                amazonS3Service.download(exercise.template.mediaPreviewUrl) else null)
 }

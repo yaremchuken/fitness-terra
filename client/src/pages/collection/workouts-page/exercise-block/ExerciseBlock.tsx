@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react'
 import ImgButton, { Position, Size } from '../../../../components/img-button/ImgButton'
-import Exercise, { ExercisePreview } from '../../../../models/workout/Exercise'
+import Exercise from '../../../../models/workout/Exercise'
 import styles from './ExerciseBlock.module.scss'
 
 type ExerciseBlockProps = {

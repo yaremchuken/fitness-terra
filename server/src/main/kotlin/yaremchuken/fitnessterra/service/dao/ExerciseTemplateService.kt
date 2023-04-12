@@ -37,8 +37,8 @@ class ExerciseTemplateService(
             template.duration,
             template.calories,
             template.equipment,
-            if (attachPreview && template.previewUrl !== null)
-                amazonS3Service.download(template.previewUrl) else null,
+            if (attachPreview && template.mediaPreviewUrl !== null)
+                amazonS3Service.download(template.mediaPreviewUrl) else null,
             if (attachMedia && template.mediaUrl !== null)
                 amazonS3Service.download(template.mediaUrl!!) else null)
 
@@ -55,8 +55,8 @@ class ExerciseTemplateService(
             template.duration,
             template.calories,
             template.equipment,
-            if (attachPreview && template.previewUrl != null)
-                amazonS3Service.download(template.previewUrl) else preview
+            if (attachPreview && template.mediaPreviewUrl != null)
+                amazonS3Service.download(template.mediaPreviewUrl) else preview
         )
 
     fun fromDto(user: User, dto: ExerciseDto): ExerciseTemplate {

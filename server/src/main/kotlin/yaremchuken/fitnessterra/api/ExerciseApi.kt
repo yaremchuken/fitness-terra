@@ -17,6 +17,7 @@ import yaremchuken.fitnessterra.api.dto.ExerciseDto
 import yaremchuken.fitnessterra.api.error.EntityNotExistsException
 import yaremchuken.fitnessterra.model.MediaEntityType
 import yaremchuken.fitnessterra.service.AmazonS3Service
+import yaremchuken.fitnessterra.service.MediaService
 import yaremchuken.fitnessterra.service.dao.ExerciseTemplateService
 import yaremchuken.fitnessterra.service.dao.UserService
 import yaremchuken.fitnessterra.utils.Utils
@@ -26,7 +27,8 @@ import yaremchuken.fitnessterra.utils.Utils
 class ExerciseApi(
     userService: UserService,
     private val exerciseTemplateService: ExerciseTemplateService,
-    private val amazonS3Service: AmazonS3Service
+    private val amazonS3Service: AmazonS3Service,
+    private val mediaService: MediaService
 ): BaseApi(userService) {
 
     @GetMapping("previews")
@@ -43,26 +45,27 @@ class ExerciseApi(
     @ResponseBody
     fun save(
         @RequestPart("exercise") dto: ExerciseDto,
-        @RequestPart("preview") preview: MultipartFile?,
         @RequestPart("media") media: MultipartFile?
     ): ExercisePreviewDto {
         val user = getUser()
         val exercise = exerciseTemplateService.save(user, dto)
-        if (preview != null || media != null) {
-            if (preview != null && preview.size > 0) {
-                val url = Utils.createS3Url(MediaEntityType.EXERCISE_PREVIEW, user, exercise.id!!)
-                amazonS3Service.upload(url, preview.bytes)
-                exercise.previewUrl = url
-            }
-            if (media != null && media.size > 0) {
-                val url = Utils.createS3Url(MediaEntityType.EXERCISE_MEDIA, user, exercise.id!!)
-                amazonS3Service.upload(url, media.bytes)
-                exercise.mediaUrl = url
-            }
+        var preview: ByteArray? = null
+
+        if (media != null && media.size != 0L) {
+            preview = mediaService.createMediaPreview(media)
+
+            val mediaUrl = Utils.createS3Url(MediaEntityType.EXERCISE_MEDIA, user, exercise.id!!)
+            amazonS3Service.upload(mediaUrl, media.bytes)
+            exercise.mediaUrl = mediaUrl
+
+            val previewUrl = Utils.createS3Url(MediaEntityType.EXERCISE_PREVIEW, user, exercise.id!!)
+            exercise.mediaPreviewUrl = previewUrl
+            amazonS3Service.upload(previewUrl, preview)
+
             exerciseTemplateService.save(exercise)
         }
 
-        return exerciseTemplateService.toPreviewDto(exercise, preview = preview?.bytes)
+        return exerciseTemplateService.toPreviewDto(exercise, preview = preview)
     }
 
     @GetMapping("template/{id}")

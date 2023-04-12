@@ -39,14 +39,14 @@ class ExerciseTemplate(
     val description: String?,
 
     /**
-     * Address of S3 storage for preview picture
-     */
-    var previewUrl: String?,
-
-    /**
      * Address of S3 storage for media file
      */
     var mediaUrl: String?,
+
+    /**
+     * Address of S3 storage for scaled to preview media file
+     */
+    var mediaPreviewUrl: String?,
 
     /**
      * Type of equipment using during the exercise.

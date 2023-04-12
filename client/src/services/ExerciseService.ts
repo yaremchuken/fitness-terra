@@ -43,7 +43,6 @@ export const saveTemplateApi = async (exercise: Exercise): Promise<ExercisePrevi
             type: 'application/json',
           }
         ),
-        preview: exercise.preview,
         media: exercise.media,
       },
       {

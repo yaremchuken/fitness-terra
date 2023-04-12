@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, useState } from 'react'
 import { connect } from 'react-redux'
 import { Dispatch } from 'redux'
 import { saveTemplate } from '../../../../actions/exercise/ExerciseAction'
@@ -116,10 +116,6 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
     )
   }
 
-  const previewChosen = (preview?: File) => {
-    setTemplateData({ ...templateData, preview })
-  }
-
   const mediaChosen = (media?: File) => {
     setTemplateData({ ...templateData, media })
   }
@@ -168,15 +164,7 @@ const ExerciseForm = ({ template, save, close }: ExerciseFormProps) => {
         padded
         disabled={inProcess}
       />
-      <div className={styles.twoInRow}>
-        <MediaUpload
-          title='Exercise Preview'
-          onUpload={previewChosen}
-          maxSize={1024}
-          media={templateData.preview}
-          disabled={inProcess}
-          onClear={() => previewChosen()}
-        />
+      <div className={styles.media}>
         <MediaUpload
           title='Exercise Visualization'
           onUpload={mediaChosen}

@@ -25,7 +25,6 @@ class AmazonS3Service(
     private val amazonS3: AmazonS3
 ) {
 
-    @CachePut(value = ["media"], key = "#key")
     fun upload(key: String, bytes: ByteArray) {
         val temp = File("${System.getProperty("java.io.tmpdir")}/${key.replace("/", "-")}")
         temp.writeBytes(bytes)

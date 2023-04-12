@@ -1,4 +1,3 @@
-import { useDrag } from 'react-dnd'
 import { ExercisePreview } from '../../../../models/workout/Exercise'
 import styles from './ExercisePreviewCard.module.scss'
 

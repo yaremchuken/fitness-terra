@@ -43,6 +43,8 @@ dependencies {
 	implementation("org.glassfish:jakarta.json:2.0.1")
 	implementation("jakarta.json.bind:jakarta.json.bind-api:3.0.0")
 
+	implementation("org.imgscalr:imgscalr-lib:4.2")
+
 	runtimeOnly("org.springframework.boot:spring-boot-starter-tomcat")
 	runtimeOnly("org.postgresql:postgresql")
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")

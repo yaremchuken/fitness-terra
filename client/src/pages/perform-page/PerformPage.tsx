@@ -35,6 +35,7 @@ const PerformPage = ({
 
   const isExercise = () => (queue[pointer] as any).id !== undefined
 
+  /* eslint react-hooks/exhaustive-deps: 0 */
   useEffect(() => {
     if (!workout) navigate('/schedule')
     else {

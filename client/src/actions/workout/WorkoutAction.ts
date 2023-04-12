@@ -1,5 +1,5 @@
 import { Action, Dispatch } from 'redux'
-import Workout, { WorkoutPreview } from '../../models/workout/Workout'
+import { WorkoutPreview } from '../../models/workout/Workout'
 import { completeApi, getApi, getPreviewsApi, saveTemplateApi } from '../../services/WorkoutService'
 import { WorkoutActionType } from './WorkoutActionType'
 
