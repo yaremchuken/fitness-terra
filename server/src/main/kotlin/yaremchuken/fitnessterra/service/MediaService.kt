@@ -1,11 +1,9 @@
 package yaremchuken.fitnessterra.service
 
-import org.apache.commons.lang3.StringUtils
 import org.imgscalr.Scalr
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.io.ByteArrayOutputStream
-import java.lang.Exception
 import javax.imageio.ImageIO
 
 const val PREVIEW_SIZE = 256
@@ -13,7 +11,7 @@ const val PREVIEW_SIZE = 256
 @Service
 class MediaService {
 
-    fun createMediaPreview(media: MultipartFile): ByteArray? {
+    fun createMediaPreview(media: MultipartFile): ByteArray {
         val image = ImageIO.read(media.inputStream)
         val resized = Scalr.resize(image, PREVIEW_SIZE)
 
